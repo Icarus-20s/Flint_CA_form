@@ -1,0 +1,168 @@
+/* Career Section Styles */
+.career {
+    background: linear-gradient(to right, #006699, #004e80);  /* Elegant blue gradient */
+    padding: 60px 20px;
+    color: white;
+  }
+  
+  .career-intro {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  
+  .career-intro h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .career-intro p {
+    font-size: 18px;
+    color: #f0f0f0;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .job-listings {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
+    gap: 30px;
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .job-card {
+    background-color: white;
+    color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .job-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .job-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .job-card h4 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #003366;
+  }
+  
+  .job-card p {
+    font-size: 16px;
+    color: #777;
+  }
+  
+  .job-card a {
+    display: inline-block;
+    padding: 12px 30px;
+    margin-top: 20px;
+    background-color: #003366;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .job-card a:hover {
+    background-color: #005f8b;
+  }
+  
+  .application-form {
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: 60px auto;
+    text-align: center;
+  }
+  
+  .application-form h3 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #003366;
+  }
+  
+  .application-form form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .application-form .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .application-form .form-group label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .application-form .form-group input,
+  .application-form .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .application-form .form-group textarea {
+    resize: vertical;
+  }
+  
+  .application-form .submit-btn {
+    background-color: #003366;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .application-form .submit-btn:hover {
+    background-color: #005f8b;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .career-intro h2 {
+      font-size: 30px;
+    }
+  
+    .job-listings {
+      grid-template-columns: 1fr; /* Stack job cards on small screens */
+    }
+  
+    .job-card {
+      padding: 15px;
+    }
+  
+    .application-form {
+      padding: 30px;
+    }
+  
+    .application-form .form-group input,
+    .application-form .form-group textarea {
+      padding: 10px;
+    }
+  }
+  

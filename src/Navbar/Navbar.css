@@ -1,0 +1,134 @@
+/* General Navbar Styling */
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 51, 102, 0.8); /* Slight transparency */
+  color: #fff;
+  padding: 12px 20px;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for a more professional look */
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  transition: background-color 0.3s ease; /* Smooth transition for transparency */
+}
+
+/* Navbar Links Styling */
+.nav-bar a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  margin-right: 20px;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+}
+
+.nav-bar a:hover {
+  color: #ffcc00;
+  background-color: #444;
+  border-radius: 4px;
+}
+
+.nav-bar a.active {
+  color: #ffcc00;
+}
+
+/* Logo Styling */
+.logo-link {
+  margin-right: auto;
+}
+
+.logo-img {
+  width: 40px;
+  height: auto;
+  background-color: #f2f2f2;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.nav-bar .logo a {
+  color: #ffcc00;
+  text-decoration: none;
+}
+
+.nav-bar .logo a:hover {
+  color: #fff;
+}
+
+/* Menu Icon (Hamburger) for Mobile */
+.menu-icon {
+  display: none;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+/* When Logo is clicked, align the logo image with text */
+.nav-bar .logo-link {
+  display: flex;
+  align-items: center;
+}
+
+/* Social Icons */
+.social-icons h1 {
+  color: white;
+}
+
+@media (max-width: 768px) {
+  /* Mobile Navbar Styles */
+  .nav-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 20px;
+  }
+
+  .nav-bar a {
+    margin: 12px 0;
+    width: 100%;
+    text-align: left; /* Align links to the left */
+  }
+
+  .nav-bar a:hover {
+    background-color: #444;
+  }
+
+  .logo-link {
+    margin-bottom: 15px;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+
+  /* Collapsible Navbar Links */
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background-color: rgba(51, 51, 51, 0.9); /* Darker background for mobile menu */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(-100%);
+    z-index: 9;
+  }
+
+  .nav-links.active {
+    transform: translateY(0);
+  }
+}
+
+/* Logo image */
+.nav-bar .logo-link img {
+  margin-right: 10px;
+}
+

@@ -1,0 +1,101 @@
+ 
+  /* Main Container */
+  .services {
+    padding: 50px 20px;
+    text-align: center;
+    background: linear-gradient(to right, #a8b0b8, #006699); /* A blue gradient */
+    min-height: 100vh;
+  }
+  
+  /* Heading Styles */
+  h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #003366;  /* Deep blue color for the firm */
+    margin-bottom: 30px;
+  }
+  
+  h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #003366;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;  /* Soft gray for body text */
+  }
+  
+  /* Service List Styles */
+  .service-list {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap; /* Ensures responsiveness */
+    margin-top: 40px;
+  }
+  
+  /* Individual Service Card */
+  .service {
+    background-color: #fff;
+    padding: 30px;
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* Soft shadow for card */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .service:hover {
+    transform: translateY(-10px);  /* Slight hover effect */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);  /* Deeper shadow on hover */
+  }
+  
+  /* Service Title */
+  .service h3 {
+    font-size: 20px;
+    color: #003366;
+    margin-bottom: 15px;
+  }
+  
+  /* Service Description */
+  .service p {
+    font-size: 14px;
+    color: #777;  /* Light gray text for descriptions */
+    line-height: 1.5;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 1024px) {
+    .service-list {
+      gap: 1.5rem;
+    }
+  
+    .service {
+      width: 280px;  /* Slightly smaller cards on medium screens */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .service-list {
+      flex-direction: column;  /* Stack cards vertically on smaller screens */
+      gap: 2rem;
+    }
+  
+    .service {
+      width: 100%;  /* Full width on smaller screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 28px;  /* Slightly smaller heading on small screens */
+    }
+  
+    .service {
+      padding: 20px;
+      width: 100%;
+    }
+  }
+  

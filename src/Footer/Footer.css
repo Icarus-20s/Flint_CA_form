@@ -1,0 +1,115 @@
+/* General body styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Footer Styles */
+.footer {
+  background-color: #003366;
+  color: #fff;
+  text-align: center;
+  padding: 40px 20px;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.footer-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.footer-nav li {
+  margin: 0 15px;
+}
+
+.footer-nav li a {
+  color: #fff;
+  font-size: 16px;
+  text-decoration: none;
+  padding: 5px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.footer-nav li a:hover {
+  color: #ffcc00;
+}
+
+/* Social Media Icons Styles */
+.footer .social-icons {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer .social-icons h2 {
+  margin-bottom: 10px;
+  font-size: 1.6em;
+}
+
+.footer .social-icons ul {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.footer .social-icons ul li {
+  margin: 0 12px;
+}
+
+.footer .social-icons ul li a {
+  color: #fff;
+  font-size: 2em;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.footer .social-icons ul li a:hover {
+  color: #ffcc00; /* Gold color */
+  transform: scale(1.1); /* Hover effect to enlarge the icons */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .footer-nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-nav li {
+    margin: 10px 0;
+  }
+
+  .footer .social-icons {
+    flex-direction: column;
+    margin-top: 30px;
+  }
+
+  .footer .social-icons ul {
+    flex-direction: column;
+  }
+
+  .footer .social-icons ul li {
+    margin-bottom: 15px;
+  }
+}
+
+/* Allowing content to scroll without being hidden under footer */
+.main-content {
+  padding-bottom: 100px; /* Prevent content from being hidden under the footer */
+}

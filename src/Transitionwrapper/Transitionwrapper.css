@@ -1,0 +1,24 @@
+.fade-enter {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  
+  .fade-enter-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 600ms ease-out, 
+                transform 600ms ease-out;
+  }
+  
+  .fade-exit {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  
+  .fade-exit-active {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    transition: opacity 600ms ease-out, 
+                transform 600ms ease-out;
+  }
+  
