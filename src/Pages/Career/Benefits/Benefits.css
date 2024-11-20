@@ -1,0 +1,23 @@
+/* Benefits.css */
+.benefits {
+    background-color: #7c92b2;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+  }
+  
+  .benefits h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .benefits ul {
+    margin-top: 10px;
+  }
+  
+  .benefits ul li {
+    color: #555;
+    margin-bottom: 10px;
+  }
+  

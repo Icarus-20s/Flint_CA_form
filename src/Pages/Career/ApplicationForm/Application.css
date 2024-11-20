@@ -1,0 +1,58 @@
+/* ApplicationForm.css */
+.application-form {
+    background-color: #7c92b2;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+  }
+  
+  .application-form h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .application-form form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .application-form label {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .application-form input,
+  .application-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+  }
+  
+  .application-form input[type="file"] {
+    padding: 5px;
+  }
+  
+  .application-form textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+  
+  button {
+    align-self: flex-start;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 4px;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
