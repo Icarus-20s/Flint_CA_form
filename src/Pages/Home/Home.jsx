@@ -1,8 +1,28 @@
-import React from 'react';
-import { Link } from 'react-scroll'; // Importing the react-scroll library for smooth scrolling
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-scroll'; // For smooth scrolling
+import axios from 'axios'; // Axios for API calls
 import './Home.css';
 
 const Home = () => {
+  const [services, setServices] = useState([]); // State to store services
+  const [loading, setLoading] = useState(true); // State for loading indicator
+
+  // Fetch services when the component mounts
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/home/'); // Adjust the endpoint as needed
+        setServices(response.data); // Store the fetched services
+        setLoading(false); // Set loading to false after fetching is done
+      } catch (error) {
+        console.log("Error fetching services:", error);
+        setLoading(false); // In case of an error, stop loading
+      }
+    };
+
+    fetchServices();
+  }, []); // Empty dependency array to fetch only once when component mounts
+
   return (
     <div className="home">
       {/* Hero Section */}
@@ -21,19 +41,18 @@ const Home = () => {
       {/* Services Section */}
       <section className="services" id="services">
         <h2>Our Services</h2>
+        {/* Conditionally render services or loading text */}
         <div className="services-list">
-          <div className="service">
-            <h3>Tax Consultancy</h3>
-            <p>Get expert tax planning and advice to optimize your tax liabilities and avoid any compliance issues.</p>
-          </div>
-          <div className="service">
-            <h3>Accounting & Bookkeeping</h3>
-            <p>Our team offers reliable accounting services, ensuring accurate financial records and reports.</p>
-          </div>
-          <div className="service">
-            <h3>Business Advisory</h3>
-            <p>Strategic advice to help your business grow, reduce costs, and increase profitability.</p>
-          </div>
+          {loading ? (
+            <p>Loading services...</p> // Display loading message while fetching data
+          ) : (
+            services.map((service) => (
+              <div className="service" key={service.id}>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+              </div>
+            ))
+          )}
         </div>
       </section>
     </div>
