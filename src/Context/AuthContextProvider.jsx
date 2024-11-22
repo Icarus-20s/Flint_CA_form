@@ -17,7 +17,6 @@ const AuthContextProvider = ({ children }) => {
     setIsAuthenticated(true);
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("role", JSON.stringify(role));
-    navigate("/",{replace:true});
 
   };
 

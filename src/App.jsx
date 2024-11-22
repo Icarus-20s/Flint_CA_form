@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./Pages/Home/Home.jsx";
 import Aboutus from "./Pages/Aboutus/Aboutus.jsx";
 import Contactus from "./Pages/Contactus/Contactus.jsx";
@@ -11,9 +11,10 @@ import Footer from "./Footer/Footer.jsx";
 import TransitionWrapper from "./Transitionwrapper/TransitionWrapper.jsx";
 import Career from "./Pages/Career/Career.jsx";
 import Login from "./Pages/Login/Login.jsx"
+import AuthContextProvider from "./Context/AuthContextProvider.jsx";
 const App = () => {
   return (
-    <BrowserRouter>
+    <AuthContextProvider>
            <Navbar />
       <TransitionWrapper>
         <Routes>
@@ -27,7 +28,7 @@ const App = () => {
         </Routes>
       </TransitionWrapper>
       <Footer />
-    </BrowserRouter>
+    </AuthContextProvider>
   );
 };
 
