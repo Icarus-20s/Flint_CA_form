@@ -65,6 +65,13 @@ const Navbar = () => {
         >
           Contact Us
         </NavLink>
+        <NavLink
+          to="/login"
+          onClick={closeMenu}
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          Login
+        </NavLink>
       </div>
     </nav>
   );

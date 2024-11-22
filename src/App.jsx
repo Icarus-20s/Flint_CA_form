@@ -10,6 +10,7 @@ import NoMatchRoute from "./Pages/NoRoute/NoRoute.jsx";
 import Footer from "./Footer/Footer.jsx";
 import TransitionWrapper from "./Transitionwrapper/TransitionWrapper.jsx";
 import Career from "./Pages/Career/Career.jsx";
+import Login from "./Pages/Login/Login.jsx"
 const App = () => {
   return (
     <BrowserRouter>
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/contact" element={<Contactus />} />
           <Route path="/services" element={<Services />} />
           <Route path="/career" element={<Career />} />
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<NoMatchRoute />} />
         </Routes>
       </TransitionWrapper>

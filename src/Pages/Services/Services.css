@@ -1,6 +1,6 @@
 /* Main Container */
 .services {
-  padding: 60px 20px;
+  padding: 80px 20px;
   text-align: center;
   background: linear-gradient(to right, #a8b0b8, #006699); /* Apply the gradient to the entire body */
   min-height: 100vh;
