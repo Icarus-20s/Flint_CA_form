@@ -3,17 +3,26 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: rgba(0, 51, 102, 0.8); /* Slight transparency */
+  background-color: rgba(0, 51, 102, 0.8); 
   color: #fff;
   padding: 12px 20px;
   font-family: 'Poppins', sans-serif;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for a more professional look */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 10;
-  transition: background-color 0.3s ease; /* Smooth transition for transparency */
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Navbar Visibility States */
+.nav-bar.hidden {
+  transform: translateY(-100%);
+}
+
+.nav-bar.visible {
+  transform: translateY(0);
 }
 
 /* Navbar Links Styling */
@@ -43,20 +52,15 @@
 }
 
 .logo-img {
-  width: 40px;
+  width: 35px;
   height: auto;
   background-color: #f2f2f2;
   padding: 5px;
   border-radius: 50%;
 }
 
-.nav-bar .logo a {
-  color: #ffcc00;
-  text-decoration: none;
-}
-
-.nav-bar .logo a:hover {
-  color: #fff;
+.nav-bar .logo-link img {
+  margin-right: 10px;
 }
 
 /* Menu Icon (Hamburger) for Mobile */
@@ -64,71 +68,96 @@
   display: none;
   cursor: pointer;
   margin-left: auto;
+  z-index: 11;
 }
 
+.menu-icon svg {
+  color: #ffcc00; /* Menu icon color */
+  font-size: 30px; /* Adjusted for visibility */
+}
+
+/* Navbar Links Container */
 .nav-links {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Distribute navbar items evenly */
+  width: 100%; /* Take up full width */
 }
 
-/* When Logo is clicked, align the logo image with text */
-.nav-bar .logo-link {
+/* Collapsible Navbar Links */
+.nav-links.active {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  background-color: rgba(0, 51, 102, 0.9);
+  width: 100%;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 9;
 }
 
-/* Social Icons */
-.social-icons h1 {
-  color: white;
+.nav-links a {
+  margin: 12px 0;
+  text-align: left;
+  padding: 10px;
+  font-size: 18px; /* Adjust font size for mobile */
 }
 
+/* Media Queries for Mobile */
 @media (max-width: 768px) {
-  /* Mobile Navbar Styles */
   .nav-bar {
+    flex-direction: row; 
+    justify-content: space-between; 
+    padding: 10px 15px;
+  }
+
+  .nav-links {
+    display: none; /* Hide the nav links initially */
+    width: 100%;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 15px 20px;
+    align-items: center;
+  }
+
+  .nav-links.active {
+    display: flex;
   }
 
   .nav-bar a {
-    margin: 12px 0;
+    margin: 10px 0;
     width: 100%;
-    text-align: left; /* Align links to the left */
-  }
-
-  .nav-bar a:hover {
-    background-color: #444;
-  }
-
-  .logo-link {
-    margin-bottom: 15px;
+    text-align: left;
   }
 
   .menu-icon {
     display: block;
   }
 
-  /* Collapsible Navbar Links */
+  .logo-link {
+    margin-bottom: 10px;
+  }
+}
+
+/* Desktop View Adjustments */
+@media (min-width: 768px) {
+  .nav-bar {
+    flex-direction: row;
+    justify-content: space-between; /* Space out the navbar items evenly */
+    padding: 12px 50px; /* Adjust padding to space out items */
+  }
+
   .nav-links {
-    flex-direction: column;
-    width: 100%;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    background-color: rgba(51, 51, 51, 0.9); /* Darker background for mobile menu */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease-in-out;
-    transform: translateY(-100%);
-    z-index: 9;
+    display: flex;
+    justify-content: space-evenly; /* Evenly space the navbar links */
+    width: auto; /* Let the nav-links take the necessary space */
   }
 
-  .nav-links.active {
-    transform: translateY(0);
+  .nav-links a {
+    margin: 0 15px; /* Space between each link */
+  }
+
+  .menu-icon {
+    display: none; /* Hide the menu icon in desktop view */
   }
 }
-
-/* Logo image */
-.nav-bar .logo-link img {
-  margin-right: 10px;
-}
-
