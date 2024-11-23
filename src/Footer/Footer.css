@@ -84,6 +84,10 @@ body {
   transform: scale(1.1); /* Hover effect to enlarge the icons */
 }
 
+.footer .social-icons h2{
+  color: antiquewhite;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .footer-nav {
