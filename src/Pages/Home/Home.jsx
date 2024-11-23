@@ -6,7 +6,6 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentService, setCurrentService] = useState(null);
 
-  // Hardcoded services data
   const services = [
     {
       id: 1,
@@ -26,21 +25,36 @@ const Home = () => {
       description: 'We guide businesses to make strategic decisions and optimize operations.',
       image: 'https://via.placeholder.com/250x150?text=Business+Advisory',
     },
+    {
+      id: 4,
+      title: 'Financial Planning',
+      description: 'We help individuals and businesses plan for a secure financial future.',
+      image: 'https://via.placeholder.com/250x150?text=Financial+Planning',
+    },
+    {
+      id: 5,
+      title: 'Risk Management',
+      description: 'We provide risk assessment and management services for businesses.',
+      image: 'https://via.placeholder.com/250x150?text=Risk+Management',
+    },
+    {
+      id: 6,
+      title: 'Forensic Accounting',
+      description: 'We provide investigative accounting services for fraud detection and litigation support.',
+      image: 'https://via.placeholder.com/250x150?text=Forensic+Accounting',
+    },
   ];
 
-  // Handle opening modal with service details
   const openModal = (service) => {
     setCurrentService(service);
     setShowModal(true);
   };
 
-  // Handle closing the modal
   const closeModal = () => {
     setShowModal(false);
     setCurrentService(null);
   };
 
-  // Hardcoded testimonials data
   const testimonials = [
     {
       id: 1,
@@ -63,6 +77,13 @@ const Home = () => {
       testimonial: 'I highly recommend their business advisory services for growth-oriented companies.',
       image: 'https://via.placeholder.com/100x100?text=Michael+Johnson',
     },
+    {
+      id: 4,
+      name: 'Emily Taylor',
+      title: 'Owner, Startup Inc.',
+      testimonial: 'Their risk management services helped us minimize operational losses.',
+      image: 'https://via.placeholder.com/100x100?text=Emily+Taylor',
+    },
   ];
 
   return (
@@ -74,8 +95,12 @@ const Home = () => {
             <span>Welcome</span> to Our <span>Chartered Accountant</span> Firm
           </h1>
           <p>Your trusted partner for expert financial and accounting solutions.</p>
+        </div>
+
+        {/* Scroll to Services */}
+        <div className="scroll-to-services">
           <Link to="services" smooth={true} duration={500} className="cta-button">
-            Our Services
+            Explore Our Services <span className="arrow">→</span>
           </Link>
         </div>
       </section>

@@ -3,17 +3,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: rgba(0, 51, 102, 0.8); 
   color: #fff;
   padding: 12px 20px;
   font-family: 'Poppins', sans-serif;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
+  box-shadow: none; /* Remove any shadow that may separate it */
+  backdrop-filter: blur(10px); /* Apply blur effect */
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
+  width: 100%; /* Ensure navbar spans entire width */
   z-index: 10;
   transition: transform 0.3s ease-in-out;
+  background-color: transparent; /* Make navbar fully transparent */
+  border: none; /* No border to separate from background */
+  margin: 0; /* Remove margin */
 }
 
 /* Navbar Visibility States */
@@ -25,30 +29,70 @@
   transform: translateY(0);
 }
 
-/* Navbar Links Styling */
+/* General Navbar Links Styling */
 .nav-bar a {
   color: #fff;
-  text-decoration: none;
+  text-decoration: none; /* Remove default underline */
   font-size: 16px;
   font-weight: 600;
   margin-right: 20px;
   padding: 8px 12px;
-  transition: all 0.3s ease;
+  position: relative; /* Allow positioning of underline */
+  transition: color 0.3s ease;
 }
 
+/* Hover Effect: Underline when hovering */
 .nav-bar a:hover {
-  color: #ffcc00;
-  background-color: #444;
-  border-radius: 4px;
+  color: #0056b3; /* A professional color like dark blue on hover */
+  text-decoration: none; /* Ensure no default underline */
 }
 
+.nav-bar a:hover::after {
+  content: ''; /* Create an underline using ::after */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px; /* Adjust thickness of underline */
+  background-color: #0056b3; /* Professional color for underline */
+  transition: width 0.3s ease; /* Smooth transition */
+}
+
+/* Active Link (when user is on this page) */
 .nav-bar a.active {
-  color: #ffcc00;
+  color: #0056b3; /* Same color for active link */
+}
+
+.nav-bar a.active::after {
+  content: ''; /* Underline for active link */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px; /* Same thickness for consistency */
+  background-color: #0056b3; /* Professional color for underline */
+}
+
+/* Visited Links */
+.nav-bar a:visited {
+  color: #fff; /* Keep the original color for visited links */
+}
+
+.nav-bar a:visited::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px; /* Same thickness for consistency */
+  background-color: #0056b3; /* Professional underline color */
 }
 
 /* Logo Styling */
 .logo-link {
-  margin-right: auto;
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .logo-img {
@@ -57,11 +101,15 @@
   background-color: #f2f2f2;
   padding: 5px;
   border-radius: 50%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.nav-bar .logo-link img {
-  margin-right: 10px;
+/* Hover Effect on Logo */
+.logo-link:hover .logo-img {
+  transform: scale(1.1); /* Slightly enlarge logo */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
 }
+
 
 /* Menu Icon (Hamburger) for Mobile */
 .menu-icon {
@@ -80,8 +128,9 @@
 .nav-links {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Distribute navbar items evenly */
+  justify-content: space-between;
   width: 100%; /* Take up full width */
+  background-color: transparent; /* Make navbar links background fully transparent */
 }
 
 /* Collapsible Navbar Links */
@@ -91,7 +140,7 @@
   position: absolute;
   top: 60px;
   left: 0;
-  background-color: rgba(0, 51, 102, 0.9);
+  background-color: rgba(0, 51, 102, 0.9); /* Optional: Add slight transparency to background */
   width: 100%;
   padding: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -108,8 +157,8 @@
 /* Media Queries for Mobile */
 @media (max-width: 768px) {
   .nav-bar {
-    flex-direction: row; 
-    justify-content: space-between; 
+    flex-direction: row;
+    justify-content: space-between;
     padding: 10px 15px;
   }
 
@@ -143,8 +192,8 @@
 @media (min-width: 768px) {
   .nav-bar {
     flex-direction: row;
-    justify-content: space-between; /* Space out the navbar items evenly */
-    padding: 12px 50px; /* Adjust padding to space out items */
+    justify-content: space-between;
+    padding: 12px 50px;
   }
 
   .nav-links {

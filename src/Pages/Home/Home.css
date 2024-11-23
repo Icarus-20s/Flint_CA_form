@@ -14,7 +14,7 @@ body {
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(to right, #a8b0b8, #006699);
+  background: linear-gradient(to right, #a8b0b8, #006699); /* Gradient background */
   color: white;
   text-align: center;
   display: flex;
@@ -47,24 +47,38 @@ body {
   color: #f1f1f1;
 }
 
+/* Scroll Button */
+.scroll-to-services {
+  margin-top: 40px;
+}
+
 .cta-button {
   background-color: #ffcc00;
   color: #003366;
   padding: 12px 30px;
   text-decoration: none;
-  border-radius: 5px;
+  border-radius: 25px;
   font-size: 18px;
   font-weight: bold;
-  transition: background-color 0.3s ease;
+  display: inline-block;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  position: relative;
 }
 
 .cta-button:hover {
   background-color: #e6b800;
+  cursor: pointer;
+  transform: translateY(-5px);
+}
+
+.arrow {
+  margin-left: 10px;
+  font-size: 22px;
 }
 
 /* Services Section */
 .services {
-  background-color: #f1f1f1;
+  background-color: #f0f4f7; /* Subtle light blue */
   padding: 80px 20px;
   text-align: center;
 }
@@ -83,25 +97,32 @@ body {
 }
 
 .service {
-  background-color: #003366;
+  background-color: #00FFFF;
   color: white;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
   cursor: pointer;
-  transform: perspective(500px) rotateY(0deg);
-  transition: transform 0.4s ease;
+  transform: perspective(1000px) rotateY(0deg) scale(1);
+  transition: transform 0.5s ease, box-shadow 0.3s ease;
   max-width: 300px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
 .service:hover {
-  transform: perspective(500px) rotateY(10deg);
+  transform: perspective(1000px) rotateY(15deg) scale(1.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .service img {
   width: 100%;
   height: auto;
   border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.service:hover img {
+  transform: scale(1.1);
 }
 
 .service h3 {
@@ -150,16 +171,16 @@ body {
 
 /* Testimonials Section */
 .testimonials {
-  background-color: #003366;
+  background: linear-gradient(to right, #a8b0b8, #006699); /* Gradient background */
   color: white;
   padding: 80px 20px;
+  text-align: center;
 }
 
 .testimonials h2 {
   font-size: 32px;
   margin-bottom: 40px;
   font-weight: 600;
-  text-align: center;
 }
 
 .testimonials-list {
@@ -170,46 +191,61 @@ body {
 }
 
 .testimonial {
-  background-color: #fff;
+  background-color: transparent;
   color: #003366;
-  padding: 20px;
-  border-radius: 10px;
-  width: 280px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
-}
-
-.testimonial:hover {
-  transform: scale(1.05) translateY(-10px);
+  width: 250px;
+  text-align: center;
 }
 
 .testimonial-image-container {
-  text-align: center;
+  margin-bottom: 15px;
 }
 
 .testimonial-image {
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
-  margin-bottom: 15px;
-}
-
-.testimonial-content {
-  text-align: center;
 }
 
 .testimonial-text {
   font-style: italic;
   font-size: 16px;
+  color: #fff;
+  max-width: 200px;
+  margin: 0 auto;
 }
 
-.testimonial-name {
-  font-weight: bold;
-  margin-top: 10px;
-}
 
-.testimonial-title {
-  font-size: 14px;
-  color: #777;
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .services h2, .testimonials h2 {
+    font-size: 28px;
+  }
+
+  .services-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .testimonial {
+    width: 100%;
+  }
+
+  .modal-content {
+    width: 90%;
+  }
+
+  .cta-button {
+    font-size: 16px;
+    padding: 10px 25px;
+  }
+
+  .arrow {
+    font-size: 18px;
+  }
 }

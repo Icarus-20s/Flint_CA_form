@@ -47,9 +47,9 @@ const Navbar = () => {
   return (
     <nav className={`nav-bar ${isNavbarVisible ? "visible" : "hidden"}`}>
       {/* Logo link */}
-      <NavLink to="/" className="logo-link" onClick={closeMenu}>
+      <div className="logo-link">
         <img src={logo} alt="Logo" className="logo-img" />
-      </NavLink>
+      </div>
 
       {/* Menu Icon for mobile */}
       <div className="menu-icon" onClick={toggleMenu}>
