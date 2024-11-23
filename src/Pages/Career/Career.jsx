@@ -27,8 +27,7 @@ function Career() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission (e.g., sending data to a backend)
-    console.log(formData);
+    console.log(formData); // Handle form submission (e.g., sending data to a backend)
   };
 
   return (
@@ -36,68 +35,40 @@ function Career() {
       {/* Hero Section */}
       <section className="hero">
         <h1>Join Our Team</h1>
-        <p>Explore career opportunities at [Your Firm Name]. Apply for open positions below!</p>
+        <p>Explore exciting career opportunities at CA Firm!</p>
       </section>
 
       {/* Job Listings */}
       <section className="job-listings">
-        <h2>Current Job Openings</h2>
+        <h2>Current Openings</h2>
 
-        {/* Job Listing 1 */}
-        <div className="job-card">
-          <div className="job-title">
-            <h3>Senior Accountant</h3>
-            <p><strong>Location:</strong> New York, USA</p>
-          </div>
-          <div className="job-description">
-            <p>We are seeking a Senior Accountant to join our growing team. The ideal candidate will have 5+ years of experience in financial accounting, tax filings, and auditing. Strong communication skills are required.</p>
-            <button
-              className="apply-btn"
-              onClick={() => {
-                window.scrollTo({ top: document.querySelector('.application-form').offsetTop, behavior: 'smooth' });
-              }}
-            >
-              Apply Now
-            </button>
-          </div>
-        </div>
-
-        {/* Job Listing 2 */}
-        <div className="job-card">
-          <div className="job-title">
-            <h3>Tax Consultant</h3>
-            <p><strong>Location:</strong> London, UK</p>
-          </div>
-          <div className="job-description">
-            <p>We are looking for a Tax Consultant with expertise in corporate taxation and international tax law. This role requires analytical skills and the ability to work independently.</p>
-            <button
-              className="apply-btn"
-              onClick={() => {
-                window.scrollTo({ top: document.querySelector('.application-form').offsetTop, behavior: 'smooth' });
-              }}
-            >
-              Apply Now
-            </button>
-          </div>
-        </div>
-
-        {/* Job Listing 3 */}
-        <div className="job-card">
-          <div className="job-title">
-            <h3>Junior Auditor</h3>
-            <p><strong>Location:</strong> Mumbai, India</p>
-          </div>
-          <div className="job-description">
-            <p>As a Junior Auditor, you will assist in the execution of audits for various clients. Ideal candidates should have a keen eye for detail and a willingness to learn and grow in the field of auditing.</p>
-            <button
-              className="apply-btn"
-              onClick={() => {
-                window.scrollTo({ top: document.querySelector('.application-form').offsetTop, behavior: 'smooth' });
-              }}
-            >
-              Apply Now
-            </button>
-          </div>
+        <div className="job-cards">
+          {/* Job Listing */}
+          {["Senior Accountant", "Tax Consultant", "Junior Auditor"].map((title, index) => (
+            <div key={index} className="job-card">
+              <div className="job-title">
+                <h3>{title}</h3>
+                <p><strong>Location:</strong> {["New York", "London", "Mumbai"][index]}</p>
+              </div>
+              <div className="job-description">
+                <p>
+                  {index === 0
+                    ? "We are seeking a Senior Accountant with 5+ years of experience in financial accounting."
+                    : index === 1
+                    ? "Looking for a Tax Consultant with expertise in corporate taxation."
+                    : "Join as a Junior Auditor, assisting with audits for various clients."}
+                </p>
+                <button
+                  className="apply-btn"
+                  onClick={() => {
+                    window.scrollTo({ top: document.querySelector('.application-form').offsetTop, behavior: 'smooth' });
+                  }}
+                >
+                  Apply Now
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -132,7 +103,7 @@ function Career() {
             type="text"
             id="position"
             name="position"
-            placeholder="e.g. Senior Accountant"
+            placeholder="Position Name"
             value={formData.position}
             onChange={handleChange}
             required
