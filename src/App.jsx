@@ -12,6 +12,8 @@ import TransitionWrapper from "./Transitionwrapper/TransitionWrapper.jsx";
 import Career from "./Pages/Career/Career.jsx";
 import Login from "./Pages/Login/Login.jsx"
 import AuthContextProvider from "./Context/AuthContextProvider.jsx";
+import Logout from "./Pages/Logout/Logout.jsx";
+import ProtectedRoutes from "./Context/ProtectedRoutes.jsx";
 const App = () => {
   return (
     <AuthContextProvider>
@@ -25,6 +27,10 @@ const App = () => {
           <Route path="/career" element={<Career />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NoMatchRoute />} />
+
+          <Route element={<ProtectedRoutes />}>
+          <Route path="/logout" element={<Logout />}/>
+          </Route>
         </Routes>
       </TransitionWrapper>
       <Footer />
