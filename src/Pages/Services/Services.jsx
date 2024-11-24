@@ -1,113 +1,281 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './Services.css';
-import Loader from '../../Loaders/Loader'; // Ensure you are importing the Loader component
-import { useAuth } from '../../Context/AuthContextProvider'; // Import the authentication context
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./Services.css";
+import Loader from "../../Loaders/Loader";
+import { useAuth } from "../../Context/AuthContextProvider";
 
 const Services = () => {
-  const { isAuthenticated } = useAuth(); // Get the authentication status from context
-  const [services, setServices] = useState([]);
-  const [newService, setNewService] = useState({
-    title: '',
-    description: '',
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null); // State to handle errors
+    const { isAuthenticated } = useAuth();
+    const [services, setServices] = useState([]);
+    const [newService, setNewService] = useState({
+        title: "",
+        description: "",
+        image: null,
+    });
+    const [editingService, setEditingService] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [expanded, setExpanded] = useState({}); // Track expanded services
 
-  // Fetch services when the component mounts
-  useEffect(() => {
-    const fetchServices = async () => {
-      setLoading(true); // Set loading to true when the request starts
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/home/');
-        setServices(response.data); // Update state with fetched services
-        setLoading(false); // Set loading to false once data is fetched
-      } catch (error) {
-        setLoading(false); // Set loading to false if error occurs
-        setError('Error fetching services. Please try again later.');
-        console.error("Error fetching services:", error);
-      }
+    useEffect(() => {
+        const fetchServices = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(
+                    "http://127.0.0.1:8000/services/"
+                );
+                setServices(response.data);
+                setLoading(false);
+            } catch (err) {
+                setLoading(false);
+                setError("Error fetching services. Please try again later.");
+                console.error("Error fetching services:", err);
+            }
+        };
+        fetchServices();
+    }, []);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewService((prev) => ({ ...prev, [name]: value }));
     };
 
-    fetchServices();
-  }, []);
+    const handleImageChange = (e) => {
+        setNewService((prev) => ({ ...prev, image: e.target.files[0] }));
+    };
 
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewService({
-      ...newService,
-      [name]: value,
-    });
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!isAuthenticated) {
+            alert("You must be logged in to add a service.");
+            return;
+        }
 
-  // Submit form to add a new service
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!isAuthenticated) {
-      alert("You must be logged in to add a service.");
-      return;
-    }
+        const formData = new FormData();
+        formData.append("title", newService.title);
+        formData.append("description", newService.description);
+        if (newService.image) {
+            formData.append("image", newService.image);
+        }
 
-    try {
-      const response = await axios.post('http://127.0.0.1:8000/home/', newService);
-      setServices([...services, response.data]); // Add the new service to the state
-      setNewService({ title: '', description: '' }); // Reset the form
-    } catch (error) {
-      setError('Error adding service. Please try again later.'); // Set error message
-      console.log('Error adding service:', error); // Handle errors
-    }
-  };
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:8000/services/",
+                formData,
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                }
+            );
+            setServices((prev) => [...prev, response.data]);
+            setNewService({ title: "", description: "", image: null });
+        } catch (err) {
+            setError("Error adding service. Please try again later.");
+            console.error("Error adding service:", err);
+        }
+    };
 
-  return (
-    <div className="services">
-      <h1>Our Services</h1>
-      
-      {/* Conditional rendering of the form based on authentication */}
-      {isAuthenticated && (
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="title"
-            value={newService.title}
-            onChange={handleInputChange}
-            placeholder="Service Title"
-            required
-          />
-          <textarea
-            name="description"
-            value={newService.description}
-            onChange={handleInputChange}
-            placeholder="Service Description"
-            required
-          />
-          <button type="submit">Add Service</button>
-        </form>
-      )}
+    const handleEditService = (service) => {
+        setEditingService(service);
+    };
 
-      {/* Error handling */}
-      {error && <p className="error">{error}</p>}
+    const handleUpdateService = async (e) => {
+        e.preventDefault();
+        if (!isAuthenticated) {
+            alert("You must be logged in to update a service.");
+            return;
+        }
 
-      {/* Display loader while data is being fetched */}
-      {loading ? (
-        <Loader /> 
-      ) : (
-        <div className="service-list">
-          {/* Display fetched services */}
-          {services.length > 0 ? (
-            services.map((service) => (
-              <div className="service" key={service.id}>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-              </div>
-            ))
-          ) : (
-            <p>No services available</p>
-          )}
+        const formData = new FormData();
+        formData.append("title", editingService.title);
+        formData.append("description", editingService.description);
+        if (editingService.image) {
+            formData.append("image", editingService.image);
+        }
+
+        try {
+            const response = await axios.put(
+                `http://127.0.0.1:8000/services/${editingService.id}/`,
+                formData,
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                }
+            );
+            setServices((prev) =>
+                prev.map((service) =>
+                    service.id === editingService.id ? response.data : service
+                )
+            );
+            setEditingService(null);
+        } catch (err) {
+            setError("Error updating service. Please try again later.");
+            console.error("Error updating service:", err);
+        }
+    };
+
+    const handleDeleteService = async (id) => {
+        if (!isAuthenticated) {
+            alert("You must be logged in to delete a service.");
+            return;
+        }
+
+        try {
+            await axios.delete(`http://127.0.0.1:8000/services/${id}/`);
+            setServices((prev) => prev.filter((service) => service.id !== id));
+        } catch (err) {
+            setError("Error deleting service. Please try again later.");
+            console.error("Error deleting service:", err);
+        }
+    };
+
+    // Toggle service description visibility
+    const handleToggleDescription = (id) => {
+        setExpanded((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
+    };
+
+    return (
+        <div className="services">
+            <h1>Our Services</h1>
+
+            {isAuthenticated && !editingService && (
+                <form onSubmit={handleSubmit} className="service-form">
+                    <input
+                        type="text"
+                        name="title"
+                        value={newService.title}
+                        onChange={handleInputChange}
+                        placeholder="Service Title"
+                        required
+                    />
+                    <textarea
+                        name="description"
+                        value={newService.description}
+                        onChange={handleInputChange}
+                        placeholder="Service Description"
+                        required
+                    />
+                    <input
+                        type="file"
+                        name="image"
+                        onChange={handleImageChange}
+                    />
+                    <button type="submit">Add Service</button>
+                </form>
+            )}
+
+            {editingService && (
+                <form onSubmit={handleUpdateService} className="service-form">
+                    <input
+                        type="text"
+                        name="title"
+                        value={editingService.title}
+                        onChange={(e) =>
+                            setEditingService((prev) => ({
+                                ...prev,
+                                title: e.target.value,
+                            }))
+                        }
+                        placeholder="Edit Service Title"
+                        required
+                    />
+                    <textarea
+                        name="description"
+                        value={editingService.description}
+                        onChange={(e) =>
+                            setEditingService((prev) => ({
+                                ...prev,
+                                description: e.target.value,
+                            }))
+                        }
+                        placeholder="Edit Service Description"
+                        required
+                    />
+                    <input
+                        type="file"
+                        name="image"
+                        onChange={(e) =>
+                            setEditingService((prev) => ({
+                                ...prev,
+                                image: e.target.files[0],
+                            }))
+                        }
+                    />
+                    <button type="submit">Update Service</button>
+                    <button
+                        type="button"
+                        onClick={() => setEditingService(null)}
+                    >
+                        Cancel
+                    </button>
+                </form>
+            )}
+
+            {error && <p className="error">{error}</p>}
+
+            {loading ? (
+                <Loader />
+            ) : (
+                <div className="service-list">
+                    {services.length > 0 ? (
+                        services.map((service) => (
+                            <div className="service" key={service.id}>
+                                {/* Display Image */}
+                                {service.image && (
+                                    <img
+                                        src={
+                                            service.image.startsWith("http")
+                                                ? service.image
+                                                : `http://127.0.0.1:8000${service.image}`
+                                        }
+                                        alt={service.title}
+                                        className="service-image"
+                                    />
+                                )}
+                                <h3>{service.title}</h3>
+                                <p>
+                                    {expanded[service.id]
+                                        ? service.description
+                                        : service.description.length > 100
+                                        ? service.description.slice(0, 100) + "..."
+                                        : service.description}
+                                </p>
+                                {service.description.length > 100 && (
+                                    <button
+                                        className="see-more"
+                                        onClick={() => handleToggleDescription(service.id)}
+                                    >
+                                        {expanded[service.id] ? "See Less" : "See More"}
+                                    </button>
+                                )}
+                                {isAuthenticated && (
+                                    <div className="service-actions">
+                                        <button
+                                            onClick={() =>
+                                                handleEditService(service)
+                                            }
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                handleDeleteService(service.id)
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        <p>No services available</p>
+                    )}
+                </div>
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default Services;
