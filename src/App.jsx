@@ -14,7 +14,7 @@ import Login from "./Pages/Login/Login.jsx"
 import AuthContextProvider from "./Context/AuthContextProvider.jsx";
 import Logout from "./Pages/Logout/Logout.jsx";
 import ProtectedRoutes from "./Context/ProtectedRoutes.jsx";
-import Resources from "./Resources/Resources.jsx";
+import Resources from "./Pages/Resources/Resources.jsx";
 
 const App = () => {
   return (
