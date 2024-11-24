@@ -14,6 +14,8 @@ import Login from "./Pages/Login/Login.jsx"
 import AuthContextProvider from "./Context/AuthContextProvider.jsx";
 import Logout from "./Pages/Logout/Logout.jsx";
 import ProtectedRoutes from "./Context/ProtectedRoutes.jsx";
+import Resources from "./Resources/Resources.jsx";
+
 const App = () => {
   return (
     <AuthContextProvider>
@@ -25,6 +27,7 @@ const App = () => {
           <Route path="/contact" element={<Contactus />} />
           <Route path="/services" element={<Services />} />
           <Route path="/career" element={<Career />} />
+          <Route path="/resources" element={< Resources/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NoMatchRoute />} />
 

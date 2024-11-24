@@ -67,6 +67,9 @@ const Navbar = () => {
         <NavLink to="/career" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
           Career
         </NavLink>
+        <NavLink to="/resources" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
+          Resources
+        </NavLink>
         <NavLink to="/about" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
           About Us
         </NavLink>

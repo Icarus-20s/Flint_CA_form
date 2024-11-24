@@ -1,0 +1,142 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .resources-container {
+    margin: 0 auto;
+    padding: 80px 15px;
+    max-width: 1200px;
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 30px;
+    color: #333;
+    font-weight: 700;
+  }
+  
+  .resources-section {
+    margin-bottom: 50px;
+  }
+  
+  .resources-section h2 {
+    font-size: 28px;
+    color: #0056b3;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  .resources-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Make it responsive */
+    gap: 30px;
+    margin-top: 20px;
+  }
+  
+  .resource-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .resource-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .resource-item a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .resource-item h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #0056b3;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  
+  .resource-item p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+  }
+  
+  .resource-item a:hover h3 {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+  
+  .resource-item a:active {
+    text-decoration: underline;
+  }
+  
+  .resource-item a:focus {
+    outline: none;
+    border: 2px solid #0056b3;
+  }
+  
+  /* Notice Section Link Styling */
+  .resources-section .resource-item a:hover {
+    color: #0056b3;
+    text-decoration: none;
+  }
+  
+  /* Media Queries for Mobile */
+  @media (max-width: 768px) {
+    .resources-container {
+      padding: 20px;
+    }
+  
+    h1 {
+      font-size: 28px;
+    }
+  
+    .resources-items {
+      grid-template-columns: 1fr; /* Stack items vertically on mobile */
+    }
+  
+    .resource-item {
+      padding: 15px;
+      box-shadow: none;
+      background-color: #f7f7f7;
+    }
+  
+    .resource-item h3 {
+      font-size: 18px;
+    }
+  
+    .resource-item p {
+      font-size: 13px;
+    }
+  }
+  
+  /* News and Learning Resources Cards */
+  .news-card, .learning-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .news-card:hover, .learning-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Link Hover Effects */
+  a:hover {
+    color: #0056b3;
+    text-decoration: none;
+  }
+  
