@@ -1,41 +1,69 @@
-import React from "react";
-import "./Appliedusers.css"; // Import the styles
+// src/components/JobApplicationsList.js
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import './Appliedusers.css';
 
-const AppliedUsers = () => {
-  const applicants = [
-    { name: "John Doe", email: "john.doe@example.com", position: "Senior Accountant", resume: "resume1.pdf", date: "2024-11-22" },
-    { name: "Jane Smith", email: "jane.smith@example.com", position: "Tax Consultant", resume: "resume2.pdf", date: "2024-11-21" },
-    { name: "Mike Lee", email: "mike.lee@example.com", position: "Junior Auditor", resume: "resume3.pdf", date: "2024-11-20" },
-    // Add more applicants as needed
-  ];
+const Appliedusers = () => {
+    const [groupedApplications, setGroupedApplications] = useState({});
 
-  return (
-    <div className="table-container">
-      <h2>Applicants List</h2>
-      <table className="applicant-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Position</th>
-            <th>Resume</th>
-            <th>Date Applied</th>
-          </tr>
-        </thead>
-        <tbody>
-          {applicants.map((applicant, index) => (
-            <tr key={index}>
-              <td>{applicant.name}</td>
-              <td>{applicant.email}</td>
-              <td>{applicant.position}</td>
-              <td><a href={`#${applicant.resume}`} className="resume-link">View</a></td>
-              <td>{applicant.date}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+    useEffect(() => {
+        // Fetch all job applications grouped by job title
+        axios
+            .get("http://localhost:8000/jobapplications/")  // Your Django API endpoint
+            .then((response) => {
+                setGroupedApplications(response.data);  // Store grouped applications
+            })
+            .catch((error) => {
+                console.error("Error fetching job applications:", error);
+            });
+    }, []);
+
+    return (
+        <div className="applications-container">
+            <h1>Job Applications</h1>
+            <button onClick={() => window.location.href = "/apply-job"}>Apply for a Job</button>
+
+            {/* Loop through each job title and display its applications */}
+            <div className="job-list">
+                {Object.keys(groupedApplications).map((jobTitle) => (
+                    <div className="job-category" key={jobTitle}>
+                        <h2>{jobTitle}</h2>
+                        {/* Only display a table if there are applications for this job */}
+                        <table className="applications-table">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Resumes</th>
+                                    <th>Cover Letter</th>
+                                    <th>Applied Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {groupedApplications[jobTitle].map((application) => (
+                                    <tr key={application.id}>
+                                        <td>{application.full_name}</td>
+                                        <td>{application.email}</td>
+                                        <td>
+                                            <a href={application.resumes} target="_blank" rel="noopener noreferrer">
+                                                Download Resume
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href={application.cover_letter} target="_blank" rel="noopener noreferrer">
+                                                Download Cover Letter
+                                            </a>
+                                        </td>
+                                        <td>{application.applied_date}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 };
 
-export default AppliedUsers;
+export default Appliedusers;
