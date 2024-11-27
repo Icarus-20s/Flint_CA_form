@@ -12,7 +12,7 @@ const Resources = () => {
         <h2>Notices</h2>
         <div className="resources-items">
           <div className="resource-item">
-            <a href="/path-to-notice1.pdf" target="_blank" rel="noopener noreferrer">
+            <a href="https://en.ican.org.np/site/show/laws-legislation" target="_blank" rel="noopener noreferrer">
               <h3>Notice 1: Important Guidelines</h3>
             </a>
           </div>
