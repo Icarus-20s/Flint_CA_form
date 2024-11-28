@@ -1,34 +1,44 @@
 import React, { useState } from 'react';
-import api from "../../Api/api";  // Assuming you have an api.js file for making API requests
+import api from "../../Api/api"; // API helper for making requests
 import './Contactus.css';
+import Loader from "../../Loaders/Loader"; // Loader for feedback during submission
 
 const Contactus = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
   });
+  const [loading, setLoading] = useState(false); // State to handle loading
+  const [error, setError] = useState(''); // State to store error messages
 
+  // Handle input changes
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(''); // Clear previous errors
+
     try {
-      // Assuming the API endpoint is 'contact/' and needs the form data
       const response = await api.post('contact/', formData);
 
       if (response.status === 200) {
         alert('Message sent successfully!');
         setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
-        alert('There was an error sending the message!');
+        throw new Error('Failed to send message');
       }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error sending message.');
+    } catch (err) {
+      console.error('Error:', err);
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,10 +47,14 @@ const Contactus = () => {
       <form onSubmit={handleSubmit}>
         <h2>Contact Us</h2>
 
-        <label>
+        {/* Display error message if present */}
+        {error && <p className="error-message">{error}</p>}
+
+        <label htmlFor="name">
           Name:
           <input
             type="text"
+            id="name"
             name="name"
             value={formData.name}
             onChange={handleChange}
@@ -49,10 +63,11 @@ const Contactus = () => {
           />
         </label>
 
-        <label>
+        <label htmlFor="email">
           Email:
           <input
             type="email"
+            id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
@@ -61,10 +76,11 @@ const Contactus = () => {
           />
         </label>
 
-        <label>
+        <label htmlFor="subject">
           Subject:
           <input
             type="text"
+            id="subject"
             name="subject"
             value={formData.subject}
             onChange={handleChange}
@@ -73,9 +89,10 @@ const Contactus = () => {
           />
         </label>
 
-        <label>
+        <label htmlFor="message">
           Message:
           <textarea
+            id="message"
             name="message"
             value={formData.message}
             onChange={handleChange}
@@ -84,7 +101,17 @@ const Contactus = () => {
           ></textarea>
         </label>
 
-        <button type="submit">Send Message</button>
+        {/* Submit button with loading animation */}
+        <div className="button-container">
+          <button type="submit" disabled={loading}>
+            {loading ? 'Sending...' : 'Send Message'}
+          </button>
+          {loading && (
+            <div className="loader-wrapper">
+              <Loader size={16} color="#fff" /> {/* Adjusted loader size */}
+            </div>
+          )}
+        </div>
       </form>
     </div>
   );
