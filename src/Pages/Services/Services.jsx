@@ -15,7 +15,6 @@ const Services = () => {
     const [editingService, setEditingService] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [expanded, setExpanded] = useState({}); // Track expanded services
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -127,14 +126,6 @@ const Services = () => {
         }
     };
 
-    // Toggle service description visibility
-    const handleToggleDescription = (id) => {
-        setExpanded((prev) => ({
-            ...prev,
-            [id]: !prev[id],
-        }));
-    };
-
     return (
         <div className="services">
             <h1>Our Services</h1>
@@ -220,53 +211,47 @@ const Services = () => {
                 <div className="service-list">
                     {services.length > 0 ? (
                         services.map((service) => (
-                            <div className="service" key={service.id}>
-                                {/* Display Image */}
-                                {service.image && (
-                                    <img
-                                        src={
-                                            service.image.startsWith("http")
-                                                ? service.image
-                                                : `http://127.0.0.1:8000${service.image}`
-                                        }
-                                        alt={service.title}
-                                        className="service-image"
-                                    />
-                                )}
-                                <h3>{service.title}</h3>
-                                <p>
-                                    {expanded[service.id]
-                                        ? service.description
-                                        : service.description.length > 100
-                                        ? service.description.slice(0, 100) + "..."
-                                        : service.description}
-                                </p>
-                                {service.description.length > 100 && (
-                                    <button
-                                        className="see-more"
-                                        onClick={() => handleToggleDescription(service.id)}
-                                    >
-                                        {expanded[service.id] ? "See Less" : "See More"}
-                                    </button>
-                                )}
-                                {isAuthenticated && (
-                                    <div className="service-actions">
-                                        <button
-                                            onClick={() =>
-                                                handleEditService(service)
-                                            }
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                handleDeleteService(service.id)
-                                            }
-                                        >
-                                            Delete
-                                        </button>
+                            <div className="flip-card" key={service.id}>
+                                <div className="flip-card-inner">
+                                    {/* Front Side */}
+                                    <div className="flip-card-front">
+                                        {service.image && (
+                                            <img
+                                                src={
+                                                    service.image.startsWith("http")
+                                                        ? service.image
+                                                        : `http://127.0.0.1:8000${service.image}`
+                                                }
+                                                alt={service.title}
+                                                className="service-image"
+                                            />
+                                        )}
+                                        <h3>{service.title}</h3>
                                     </div>
-                                )}
+
+                                    {/* Back Side */}
+                                    <div className="flip-card-back">
+                                        <p>{service.description}</p>
+                                        {isAuthenticated && (
+                                            <div className="service-actions">
+                                                <button
+                                                    onClick={() =>
+                                                        handleEditService(service)
+                                                    }
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() =>
+                                                        handleDeleteService(service.id)
+                                                    }
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         ))
                     ) : (

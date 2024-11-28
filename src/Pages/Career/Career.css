@@ -31,6 +31,11 @@ a {
   line-height: 1.6;
 }
 
+.hero button{
+  background-color: #ffcc00;
+  color: #003366;
+}
+
 /* Job Listings Section */
 .job-listings {
   padding: 40px 20px;

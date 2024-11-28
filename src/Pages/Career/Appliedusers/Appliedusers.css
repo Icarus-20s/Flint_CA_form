@@ -1,6 +1,4 @@
-/* src/components/JobApplicationsList.css */
-
-/* Basic Reset */
+/* General Reset */
 * {
   margin: 0;
   padding: 0;
@@ -8,62 +6,96 @@
 }
 
 body {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f7f7f7;
-  color: #333;
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: #f5f6fa;
+  color: #2c3e50;
   line-height: 1.6;
   margin: 0;
-  padding: 0;
 }
 
+/* Page Title */
+.applications-container{
+  padding: 80px;
+}
 h1 {
   text-align: center;
   margin: 20px 0;
   font-size: 2.5rem;
-  color: #333;
+  color: #34495e;
 }
 
+/* Loading and Error Messages */
+.loading-message,
+.error-message {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 20px auto;
+  color: #7f8c8d;
+}
+
+.error-message {
+  color: #e74c3c;
+}
+
+.no-data-message {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 1.2rem;
+  margin: 30px auto;
+}
+
+/* Button Styles */
 button {
-  background-color: #007bff;
+  background-color: #3498db;
   color: white;
   border: none;
   padding: 12px 24px;
   font-size: 1.1rem;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 25px;
   margin: 20px auto;
   display: block;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #2980b9;
+  transform: translateY(-2px);
 }
 
-/* Job Category Styles */
+button:active {
+  transform: translateY(1px);
+}
+
+/* Job Categories */
 .job-list {
-  margin-top: 30px;
+  margin: 30px auto;
+  max-width: 1200px;
+  padding: 0 15px;
 }
 
 .job-category {
-  background-color: #fff;
+  background-color: #ccc;
   padding: 20px;
   margin-bottom: 30px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .job-category h2 {
   font-size: 1.8rem;
-  color: #333;
+  color: #2c3e50;
   margin-bottom: 15px;
   text-transform: capitalize;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
 }
 
+/* Table Styles */
 .applications-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #fff;
   margin-top: 20px;
 }
 
@@ -71,54 +103,98 @@ button:hover {
 .applications-table td {
   padding: 15px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ecf0f1;
 }
 
 .applications-table th {
-  background-color: #007bff;
+  background-color: #3498db;
   color: white;
   font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
 }
 
 .applications-table td {
-  color: #555;
+  color: #34495e;
+  font-size: 0.95rem;
 }
 
 .applications-table td a {
-  color: #007bff;
+  color: #3498db;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .applications-table td a:hover {
-  color: #0056b3;
+  color: #2980b9;
 }
 
-/* Table rows hover effect */
 .applications-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
 .applications-table tr:hover {
-  background-color: #f1f1f1;
+  background-color: #ecf0f1;
+}
+
+.pdf-preview-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.pdf-preview-content {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.close-preview {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.close-preview:hover {
+  background-color: #c0392b;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .applications-table {
-    font-size: 0.9rem;
-  }
-
+@media (max-width: 992px) {
   .applications-table th,
   .applications-table td {
-    padding: 10px;
+    padding: 12px;
   }
 
   button {
     width: 100%;
-    font-size: 1.2rem;
-    padding: 15px;
+    font-size: 1.1rem;
+    padding: 12px;
   }
 
   h1 {
@@ -126,26 +202,30 @@ button:hover {
   }
 }
 
-@media (max-width: 480px) {
-  .applications-table {
-    font-size: 0.85rem;
+
+
+
+@media (max-width: 576px) {
+  .job-category {
+    padding: 15px;
   }
 
   .applications-table th,
   .applications-table td {
-    padding: 8px;
-  }
-
-  button {
-    font-size: 1.1rem;
-    padding: 12px;
+    padding: 10px;
+    font-size: 0.85rem;
   }
 
   h1 {
     font-size: 1.8rem;
   }
 
+  button {
+    padding: 10px;
+    font-size: 1rem;
+  }
+
   .applications-table td a {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 }
