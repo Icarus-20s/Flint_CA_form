@@ -1,163 +1,200 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import api from "../../Api/api"; // Assuming you have a proper axios instance in this file
 import "./Career.css";
-import { useAuth } from "../../Context/AuthContextProvider";
-import { Navigate, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from '../../Context/AuthContextProvider';
+import AppliedUsers from './Appliedusers/Appliedusers'; // Your AppliedUsers component
+import { useLocation, useNavigate } from 'react-router-dom';
 
-function Career() {
+const Career = () => {
+  const [careers, setCareers] = useState([]);
   const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation(); // Get current route location
-
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    position: "",
-    resume: null,
-    message: "",
+  const [careerDetail, setCareerDetail] = useState(null);
+  const [application, setApplication] = useState({
+    full_name: '',
+    email: '',
+    resumes: null,
+    cover_letter: null,
+    job: null,  // To store the job id
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  // State to toggle between Career page and Applied Users page
+  const [isAppliedUsersView, setIsAppliedUsersView] = useState(false);
+
+  // Fetch careers from backend
+  useEffect(() => {
+    const fetchCareers = async () => {
+      try {
+        const response = await api.get('/career/');
+        setCareers(response.data);
+      } catch (error) {
+        console.error('Error fetching careers:', error);
+      }
+    };
+    fetchCareers();
+  }, []);
+
+  // Handle job application form input changes
+  const handleApplicationChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'resumes' || name === 'cover_letter') {
+      setApplication((prev) => ({
+        ...prev,
+        [name]: files ? files[0] : null,
+      }));
+    } else {
+      setApplication((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
-  const handleuserapplied = () => {
-    navigate('/career/applieduser');
-  };
-
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      resume: e.target.files[0],
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleApplicationSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // Handle form submission (e.g., sending data to a backend)
+
+    // Check if files are valid
+    if (!validateFiles()) return;
+
+    const formData = new FormData();
+    formData.append('full_name', application.full_name);
+    formData.append('email', application.email);
+
+    // Check if resumes and cover letter exist before appending
+    if (application.resumes) {
+      formData.append('resumes', application.resumes);
+    }
+
+    if (application.cover_letter) {
+      formData.append('cover_letter', application.cover_letter);
+    }
+
+    formData.append('job', careerDetail.id); // Attach the job ID
+
+    try {
+      const response = await api.post('/jobapplication/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Ensure the correct content type
+        },
+      });
+
+      if (response.status === 201) {
+        alert('Application submitted successfully!');
+        setCareerDetail(null); // Go back to career list after application
+      } else {
+        alert('There was an error submitting your application. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      alert('There was an error submitting your application. Please try again.');
+    }
   };
 
-  // Check if the current path is the one for the child component
-  const isChildRoute = location.pathname.includes('/career/applieduser');
+  // File validation (e.g., max 5MB)
+  const validateFiles = () => {
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (application.resumes && application.resumes.size > maxSize) {
+      alert("Resume file is too large. Max size is 5MB.");
+      return false;
+    }
+    if (application.cover_letter && application.cover_letter.size > maxSize) {
+      alert("Cover letter file is too large. Max size is 5MB.");
+      return false;
+    }
+    return true;
+  };
+
+  // Handle the cancel button click (go back to job list)
+  const handleCancel = () => {
+    setCareerDetail(null); // Reset career detail
+    setApplication({ // Reset the application form
+      full_name: '',
+      email: '',
+      resumes: null,
+      cover_letter: null,
+      job: null,
+    });
+  };
 
   return (
-    <div className="career-page">
-      {/* Hero Section */}
-      {!isChildRoute && (
-        <section className="hero">
-          <h1>Join Our Team</h1>
-          <p>Explore exciting career opportunities at CA Firm!</p>
-          {isAuthenticated && (
-            <button onClick={handleuserapplied}>See applied users</button>
-          )}
-        </section>
+    <div className="App">
+      <header>
+        <h1>Career Opportunities</h1>
+      </header>
+
+      {/* Conditional Rendering for Applied Users or Career Page */}
+      {isAuthenticated && !isAppliedUsersView && (
+        <button onClick={() => setIsAppliedUsersView(true)}>See Applied Users</button>
       )}
 
-      {/* Job Listings */}
-      {!isChildRoute && (
-        <section className="job-listings">
-          <h2>Current Openings</h2>
-          <div className="job-cards">
-            {/* Job Listing */}
-            {["Senior Accountant", "Tax Consultant", "Junior Auditor"].map((title, index) => (
-              <div key={index} className="job-card">
-                <div className="job-title">
-                  <h3>{title}</h3>
-                  <p><strong>Location:</strong> {["New York", "London", "Mumbai"][index]}</p>
-                </div>
-                <div className="job-description">
-                  <p>
-                    {index === 0
-                      ? "We are seeking a Senior Accountant with 5+ years of experience in financial accounting."
-                      : index === 1
-                      ? "Looking for a Tax Consultant with expertise in corporate taxation."
-                      : "Join as a Junior Auditor, assisting with audits for various clients."}
-                  </p>
-                  <button
-                    className="apply-btn"
-                    onClick={() => {
-                      window.scrollTo({ top: document.querySelector('.application-form').offsetTop, behavior: 'smooth' });
-                    }}
-                  >
-                    Apply Now
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+      {/* Applied Users Section */}
+      {isAuthenticated && isAppliedUsersView && (
+        <div>
+          <AppliedUsers />
+          <button onClick={() => setIsAppliedUsersView(false)}>Back to Career Opportunities</button>
+        </div>
       )}
 
-      {/* Application Form */}
-      {!isChildRoute && (
-        <section className="application-form">
-          <h2>Submit Your Application</h2>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="name">Full Name</label>
+      {/* Job Details and Application Form */}
+      {isAuthenticated && !isAppliedUsersView && careerDetail && (
+        <div className="job-details">
+          <h2>Job Details</h2>
+          <p><strong>Title:</strong> {careerDetail.title}</p>
+          <p><strong>Description:</strong> {careerDetail.description}</p>
+          <p><strong>Location:</strong> {careerDetail.location}</p>
+          <p><strong>Employment Type:</strong> {careerDetail.employment_type}</p>
+          <p><strong>Deadline:</strong> {careerDetail.deadline}</p>
+
+          <h3>Apply Now</h3>
+          <form onSubmit={handleApplicationSubmit}>
             <input
               type="text"
-              id="name"
-              name="name"
-              placeholder="Your Full Name"
-              value={formData.name}
-              onChange={handleChange}
+              name="full_name"
+              value={application.full_name}
+              onChange={handleApplicationChange}
+              placeholder="Full Name"
               required
             />
-
-            <label htmlFor="email">Email Address</label>
             <input
               type="email"
-              id="email"
               name="email"
-              placeholder="Your Email Address"
-              value={formData.email}
-              onChange={handleChange}
+              value={application.email}
+              onChange={handleApplicationChange}
+              placeholder="Email"
               required
             />
-
-            <label htmlFor="position">Position Applying For</label>
-            <input
-              type="text"
-              id="position"
-              name="position"
-              placeholder="Position Name"
-              value={formData.position}
-              onChange={handleChange}
-              required
-            />
-
-            <label htmlFor="resume">Upload Resume</label>
             <input
               type="file"
-              id="resume"
-              name="resume"
-              onChange={handleFileChange}
+              name="resumes"
+              onChange={handleApplicationChange}
               required
             />
-
-            <label htmlFor="message">Cover Letter</label>
-            <textarea
-              id="message"
-              name="message"
-              placeholder="Write a brief cover letter"
-              value={formData.message}
-              onChange={handleChange}
-              required
-            ></textarea>
-            <button type="submit" className="submit-btn">
-              Submit Application
-            </button>
+            <input
+              type="file"
+              name="cover_letter"
+              onChange={handleApplicationChange}
+            />
+            <button type="submit">Submit Application</button>
           </form>
-        </section>
+          <button onClick={handleCancel}>Cancel</button> {/* Cancel Button */}
+        </div>
       )}
 
-      {/* Render the Outlet for Child Components */}
-      <Outlet />
+      {/* List of Careers (for navigation) */}
+      {isAuthenticated && !isAppliedUsersView && (
+        <div className="job-container">
+          {careers.map((career) => (
+            <div key={career.id} className="job-card">
+              <h3>{career.title}</h3>
+              <p>{career.description}</p>
+              <p className="job-location"><strong>Location:</strong> {career.location}</p>
+              <p className="employment-type"><strong>Employment Type:</strong> {career.employment_type}</p>
+              <button className="btn-apply" onClick={() => setCareerDetail(career)}>Apply Now</button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default Career;
