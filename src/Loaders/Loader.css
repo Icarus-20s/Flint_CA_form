@@ -1,29 +1,32 @@
+/* Base Loader Container */
 .loader-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 8px; 
-    padding: 20px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Centered Loader Styling */
+.loader-container.centered {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10; /* Ensure it overlays content */
+}
+
+/* Loader Spinner */
+.loader {
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.1); /* Light border for contrast */
+  border-top-color: #4CAF50; /* Dynamic color */
+  animation: spin 1s linear infinite;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .loader {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 4px solid transparent;
-    border-top-color: #6d8e82; 
-    animation: spin 1s linear infinite;
+  100% {
+    transform: rotate(360deg);
   }
-  
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  
+}
