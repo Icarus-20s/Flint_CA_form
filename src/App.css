@@ -2,7 +2,11 @@
     font-family: Arial, sans-serif;
   }
   body {
+    background: linear-gradient(to right, #a8b0b8, #006699); /* Gradient background */
+    color: #333;
+    scroll-behavior: smooth;
     font-family: 'Roboto', sans-serif;
+
   }
   
   h2, h3, h4 {

@@ -4,8 +4,6 @@ import Loader from "../../Loaders/Loader";
 import { useAuth } from "../../Context/AuthContextProvider";
 import { useNavigate } from "react-router-dom";
 import "./Career.css";
-import AppliedUsers from "./Appliedusers/Appliedusers";
-
 const Career = () => {
     const { isAuthenticated } = useAuth();
     const navigate = useNavigate();

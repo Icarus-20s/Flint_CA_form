@@ -11,10 +11,12 @@ const Footer = () => {
     <footer className="footer">
       <nav>
         <ul className="footer-nav">
+          
           <li><Link to="/about">About</Link></li>
           <li><Link to="/contact">Contact us</Link></li>
         </ul>
         <div className="social-icons">
+          
           <h2>Follow Us</h2>
           <ul>
             <li>
@@ -40,8 +42,8 @@ const Footer = () => {
           </ul>
         </div>
       </nav>
-      <p>&copy; CA Associates Nepal</p>
-    </footer>
+       <p> © 2024 Chartered Accountant Firm. All Rights Reserved.</p>
+       </footer>
   );
 };
 

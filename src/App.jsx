@@ -17,6 +17,7 @@ import ProtectedRoutes from "./Context/ProtectedRoutes.jsx";
 import Resources from "./Pages/NoRoute/Resources/Resources.jsx";
 import Appliedusers from "./Pages/Career/Appliedusers/Appliedusers.jsx";
 
+
 const App = () => {
   return (
     <AuthContextProvider>

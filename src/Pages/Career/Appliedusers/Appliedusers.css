@@ -14,7 +14,7 @@ body {
 }
 
 /* Page Title */
-.applications-container{
+.applications-container {
   padding: 80px;
 }
 h1 {
@@ -197,12 +197,27 @@ button:active {
   background-color: #c0392b;
 }
 
-
 /* Responsive Design */
 @media (max-width: 992px) {
+  .applications-container {
+    padding: 40px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .job-category {
+    padding: 15px;
+  }
+
+  .job-category h2 {
+    font-size: 1.6rem;
+  }
+
   .applications-table th,
   .applications-table td {
-    padding: 12px;
+    padding: 10px;
   }
 
   button {
@@ -211,27 +226,62 @@ button:active {
     padding: 12px;
   }
 
-  h1 {
-    font-size: 2rem;
+  .delete-btn {
+    padding: 8px 16px;
+  }
+
+  .applications-table td a {
+    font-size: 0.85rem;
   }
 }
 
-
-
-
-@media (max-width: 576px) {
-  .job-category {
-    padding: 15px;
-  }
-
-  .applications-table th,
-  .applications-table td {
-    padding: 10px;
-    font-size: 0.85rem;
+@media (max-width: 768px) {
+  .applications-container {
+    padding: 20px;
   }
 
   h1 {
     font-size: 1.8rem;
+  }
+
+  .job-category h2 {
+    font-size: 1.4rem;
+  }
+
+  .applications-table th,
+  .applications-table td {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .delete-btn {
+    padding: 6px 12px;
+  }
+
+  .applications-table td a {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .job-category {
+    padding: 10px;
+  }
+
+  .applications-table th,
+  .applications-table td {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
   }
 
   button {
@@ -240,6 +290,41 @@ button:active {
   }
 
   .applications-table td a {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
+  }
+
+  .delete-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .job-category {
+    padding: 8px;
+  }
+
+  .applications-table th,
+  .applications-table td {
+    padding: 6px;
+    font-size: 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .applications-table td a {
+    font-size: 0.7rem;
+  }
+
+  button {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .delete-btn {
+    padding: 4px 8px;
+    font-size: 0.7rem;
   }
 }
