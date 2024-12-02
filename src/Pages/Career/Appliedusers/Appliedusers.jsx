@@ -8,11 +8,10 @@ const AppliedUsers = () => {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        // Fetch all job applications grouped by job title
-        const fetchApplications = async () => {
+                const fetchApplications = async () => {
             try {
                 const response = await axios.get("http://localhost:8000/jobapplications/");
-                setGroupedApplications(response.data); // Store grouped applications
+                setGroupedApplications(response.data); 
             } catch (err) {
                 setError("Failed to fetch job applications. Please try again later.");
             } finally {
@@ -22,6 +21,25 @@ const AppliedUsers = () => {
 
         fetchApplications();
     }, []);
+
+    const handleDeleteApplication = async (jobTitle, applicationId) => {
+        try {
+            // Send DELETE request to backend
+            await axios.delete(`http://localhost:8000/jobapplication/delete/${applicationId}/`);
+
+            // Update the state to remove the deleted application
+            setGroupedApplications((prev) => {
+                const updatedApplications = { ...prev };
+                updatedApplications[jobTitle] = updatedApplications[jobTitle].filter(
+                    (application) => application.id !== applicationId
+                );
+                return updatedApplications;
+            });
+        } catch (err) {
+            setError("Failed to delete the application. Please try again later.");
+            console.error("Error deleting application:", err);
+        }
+    };
 
     if (loading) {
         return (
@@ -60,6 +78,7 @@ const AppliedUsers = () => {
                                         <th>Resume</th>
                                         <th>Cover Letter</th>
                                         <th>Applied Date</th>
+                                        <th>Actions</th> {/* Added column for actions */}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -86,6 +105,14 @@ const AppliedUsers = () => {
                                                 </a>
                                             </td>
                                             <td>{new Date(application.applied_date).toLocaleDateString()}</td>
+                                            <td>
+                                                <button
+                                                    className="delete-btn"
+                                                    onClick={() => handleDeleteApplication(jobTitle, application.id)}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

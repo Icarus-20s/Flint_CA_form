@@ -1,200 +1,404 @@
-import React, { useState, useEffect } from 'react';
-import api from "../../Api/api"; // Assuming you have a proper axios instance in this file
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Loader from "../../Loaders/Loader";
+import { useAuth } from "../../Context/AuthContextProvider";
+import { useNavigate } from "react-router-dom";
 import "./Career.css";
-import { useAuth } from '../../Context/AuthContextProvider';
-import AppliedUsers from './Appliedusers/Appliedusers'; // Your AppliedUsers component
-import { useLocation, useNavigate } from 'react-router-dom';
+import AppliedUsers from "./Appliedusers/Appliedusers";
 
 const Career = () => {
-  const [careers, setCareers] = useState([]);
-  const { isAuthenticated } = useAuth();
-  const [careerDetail, setCareerDetail] = useState(null);
-  const [application, setApplication] = useState({
-    full_name: '',
-    email: '',
-    resumes: null,
-    cover_letter: null,
-    job: null,  // To store the job id
-  });
-
-  // State to toggle between Career page and Applied Users page
-  const [isAppliedUsersView, setIsAppliedUsersView] = useState(false);
-
-  // Fetch careers from backend
-  useEffect(() => {
-    const fetchCareers = async () => {
-      try {
-        const response = await api.get('/career/');
-        setCareers(response.data);
-      } catch (error) {
-        console.error('Error fetching careers:', error);
-      }
-    };
-    fetchCareers();
-  }, []);
-
-  // Handle job application form input changes
-  const handleApplicationChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === 'resumes' || name === 'cover_letter') {
-      setApplication((prev) => ({
-        ...prev,
-        [name]: files ? files[0] : null,
-      }));
-    } else {
-      setApplication((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
-
-  const handleApplicationSubmit = async (e) => {
-    e.preventDefault();
-
-    // Check if files are valid
-    if (!validateFiles()) return;
-
-    const formData = new FormData();
-    formData.append('full_name', application.full_name);
-    formData.append('email', application.email);
-
-    // Check if resumes and cover letter exist before appending
-    if (application.resumes) {
-      formData.append('resumes', application.resumes);
-    }
-
-    if (application.cover_letter) {
-      formData.append('cover_letter', application.cover_letter);
-    }
-
-    formData.append('job', careerDetail.id); // Attach the job ID
-
-    try {
-      const response = await api.post('/jobapplication/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Ensure the correct content type
-        },
-      });
-
-      if (response.status === 201) {
-        alert('Application submitted successfully!');
-        setCareerDetail(null); // Go back to career list after application
-      } else {
-        alert('There was an error submitting your application. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error submitting application:', error);
-      alert('There was an error submitting your application. Please try again.');
-    }
-  };
-
-  // File validation (e.g., max 5MB)
-  const validateFiles = () => {
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (application.resumes && application.resumes.size > maxSize) {
-      alert("Resume file is too large. Max size is 5MB.");
-      return false;
-    }
-    if (application.cover_letter && application.cover_letter.size > maxSize) {
-      alert("Cover letter file is too large. Max size is 5MB.");
-      return false;
-    }
-    return true;
-  };
-
-  // Handle the cancel button click (go back to job list)
-  const handleCancel = () => {
-    setCareerDetail(null); // Reset career detail
-    setApplication({ // Reset the application form
-      full_name: '',
-      email: '',
-      resumes: null,
-      cover_letter: null,
-      job: null,
+    const { isAuthenticated } = useAuth();
+    const navigate = useNavigate();
+    const [careers, setCareers] = useState([]);
+    const [newCareer, setNewCareer] = useState({
+        title: "",
+        description: "",
+        location: "",
+        employment_type: "Full-Time",
+        deadline: "",
     });
-  };
+    const [editingCareer, setEditingCareer] = useState(null);
+    const [applicantDetails, setApplicantDetails] = useState({
+        full_name: "",
+        email: "",
+        resumes: null,
+        cover_letter: null,
+    });
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [applyingForCareerId, setApplyingForCareerId] = useState(null);
 
-  return (
-    <div className="App">
-      <header>
-        <h1>Career Opportunities</h1>
-      </header>
+    // Fetch careers on component mount
+    useEffect(() => {
+        const fetchCareers = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get("http://127.0.0.1:8000/career/");
+                setCareers(response.data);
+                setLoading(false);
+            } catch (err) {
+                setLoading(false);
+                setErrorMessage("Error fetching careers. Please try again later.");
+                console.error("Error fetching careers:", err);
+            }
+        };
+        fetchCareers();
+    }, []);
 
-      {/* Conditional Rendering for Applied Users or Career Page */}
-      {isAuthenticated && !isAppliedUsersView && (
-        <button onClick={() => setIsAppliedUsersView(true)}>See Applied Users</button>
-      )}
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewCareer((prev) => ({ ...prev, [name]: value }));
+    };
 
-      {/* Applied Users Section */}
-      {isAuthenticated && isAppliedUsersView && (
-        <div>
-          <AppliedUsers />
-          <button onClick={() => setIsAppliedUsersView(false)}>Back to Career Opportunities</button>
-        </div>
-      )}
+    const handleApplicantChange = (e) => {
+        const { name, value } = e.target;
+        setApplicantDetails((prev) => ({ ...prev, [name]: value }));
+    };
 
-      {/* Job Details and Application Form */}
-      {isAuthenticated && !isAppliedUsersView && careerDetail && (
-        <div className="job-details">
-          <h2>Job Details</h2>
-          <p><strong>Title:</strong> {careerDetail.title}</p>
-          <p><strong>Description:</strong> {careerDetail.description}</p>
-          <p><strong>Location:</strong> {careerDetail.location}</p>
-          <p><strong>Employment Type:</strong> {careerDetail.employment_type}</p>
-          <p><strong>Deadline:</strong> {careerDetail.deadline}</p>
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setApplicantDetails((prev) => ({
+            ...prev,
+            [e.target.name]: file,
+        }));
+    };
 
-          <h3>Apply Now</h3>
-          <form onSubmit={handleApplicationSubmit}>
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!isAuthenticated) {
+            alert("You must be logged in to add a career.");
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:8000/career/create/",
+                newCareer
+            );
+            setCareers((prev) => [...prev, response.data]);
+            setNewCareer({
+                title: "",
+                description: "",
+                location: "",
+                employment_type: "Full-Time",
+                deadline: "",
+            });
+            setSuccessMessage("Career added successfully!");
+        } catch (err) {
+            setErrorMessage("Error adding career. Please try again later.");
+            console.error("Error adding career:", err);
+        }
+    };
+
+    const handleEditCareer = (career) => {
+        setEditingCareer({ ...career });
+    };
+
+    const handleUpdateCareer = async (e) => {
+        e.preventDefault();
+        if (!isAuthenticated) {
+            alert("You must be logged in to update a career.");
+            return;
+        }
+
+        try {
+            const response = await axios.put(
+                `http://127.0.0.1:8000/career/${editingCareer.id}/update/`,
+                editingCareer
+            );
+            setCareers((prev) =>
+                prev.map((career) =>
+                    career.id === editingCareer.id ? response.data : career
+                )
+            );
+            setEditingCareer(null);
+            setSuccessMessage("Career updated successfully!");
+        } catch (err) {
+            setErrorMessage("Error updating career. Please try again later.");
+            console.error("Error updating career:", err);
+        }
+    };
+
+    const handleDeleteCareer = async (id) => {
+        if (!isAuthenticated) {
+            alert("You must be logged in to delete a career.");
+            return;
+        }
+
+        try {
+            await axios.delete(`http://127.0.0.1:8000/career/${id}/delete/`);
+            setCareers((prev) => prev.filter((career) => career.id !== id));
+            setSuccessMessage("Career deleted successfully!");
+        } catch (err) {
+            setErrorMessage("Error deleting career. Please try again later.");
+            console.error("Error deleting career:", err);
+        }
+    };
+
+    const handleApplyNow = (careerId) => {
+        setApplyingForCareerId(careerId);
+    };
+
+    const handleApplySubmit = async (e) => {
+        e.preventDefault();
+        if (!applicantDetails.full_name || !applicantDetails.email || !applicantDetails.resumes) {
+            alert("Please fill in all fields and upload a resume.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("job", applyingForCareerId);
+        formData.append("full_name", applicantDetails.full_name);
+        formData.append("email", applicantDetails.email);
+        formData.append("resumes", applicantDetails.resumes);
+        if (applicantDetails.cover_letter) {
+            formData.append("cover_letter", applicantDetails.cover_letter);
+        }
+
+        try {
+            await axios.post("http://127.0.0.1:8000/jobapplication/", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            setSuccessMessage("Application submitted successfully!");
+            setApplicantDetails({
+                full_name: "",
+                email: "",
+                resumes: null,
+                cover_letter: null,
+            });
+            setApplyingForCareerId(null);
+        } catch (error) {
+            console.error("Error applying for career:", error);
+            setErrorMessage("Error submitting your application. Please try again later.");
+        }
+    };
+
+    return (
+        <div className="career-page">
+            <h1>Careers</h1>
+            {
+                isAuthenticated&&(
+                    <button onClick={()=>{
+                        navigate('/appliedusers')
+                    }}>See Applied users</button>
+                )
+            }
+
+            {errorMessage && <p className="career-error">{errorMessage}</p>}
+            {successMessage && <p className="career-success">{successMessage}</p>}
+
+            {isAuthenticated && !editingCareer && (
+                <form onSubmit={handleSubmit} className="career-create-form">
+                    <input
+                        type="text"
+                        name="title"
+                        value={newCareer.title}
+                        onChange={handleInputChange}
+                        placeholder="Career Title"
+                        required
+                    />
+                    <textarea
+                        name="description"
+                        value={newCareer.description}
+                        onChange={handleInputChange}
+                        placeholder="Career Description"
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="location"
+                        value={newCareer.location}
+                        onChange={handleInputChange}
+                        placeholder="Location"
+                        required
+                    />
+                    <select
+                        name="employment_type"
+                        value={newCareer.employment_type}
+                        onChange={handleInputChange}
+                    >
+                        <option value="Full-Time">Full-Time</option>
+                        <option value="Part-Time">Part-Time</option>
+                        <option value="Contract">Contract</option>
+                    </select>
+                    <input
+                        type="date"
+                        name="deadline"
+                        value={newCareer.deadline}
+                        onChange={handleInputChange}
+                        placeholder="Deadline"
+                        required
+                    />
+                    <button type="submit">Add Career</button>
+                </form>
+            )}
+
+            {editingCareer && (
+                <form onSubmit={handleUpdateCareer} className="career-update-form">
+                    <input
+                        type="text"
+                        name="title"
+                        value={editingCareer.title}
+                        onChange={(e) =>
+                            setEditingCareer((prev) => ({
+                                ...prev,
+                                title: e.target.value,
+                            }))
+                        }
+                        placeholder="Edit Career Title"
+                        required
+                    />
+                    <textarea
+                        name="description"
+                        value={editingCareer.description}
+                        onChange={(e) =>
+                            setEditingCareer((prev) => ({
+                                ...prev,
+                                description: e.target.value,
+                            }))
+                        }
+                        placeholder="Edit Career Description"
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="location"
+                        value={editingCareer.location}
+                        onChange={(e) =>
+                            setEditingCareer((prev) => ({
+                                ...prev,
+                                location: e.target.value,
+                            }))
+                        }
+                        placeholder="Edit Location"
+                        required
+                    />
+                    <select
+                        name="employment_type"
+                        value={editingCareer.employment_type}
+                        onChange={(e) =>
+                            setEditingCareer((prev) => ({
+                                ...prev,
+                                employment_type: e.target.value,
+                            }))
+                        }
+                    >
+                        <option value="Full-Time">Full-Time</option>
+                        <option value="Part-Time">Part-Time</option>
+                        <option value="Contract">Contract</option>
+                    </select>
+                    <input
+                        type="date"
+                        name="deadline"
+                        value={editingCareer.deadline}
+                        onChange={(e) =>
+                            setEditingCareer((prev) => ({
+                                ...prev,
+                                deadline: e.target.value,
+                            }))
+                        }
+                        placeholder="Edit Deadline"
+                        required
+                    />
+                    <button type="submit">Update Career</button>
+                    <button type="button" onClick={() => setEditingCareer(null)}>
+                        Cancel
+                    </button>
+                </form>
+            )}
+
+            {loading ? (
+                <Loader />
+            ) : (
+                <div className="career-list">
+                    {careers.length > 0 ? (
+                        careers.map((career) => (
+                            <div className="career-card" key={career.id}>
+                                <div className="career-card-inner">
+                                    <div className="career-card-front">
+                                        <h3>{career.title}</h3>
+                                    </div>
+                                    <div className="career-card-back">
+                                        <p>{career.description}</p>
+                                        <p>Location: {career.location}</p>
+                                        <p>Employment Type: {career.employment_type}</p>
+                                        <p>Deadline: {career.deadline}</p>
+                                        {isAuthenticated && (
+                                            <div className="career-card-actions">
+                                                <button onClick={() => handleEditCareer(career)}>
+                                                    Edit
+                                                </button>
+                                                <button onClick={() => handleDeleteCareer(career.id)}>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        )}
+                                        <button
+                                            className="career-apply-now-btn"
+                                            onClick={() => handleApplyNow(career.id)}
+                                        >
+                                            Apply Now
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No careers available</p>
+                    )}
+                </div>
+            )}
+{applyingForCareerId && (
+    <div className="career-application-modal">
+        <form onSubmit={handleApplySubmit} className="career-application-form">
+            {/* Get the career title based on applyingForCareerId */}
+            {careers.map((career) =>
+                career.id === applyingForCareerId ? (
+                    <h2 key={career.id}>Apply for {career.title}</h2>
+                ) : null
+            )}
             <input
-              type="text"
-              name="full_name"
-              value={application.full_name}
-              onChange={handleApplicationChange}
-              placeholder="Full Name"
-              required
+                type="text"
+                name="full_name"
+                placeholder="Your Full Name"
+                value={applicantDetails.full_name}
+                onChange={handleApplicantChange}
+                required
             />
             <input
-              type="email"
-              name="email"
-              value={application.email}
-              onChange={handleApplicationChange}
-              placeholder="Email"
-              required
+                type="email"
+                name="email"
+                placeholder="Your Email"
+                value={applicantDetails.email}
+                onChange={handleApplicantChange}
+                required
             />
             <input
-              type="file"
-              name="resumes"
-              onChange={handleApplicationChange}
-              required
+                type="file"
+                name="resumes"
+                onChange={handleFileChange}
+                required
             />
             <input
-              type="file"
-              name="cover_letter"
-              onChange={handleApplicationChange}
+                type="file"
+                name="cover_letter"
+                onChange={handleFileChange}
             />
             <button type="submit">Submit Application</button>
-          </form>
-          <button onClick={handleCancel}>Cancel</button> {/* Cancel Button */}
-        </div>
-      )}
-
-      {/* List of Careers (for navigation) */}
-      {isAuthenticated && !isAppliedUsersView && (
-        <div className="job-container">
-          {careers.map((career) => (
-            <div key={career.id} className="job-card">
-              <h3>{career.title}</h3>
-              <p>{career.description}</p>
-              <p className="job-location"><strong>Location:</strong> {career.location}</p>
-              <p className="employment-type"><strong>Employment Type:</strong> {career.employment_type}</p>
-              <button className="btn-apply" onClick={() => setCareerDetail(career)}>Apply Now</button>
-            </div>
-          ))}
-        </div>
-      )}
+            <button
+                type="button"
+                onClick={() => setApplyingForCareerId(null)}
+            >
+                Cancel
+            </button>
+        </form>
     </div>
-  );
+)}
+        </div>
+    );
 };
 
 export default Career;
