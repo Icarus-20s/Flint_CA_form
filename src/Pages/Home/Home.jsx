@@ -1,10 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-scroll';
 import './Home.css';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentService, setCurrentService] = useState(null);
+
+  const HeroSlider = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const images = [
+      'public/Images/img15.jpg',
+      'public/Images/img4.jpg',
+      'public/Images/story.jpg',
+    ];
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }, [images.length]);
+
+    return (
+      <div className="hero-slider">
+        <div
+          className="slider-images"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          {images.map((image, index) => (
+            <div className="slide" key={index}>
+              <img src={image} alt={`Slide ${index + 1}`} className="slide-image" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   const services = [
     {
@@ -87,20 +124,20 @@ const Home = () => {
   ];
 
   return (
-    <div className="home">
+    <main className="home">
       {/* Hero Section */}
       <section className="hero" id="home">
+        <HeroSlider />
         <div className="hero-content">
           <h1>
             <span className="highlight">Welcome</span> to Our <span className="highlight">Chartered Accountant</span> Firm
           </h1>
           <p>Your trusted partner for expert financial and accounting solutions.</p>
-        </div>
-        {/* Scroll to Services */}
-        <div className="scroll-to-services">
-          <Link to="services" smooth={true} duration={500} className="cta-button">
-            Explore Our Services <span className="arrow">→</span>
-          </Link>
+          <div className="scroll-to-services">
+            <Link to="services" smooth={true} duration={500} className="cta-button">
+              Explore Our Services <span className="arrow">→</span>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -109,37 +146,48 @@ const Home = () => {
         <h2 className="section-heading">Our Services</h2>
         <div className="services-list">
           {services.map((service) => (
-            <div className="service-card" key={service.id} onClick={() => openModal(service)}>
-              <img src={service.image} alt={service.title} className="service-image" />
-              <div className="service-info">
-                <h3 className="service-title">{service.title}</h3>
-              </div>
-            </div>
+            <Card key={service.id} sx={{ maxWidth: 345, margin: '20px', boxShadow: 3 }}>
+              <CardMedia
+                component="img"
+                alt={service.title}
+                height="140"
+                image={service.image}
+                title={service.title}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {service.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {service.description}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button size="small" onClick={() => openModal(service)}>Learn More</Button>
+              </CardActions>
+            </Card>
           ))}
         </div>
       </section>
 
       {/* Modal for Service Details */}
-{showModal && (
-  <div className="modal-overlay" onClick={closeModal}>
-    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      <div className="modal-header">
-        <h5 className="modal-title">{currentService?.title}</h5>
-        <button type="button" className="close" onClick={closeModal}>×</button>
-      </div>
-      <div className="modal-body">
-        {/* Display Service Image */}
-        <img src={currentService?.image} alt={currentService?.title} className="modal-image" />
-        {/* Display Service Description */}
-        <p>{currentService?.description}</p>
-      </div>
-      <div className="modal-footer">
-        <button type="button" className="btn btn-primary" onClick={closeModal}>Close</button>
-      </div>
-    </div>
-  </div>
-)}
-
+      {showModal && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h5 className="modal-title">{currentService?.title}</h5>
+              <button type="button" className="close" onClick={closeModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <img src={currentService?.image} alt={currentService?.title} className="modal-image" />
+              <p>{currentService?.description}</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-primary" onClick={closeModal}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Testimonials Section */}
       <section className="testimonials" id="testimonials">
@@ -159,7 +207,7 @@ const Home = () => {
           ))}
         </div>
       </section>
-    </div>
+    </main>
   );
 };
 

@@ -1,16 +1,6 @@
-/* General body styles */
-body {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  position: relative;
-  min-height: 100vh;
-}
-
 /* Footer Styles */
 .footer {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: #54473F;
   color: #fff;
   text-align: center;
   padding: 40px 20px;

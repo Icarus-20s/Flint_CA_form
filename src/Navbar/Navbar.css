@@ -3,21 +3,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #fff;
-  padding: 12px 20px;
+  padding: 0.5rem 1.5rem;
   font-family: 'Poppins', sans-serif;
-  box-shadow: none; /* Remove any shadow that may separate it */
-  backdrop-filter: blur(10px); /* Apply blur effect */
+  backdrop-filter: blur(12px);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  width: 100%; /* Ensure navbar spans entire width */
-  z-index: 10;
-  transition: transform 0.3s ease-in-out;
-  background-color: transparent; /* Make navbar fully transparent */
-  border: none; /* No border to separate from background */
-  margin: 0; /* Remove margin */
+  width: 100%;
+  z-index: 1000;
+  transition: transform 0.4s ease, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Navbar Visibility States */
@@ -29,154 +26,128 @@
   transform: translateY(0);
 }
 
-/* General Navbar Links Styling */
-.nav-bar a {
-  color: #fff;
-  text-decoration: none; /* Remove default underline */
-  font-size: 16px;
-  font-weight: 600;
-  margin-right: 20px;
-  padding: 8px 12px;
-  position: relative; /* Allow positioning of underline */
-  transition: color 0.3s ease;
-}
-
-/* Hover Effect: Underline when hovering */
-.nav-bar a:hover {
-  color: #0056b3; /* A professional color like dark blue on hover */
-  text-decoration: none; /* Ensure no default underline */
-}
-
-.nav-bar a:hover::after {
-  content: ''; /* Create an underline using ::after */
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px; /* Adjust thickness of underline */
-  background-color: #0056b3; /* Professional color for underline */
-  transition: width 0.3s ease; /* Smooth transition */
-}
-
-/* Active Link (when user is on this page) */
-.nav-bar a.active {
-  color: #0056b3; /* Same color for active link */
-}
-
-.nav-bar a.active::after {
-  content: ''; /* Underline for active link */
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px; /* Same thickness for consistency */
-  background-color: #0056b3; /* Professional color for underline */
-}
-
-/* Visited Links */
-.nav-bar a:visited {
-  color: #fff; /* Keep the original color for visited links */
-}
-
-.nav-bar a:visited::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px; /* Same thickness for consistency */
-  background-color: #0056b3; /* Professional underline color */
-}
-
 /* Logo Styling */
 .logo-link {
   display: flex;
   align-items: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .logo-img {
-  width: 35px;
+  width: 45px;
   height: auto;
-  background-color: #f2f2f2;
-  padding: 5px;
   border-radius: 50%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 6px;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, filter 0.3s ease;
 }
 
-/* Hover Effect on Logo */
 .logo-link:hover .logo-img {
-  transform: scale(1.1); /* Slightly enlarge logo */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.1);
 }
-
 
 /* Menu Icon (Hamburger) for Mobile */
 .menu-icon {
   display: none;
   cursor: pointer;
-  margin-left: auto;
-  z-index: 11;
+  z-index: 101;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .menu-icon svg {
-  color: #ffcc00; /* Menu icon color */
-  font-size: 30px; /* Adjusted for visibility */
+  color: #ffcc00;
+  font-size: 32px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.menu-icon:hover svg {
+  transform: rotate(90deg);
+  color: #fbbf24; /* Slightly darker yellow */
 }
 
 /* Navbar Links Container */
 .nav-links {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%; /* Take up full width */
-  background-color: transparent; /* Make navbar links background fully transparent */
-}
-
-/* Collapsible Navbar Links */
-.nav-links.active {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 60px;
-  left: 0;
-  background-color: rgba(0, 51, 102, 0.9); /* Optional: Add slight transparency to background */
-  width: 100%;
-  padding: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  z-index: 9;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .nav-links a {
-  margin: 12px 0;
-  text-align: left;
-  padding: 10px;
-  font-size: 18px; /* Adjust font size for mobile */
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: bold;
+  padding: 8px 14px;
+  border-radius: 5px;
+  transition: color 0.4s ease, transform 0.3s ease, background-color 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle semi-transparent background */
+  box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0); /* Inactive state shadow */
 }
 
-/* Media Queries for Mobile */
+.nav-links a:hover {
+  color: #0056b3;
+  background-color: rgba(0, 86, 179, 0.1); /* Light blue tint */
+  transform: translateY(-3px);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.nav-links a:hover::after {
+  content: '';
+  position: relative;
+  display: block;
+  height: 2px;
+  background-color: #0056b3;
+  width: 100%;
+  transition: width 0.4s ease;
+}
+
+.nav-links a.active {
+  color: #0056b3;
+  border-bottom: 2px solid #0056b3;
+}
+
+.nav-links a.active::after {
+  content: '';
+  position: relative;
+  display: block;
+  height: 2px;
+  background-color: #0056b3;
+  width: 100%;
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   .nav-bar {
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 10px 15px;
+    flex-direction: column;
+    padding: 10px 1rem;
+    background-color: rgba(0, 0, 0, 0.9); /* Darker, more contrasting background */
   }
 
   .nav-links {
-    display: none; /* Hide the nav links initially */
+    display: none;
     width: 100%;
     flex-direction: column;
     align-items: center;
+    background-color: rgba(154, 126, 111, 0.85); /* Slightly transparent brown */
+    padding: 10px 0;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
   }
 
   .nav-links.active {
     display: flex;
   }
 
-  .nav-bar a {
-    margin: 10px 0;
+  .nav-links a {
     width: 100%;
-    text-align: left;
+    text-align: center;
+    margin: 8px 0;
+    border-radius: 5px;
+    padding: 12px 0;
+    font-size: 18px;
+    background-color: rgba(255, 255, 255, 0.15); /* Subtle semi-transparent background */
+    color: #ffffff;
   }
 
   .menu-icon {
@@ -184,29 +155,30 @@
   }
 
   .logo-link {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 }
 
-/* Desktop View Adjustments */
 @media (min-width: 768px) {
   .nav-bar {
     flex-direction: row;
     justify-content: space-between;
-    padding: 12px 50px;
+    padding: 0.5rem 2rem;
   }
 
   .nav-links {
     display: flex;
-    justify-content: space-evenly; /* Evenly space the navbar links */
-    width: auto; /* Let the nav-links take the necessary space */
+    justify-content: flex-end;
+    gap: 20px;
   }
 
   .nav-links a {
-    margin: 0 15px; /* Space between each link */
+    margin: 0;
+    padding: 8px 14px;
+    border-radius: 5px;
   }
 
   .menu-icon {
-    display: none; /* Hide the menu icon in desktop view */
+    display: none;
   }
 }

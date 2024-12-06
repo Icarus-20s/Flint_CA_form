@@ -1,15 +1,10 @@
-.App {
-    font-family: Arial, sans-serif;
-  }
-  body {
-    background: linear-gradient(to right, #a8b0b8, #006699); /* Gradient background */
-    color: #333;
-    scroll-behavior: smooth;
-    font-family: 'Roboto', sans-serif;
-
-  }
-  
-  h2, h3, h4 {
-    color: #333;
-  }
-  
+/* General Reset and Base Styles */
+body, h1, h2, h3, p, ul, li, a {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+body {
+  background-color: #E9EED9;
+}

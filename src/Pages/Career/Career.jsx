@@ -374,12 +374,14 @@ const Career = () => {
                 onChange={handleApplicantChange}
                 required
             />
+            <label>Resume</label>
             <input
                 type="file"
                 name="resumes"
                 onChange={handleFileChange}
                 required
             />
+            <label>Cover letter</label>
             <input
                 type="file"
                 name="cover_letter"
