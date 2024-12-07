@@ -47,7 +47,7 @@ const Navbar = () => {
   return (
     <nav className={`navbar navbar-expand-lg navbar-light bg-light ${isNavbarVisible ? "visible" : "hidden"}`}>
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/">
           <img src={logo} alt="Logo" className="logo-img" style={{ height: "40px" }} />
         </a>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded={menuOpen} aria-label="Toggle navigation" onClick={toggleMenu}>

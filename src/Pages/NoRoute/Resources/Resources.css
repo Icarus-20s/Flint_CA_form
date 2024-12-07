@@ -1,142 +1,185 @@
-/* Global Styles */
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* General Container Styling */
+.resources-container {
+  padding: 20px;
+  width: 100%; /* Full width */
+  min-height: 100vh; /* Full height */
+  margin: 0; /* Remove top/bottom margins */
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f5f5; /* Modern neutral background */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Softer shadow for subtle depth */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Heading Styling */
+.resources-heading {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50; /* Strong, professional color */
+  font-size: 2.5rem;
+  font-weight: 700;
+  animation: fadeIn 1s ease-out;
+}
+
+/* Section Styling */
+.resources-section {
+  margin-bottom: 40px;
+  width: 100%;
+  animation: slideUp 0.8s ease-out;
+}
+
+/* Section Title Styling */
+.section-title {
+  font-size: 24px;
+  border-bottom: 2px solid #4EA685;
+  margin-bottom: 20px;
+  color: #54473F;
+  font-weight: 600;
+  padding-bottom: 5px;
+}
+
+/* Grid Styling */
+.resources-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px; /* Limit max width for better centering */
+  margin: 0 auto; /* Center grid */
+}
+
+/* Resource Item Styling */
+.resource-item {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.resource-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  background-color: #e8f5e9;
+}
+
+/* Resource Item Text Styling */
+.resource-item a {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.resource-item a:hover {
+  color: #4EA685; /* Match the section's color */
+}
+
+.resource-item h3 {
+  font-size: 18px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.resource-item p {
+  font-size: 14px;
+  color: #7f8c8d;
+  line-height: 1.5;
+}
+
+/* Special Styling for Cards */
+.news-card, .learning-card {
+  border-left: 4px solid #4EA685;
+  background-color: #e0f2f1;
+  transition: background-color 0.3s ease-in-out, border-left-color 0.3s ease-in-out;
+}
+
+.resource-item.news-card:hover, .resource-item.learning-card:hover {
+  background-color: #c8e6c9;
+  border-left-color: #1b5e20; /* Darker green for contrast */
+}
+
+.resource-item.news-card h3, .resource-item.learning-card h3 {
+  color: #1b5e20;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .resources-container {
-    margin: 0 auto;
-    padding: 80px 15px;
-    max-width: 1200px;
+  to {
+    opacity: 1;
   }
-  
-  h1 {
-    text-align: center;
-    font-size: 36px;
-    margin-bottom: 30px;
-    color: #333;
-    font-weight: 700;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
   }
-  
-  .resources-section {
-    margin-bottom: 50px;
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
-  
-  .resources-section h2 {
-    font-size: 28px;
-    color: #0056b3;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
   .resources-items {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Make it responsive */
-    gap: 30px;
-    margin-top: 20px;
+    grid-template-columns: repeat(2, 1fr); /* Two columns for medium screens */
+    gap: 15px;
   }
-  
+
+  .resources-heading {
+    font-size: 2.2rem; /* Adjust heading size */
+  }
+
   .resource-item {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 15px; /* Adjust padding */
   }
-  
-  .resource-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+
+  .section-title {
+    font-size: 22px;
   }
-  
-  .resource-item a {
-    text-decoration: none;
-    color: #333;
+}
+
+@media (max-width: 768px) {
+  .resources-items {
+    grid-template-columns: 1fr; /* Single column for smaller screens */
+    gap: 15px;
   }
-  
-  .resource-item h3 {
+
+  .resources-heading {
+    font-size: 2rem; /* Adjust heading size */
+  }
+
+  .resource-item {
+    padding: 15px; /* Adjust padding */
+  }
+
+  .section-title {
     font-size: 20px;
-    margin-bottom: 10px;
-    color: #0056b3;
-    font-weight: 600;
-    transition: color 0.3s ease;
   }
-  
-  .resource-item p {
-    font-size: 14px;
-    color: #666;
-    line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .resources-heading {
+    font-size: 1.8rem; /* Further adjust heading size */
   }
-  
-  .resource-item a:hover h3 {
-    color: #0056b3;
-    text-decoration: underline;
+
+  .resource-item {
+    padding: 10px; /* Further adjust padding */
   }
-  
-  .resource-item a:active {
-    text-decoration: underline;
+
+  .section-title {
+    font-size: 18px;
   }
-  
-  .resource-item a:focus {
-    outline: none;
-    border: 2px solid #0056b3;
-  }
-  
-  /* Notice Section Link Styling */
-  .resources-section .resource-item a:hover {
-    color: #0056b3;
-    text-decoration: none;
-  }
-  
-  /* Media Queries for Mobile */
-  @media (max-width: 768px) {
-    .resources-container {
-      padding: 20px;
-    }
-  
-    h1 {
-      font-size: 28px;
-    }
-  
-    .resources-items {
-      grid-template-columns: 1fr; /* Stack items vertically on mobile */
-    }
-  
-    .resource-item {
-      padding: 15px;
-      box-shadow: none;
-      background-color: #f7f7f7;
-    }
-  
-    .resource-item h3 {
-      font-size: 18px;
-    }
-  
-    .resource-item p {
-      font-size: 13px;
-    }
-  }
-  
-  /* News and Learning Resources Cards */
-  .news-card, .learning-card {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .news-card:hover, .learning-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Link Hover Effects */
-  a:hover {
-    color: #0056b3;
-    text-decoration: none;
-  }
-  
+}

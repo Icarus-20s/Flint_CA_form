@@ -1,23 +1,22 @@
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import './Transitionwrapper.css';
 
-import React from 'react'
-import {CSSTransition , TransitionGroup} from 'react-transition-group'
-import {useLocation} from "react-router-dom"
-import './Transitionwrapper.css'
+const TransitionWrapper = ({ children }) => {
+  const [show, setShow] = useState(false);
+  const location = useLocation();
 
-const TransitionWrapper = ({children}) => {
-  const location = useLocation()
+  useEffect(() => {
+    // Set show to true when location changes to trigger the transition
+    setShow(false);
+    setTimeout(() => setShow(true), 100); // Delay for the fade-in effect
+  }, [location]);
 
   return (
-    <TransitionGroup>
-      <CSSTransition
-        key={location.key}
-        timeout={300}
-        classNames="fade"
-      >
-        {children}
-      </CSSTransition>
-    </TransitionGroup>
-  )
-}
+    <div className={`fade ${show ? 'show' : ''}`}>
+      {children}
+    </div>
+  );
+};
 
-export default TransitionWrapper
+export default TransitionWrapper;

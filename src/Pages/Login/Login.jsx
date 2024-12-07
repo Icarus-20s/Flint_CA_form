@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../Api/api";
-import {useAuth} from "../../Context/AuthContextProvider";
-import "../Login/Login.css";
+import { useAuth } from "../../Context/AuthContextProvider";
+import { TextField, Button, Box, Typography, Container } from "@mui/material";
 import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
+import "./Login.css"; // Custom CSS for this page
 
 const Login = () => {
   const navigate = useNavigate();
-  const auth = useAuth()
+  const auth = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,9 +18,9 @@ const Login = () => {
     try {
       const response = await api.post("/login/", { email, password });
       if (response.status === 200) {
-        console.log(response)
-        auth.login(response.data.user,response.data.token,response.data.role);
-        navigate("/",{replace:true});
+        console.log(response);
+        auth.login(response.data.user, response.data.token, response.data.role);
+        navigate("/", { replace: true });
       }
     } catch (error) {
       setError("Login Failed. Please check your email and password.");
@@ -28,39 +29,77 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
+    <Container maxWidth="xs" className="custom-login-container">
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          boxShadow: 3,
+          padding: 3,
+          borderRadius: 2,
+          backgroundColor: 'white',
+          transition: 'box-shadow 0.3s, transform 0.3s',
+          '&:hover': {
+            boxShadow: 6,
+            transform: 'translateY(-3px)'
+          }
+        }}
+      >
+        <Typography variant="h5" component="h2" className="custom-login-heading">
+          Login
+        </Typography>
+        <form onSubmit={handleSubmit} className="custom-login-form">
+          <TextField
+            label="Email"
             type="email"
-            id="email"
+            fullWidth
+            margin="normal"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="custom-input"
+            variant="outlined"
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
+          <TextField
+            label="Password"
             type="password"
-            id="password"
+            fullWidth
+            margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="custom-input"
+            variant="outlined"
           />
-        </div>
-        {error && <div className="error-message">{error}</div>}
-        <div className="form-group">
-          <button type="submit" className="login-button">
+          {error && (
+            <Typography color="error" className="custom-error-message">
+              {error}
+            </Typography>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            className="custom-login-button"
+            sx={{ marginTop: 2 }}
+          >
             Login
-          </button>
-        </div>
-      </form>
-      <button className="home-screen" onClick={()=>{
-        navigate('/')
-      }}>Go Back To Home Screen<KeyboardBackspaceRoundedIcon /></button>
-    </div>
+          </Button>
+        </form>
+        <Button
+          variant="text"
+          color="secondary"
+          className="custom-home-screen-button"
+          onClick={() => navigate('/')}
+          startIcon={<KeyboardBackspaceRoundedIcon />}
+          sx={{ marginTop: 2 }}
+        >
+          Go Back To Home Screen
+        </Button>
+      </Box>
+    </Container>
   );
 };
 

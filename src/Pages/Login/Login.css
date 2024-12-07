@@ -1,167 +1,123 @@
-/* General container for login screen */
-.login-container {
+/* Custom login container */
+.custom-login-container {
+  background-color: #33352c4f;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: linear-gradient(to right, #a8b0b8, #006699); /* Apply the gradient to the entire body */
+  min-height: 100vh;
   padding: 20px;
-  box-sizing: border-box;
 }
 
-/* Form container */
-.login-form {
-  background-color: #fff;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+/* Custom login box */
+.custom-login-box {
+  border-radius: 12px;
+  background-color: #ffffff;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 450px;
-  transition: all 0.3s ease-in-out;
+  transition: box-shadow 0.3s, transform 0.3s;
 }
 
-/* Form group (input containers) */
-.form-group {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
+.custom-login-box:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
 }
 
-/* Labels */
-label {
+/* Login heading */
+.custom-login-heading {
+  font-size: 1.8rem;
   font-weight: 600;
-  margin-bottom: 8px;
-  color: #333;
-  font-size: 14px;
-}
-
-/* Input fields */
-input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Focus effect for inputs */
-input:focus {
-  border-color: #4caf50;
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
-}
-
-/* Error message */
-.error-message {
-  color: #f44336;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-/* Login button */
-.login-button {
-  background-color: #4caf50;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 4px;
-  width: 100%;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-/* Hover effect for login button */
-.login-button:hover {
-  background-color: #45a049;
-}
-
-/* Go back button */
-.home-screen {
-  margin-top: 20px;
-  background-color: #2196f3;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
-}
-
-/* Hover effect for go back button */
-.home-screen:hover {
-  background-color: #1976d2;
-}
-
-/* Home screen button icon styling */
-.home-screen svg {
-  margin-left: 8px;
-}
-
-/* Smooth transition on form container appearance */
-.login-form {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-/* Keyframes for smooth fade-in effect */
-@keyframes fadeIn {
-  0% {
-      opacity: 0;
-      transform: translateY(20px);
-  }
-  100% {
-      opacity: 1;
-      transform: translateY(0);
-  }
-}
-
-/* Global styles for consistency */
-.App {
-  font-family: 'Roboto', sans-serif;
-  margin: 20px;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #f4f7fa;
-  margin: 0;
-}
-
-/* Header styling */
-header h1 {
+  color: #2c3e50;
+  margin-bottom: 20px;
   text-align: center;
-  color: #4CAF50;
-  font-size: 2.5rem;
-  margin-bottom: 30px;
 }
 
-h2, h3, h4 {
-  color: #333;
+/* Custom input fields */
+.custom-input {
+  border-radius: 6px;
+  padding: 10px;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+/* Input focus styling */
+.custom-input:focus {
+  border-color: #2980b9;
+  box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
+  outline: none;
 }
 
-button {
-  background-color: #041a05;
+/* Custom login button */
+.custom-login-button {
+  background-color: #2980b9;
   color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
+  border-radius: 8px;
+  padding: 12px;
   font-size: 1rem;
-  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  outline: none;
 }
 
-button:hover {
-  background-color: #8582c3;
+.custom-login-button:hover {
+  background-color: #1c6f8b;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(28, 111, 139, 0.2);
+}
+
+.custom-login-button:active {
+  background-color: #155f74;
+  transform: translateY(1px);
+}
+
+/* Custom "Go Back" button */
+.custom-home-screen-button {
+  color: #2980b9;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.custom-home-screen-button:hover {
+  color: #1c6f8b;
+  transform: translateY(-2px);
+}
+
+/* Custom error message */
+.custom-error-message {
+  margin-top: 10px;
+  font-size: 0.875rem;
+  color: #e74c3c;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .custom-login-box {
+    padding: 20px;
+  }
+  
+  .custom-login-heading {
+    font-size: 1.5rem;
+  }
+  
+  .custom-input,
+  .custom-login-button {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-login-box {
+    padding: 15px;
+  }
+  
+  .custom-input,
+  .custom-login-button {
+    font-size: 0.9rem;
+  }
 }

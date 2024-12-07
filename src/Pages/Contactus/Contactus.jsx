@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import api from "../../Api/api"; // API helper for making requests
-import './Contactus.css';
-import Loader from "../../Loaders/Loader"; // Loader for feedback during submission
+import { TextField, Button, CircularProgress, Typography, Alert, Container, Paper } from '@mui/material';
+import './Contactus.css'; // Custom styling if needed
 
 const Contactus = () => {
   const [formData, setFormData] = useState({
@@ -43,77 +43,77 @@ const Contactus = () => {
   };
 
   return (
-    <div className="contact-form-container">
-      <form onSubmit={handleSubmit}>
-        <h2>Contact Us</h2>
+    <Container maxWidth="sm" sx={{ mt: 5 }} className="contactus-container">
+      <Paper elevation={3} sx={{ padding: 3 }} className="contactus-paper">
+        <Typography variant="h4" gutterBottom align="center" className="contactus-title">Contact Us</Typography>
 
         {/* Display error message if present */}
-        {error && <p className="error-message">{error}</p>}
+        {error && <Alert severity="error" sx={{ mb: 2 }} className="contactus-error">{error}</Alert>}
 
-        <label htmlFor="name">
-          Name:
-          <input
-            type="text"
-            id="name"
+        <form onSubmit={handleSubmit} className="contactus-form">
+          <TextField
+            label="Name"
             name="name"
             value={formData.name}
             onChange={handleChange}
+            fullWidth
+            margin="normal"
             required
-            placeholder="Your Name"
+            className="contactus-input"
           />
-        </label>
-
-        <label htmlFor="email">
-          Email:
-          <input
-            type="email"
-            id="email"
+          <TextField
+            label="Email"
             name="email"
+            type="email"
             value={formData.email}
             onChange={handleChange}
+            fullWidth
+            margin="normal"
             required
-            placeholder="Your Email"
+            className="contactus-input"
           />
-        </label>
-
-        <label htmlFor="subject">
-          Subject:
-          <input
-            type="text"
-            id="subject"
+          <TextField
+            label="Subject"
             name="subject"
             value={formData.subject}
             onChange={handleChange}
+            fullWidth
+            margin="normal"
             required
-            placeholder="Subject"
+            className="contactus-input"
           />
-        </label>
-
-        <label htmlFor="message">
-          Message:
-          <textarea
-            id="message"
+          <TextField
+            label="Message"
             name="message"
             value={formData.message}
             onChange={handleChange}
+            fullWidth
+            margin="normal"
+            multiline
+            rows={4}
             required
-            placeholder="Your Message"
-          ></textarea>
-        </label>
-
-        {/* Submit button with loading animation */}
-        <div className="button-container">
-          <button type="submit" disabled={loading}>
-            {loading ? 'Sending...' : 'Send Message'}
-          </button>
-          {loading && (
-            <div className="loader-wrapper">
-              <Loader size={16} color="#fff" /> {/* Adjusted loader size */}
-            </div>
-          )}
-        </div>
-      </form>
-    </div>
+            className="contactus-input"
+          />
+          
+          {/* Submit button with loading animation */}
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            fullWidth
+            sx={{ mt: 2 }}
+            disabled={loading}
+            className="contactus-submit"
+          >
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Send Message'
+            )}
+          </Button>
+        </form>
+      </Paper>
+    </Container>
   );
 };
 
