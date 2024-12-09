@@ -1,128 +1,107 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
 import "./Appliedusers.css";
+import api from "../../../Api/api";
 
-const AppliedUsers = () => {
-    const [groupedApplications, setGroupedApplications] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+function Appliedusers() {
+  const [applications, setApplications] = useState({}); // Default state as an empty object
+  const [loading, setLoading] = useState(true); // State for loading
+  const [error, setError] = useState(null); // State for error handling
 
-    useEffect(() => {
-                const fetchApplications = async () => {
-            try {
-                const response = await axios.get("http://localhost:8000/jobapplications/");
-                setGroupedApplications(response.data); 
-            } catch (err) {
-                setError("Failed to fetch job applications. Please try again later.");
-            } finally {
-                setLoading(false);
-            }
-        };
+  useEffect(() => {
+    // Fetching the applications data from API
+    api.get('/jobapplications/')
+      .then(response => {
+        console.log('API Response:', response.data);
+        setApplications(response.data || {});
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching applications:', error);
+        setError('Failed to load applications. Please try again later.');
+        setLoading(false);
+      });
+  }, []);
 
-        fetchApplications();
-    }, []);
+  if (loading) {
+    return <div className="text-center py-5">Loading applications...</div>;
+  }
 
-    const handleDeleteApplication = async (jobTitle, applicationId) => {
-        try {
-            // Send DELETE request to backend
-            await axios.delete(`http://localhost:8000/jobapplication/delete/${applicationId}/`);
+  if (error) {
+    return <div className="alert alert-danger text-center">{error}</div>;
+  }
 
-            // Update the state to remove the deleted application
-            setGroupedApplications((prev) => {
-                const updatedApplications = { ...prev };
-                updatedApplications[jobTitle] = updatedApplications[jobTitle].filter(
-                    (application) => application.id !== applicationId
-                );
-                return updatedApplications;
-            });
-        } catch (err) {
-            setError("Failed to delete the application. Please try again later.");
-            console.error("Error deleting application:", err);
-        }
-    };
+  return (
+    <div className="container mt-5">
+      <h2 className="text-center mb-4">Job Applications</h2>
+      {Object.keys(applications).length > 0 ? (
+        Object.keys(applications).map(department => (
+          <ApplicationsTable
+            key={department}
+            department={department}
+            applications={applications[department]}
+          />
+        ))
+      ) : (
+        <div className="alert alert-info text-center">No applications available.</div>
+      )}
+    </div>
+  );
+}
 
-    if (loading) {
-        return (
-            <div className="applications-container">
-                <h1>Job Applications</h1>
-                <p className="loading-message">Loading applications...</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="applications-container">
-                <h1>Job Applications</h1>
-                <p className="error-message">{error}</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="applications-container">
-            <h1>Job Applications</h1>
-
-            {Object.keys(groupedApplications).length === 0 ? (
-                <p className="no-data-message">No applications available at the moment.</p>
-            ) : (
-                <div className="job-list">
-                    {Object.keys(groupedApplications).map((jobTitle) => (
-                        <div className="job-category" key={jobTitle}>
-                            <h2>{jobTitle}</h2>
-                            <table className="applications-table">
-                                <thead>
-                                    <tr>
-                                        <th>Full Name</th>
-                                        <th>Email</th>
-                                        <th>Resume</th>
-                                        <th>Cover Letter</th>
-                                        <th>Applied Date</th>
-                                        <th>Actions</th> {/* Added column for actions */}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {groupedApplications[jobTitle].map((application) => (
-                                        <tr key={application.id}>
-                                            <td>{application.full_name}</td>
-                                            <td>{application.email}</td>
-                                            <td>
-                                                <a
-                                                    href={application.resumes}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    View Resume
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a
-                                                    href={application.cover_letter}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    View Cover Letter
-                                                </a>
-                                            </td>
-                                            <td>{new Date(application.applied_date).toLocaleDateString()}</td>
-                                            <td>
-                                                <button
-                                                    className="delete-btn"
-                                                    onClick={() => handleDeleteApplication(jobTitle, application.id)}
-                                                >
-                                                    Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ))}
-                </div>
-            )}
+const ApplicationsTable = ({ department, applications }) => {
+  return (
+    <div className="card shadow mb-4">
+      <div className="card-header bg-primary text-white">
+        <h5 className="mb-0">{department} Applications</h5>
+      </div>
+      <div className="card-body">
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover">
+            <thead className="thead-light">
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Resume</th>
+                <th>Cover Letter</th>
+                <th>Applied Date</th>
+                <th>Job ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              {applications.map(application => (
+                <tr key={application.id}>
+                  <td>{application.full_name}</td>
+                  <td>{application.email}</td>
+                  <td>
+                    <a
+                      href={`http://localhost:8000${application.resumes}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-link"
+                    >
+                      View Resume
+                    </a>
+                  </td>
+                  <td>
+                    <a
+                      href={`http://localhost:8000${application.cover_letter}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-link"
+                    >
+                      View Cover Letter
+                    </a>
+                  </td>
+                  <td>{new Date(application.applied_date).toLocaleDateString()}</td>
+                  <td>{application.job}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
-export default AppliedUsers;
+export default Appliedusers;
