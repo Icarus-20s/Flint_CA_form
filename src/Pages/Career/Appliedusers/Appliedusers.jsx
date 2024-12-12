@@ -8,7 +8,11 @@ function Appliedusers() {
   const [error, setError] = useState(null); // State for error handling
 
   useEffect(() => {
-    // Fetching the applications data from API
+    fetchApplications();
+  }, []);
+
+  const fetchApplications = () => {
+    setLoading(true);
     api.get('/jobapplications/')
       .then(response => {
         console.log('API Response:', response.data);
@@ -20,7 +24,26 @@ function Appliedusers() {
         setError('Failed to load applications. Please try again later.');
         setLoading(false);
       });
-  }, []);
+  };
+
+  const handleDelete = (applicationId, department) => {
+    if (window.confirm('Are you sure you want to delete this application?')) {
+      api.delete(`jobapplication/delete/${applicationId}/`)
+        .then(() => {
+          alert('Application deleted successfully.');
+          // Update the state by removing the deleted application
+          const updatedApplications = { ...applications };
+          updatedApplications[department] = updatedApplications[department].filter(
+            app => app.id !== applicationId
+          );
+          setApplications(updatedApplications);
+        })
+        .catch(error => {
+          console.error('Error deleting application:', error);
+          alert('Failed to delete application. Please try again.');
+        });
+    }
+  };
 
   if (loading) {
     return <div className="text-center py-5">Loading applications...</div>;
@@ -39,6 +62,7 @@ function Appliedusers() {
             key={department}
             department={department}
             applications={applications[department]}
+            onDelete={handleDelete}
           />
         ))
       ) : (
@@ -48,7 +72,7 @@ function Appliedusers() {
   );
 }
 
-const ApplicationsTable = ({ department, applications }) => {
+const ApplicationsTable = ({ department, applications, onDelete }) => {
   return (
     <div className="card shadow mb-4">
       <div className="card-header bg-primary text-white">
@@ -65,6 +89,7 @@ const ApplicationsTable = ({ department, applications }) => {
                 <th>Cover Letter</th>
                 <th>Applied Date</th>
                 <th>Job ID</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -94,6 +119,14 @@ const ApplicationsTable = ({ department, applications }) => {
                   </td>
                   <td>{new Date(application.applied_date).toLocaleDateString()}</td>
                   <td>{application.job}</td>
+                  <td>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => onDelete(application.id, department)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
