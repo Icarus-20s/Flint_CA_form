@@ -1,6 +1,6 @@
 .career-page {
   padding: 2rem;
-  background-color: #f0f2f5; /* Light gray background */
+  background-color: #f5f7fa; /* Lighter gray background */
   font-family: 'Poppins', sans-serif;
 }
 
@@ -27,19 +27,19 @@
 
 .career-create-form, .career-update-form {
   background-color: #ffffff;
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 2rem;
-  transition: box-shadow 0.3s, transform 0.2s; /* Added transform */
+  transition: box-shadow 0.3s, transform 0.2s;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeInUp 0.6s forwards 0.5s; /* Animation */
+  animation: fadeInUp 0.6s forwards 0.5s;
 }
 
 .career-create-form:hover, .career-update-form:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px); /* Smooth hover effect */
+  transform: translateY(-2px);
 }
 
 .career-create-form input,
@@ -51,15 +51,15 @@
   border-radius: 6px;
   font-size: 1rem;
   margin-bottom: 1rem;
-  transition: border-color 0.3s, box-shadow 0.3s; /* Added transition */
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .career-create-form input:focus,
 .career-create-form textarea:focus,
 .career-create-form select:focus {
-  border-color: #4ea685; /* Highlight on focus */
+  border-color: #4ea685;
   outline: none;
-  box-shadow: 0 0 4px rgba(78, 166, 133, 0.5); /* Subtle focus shadow */
+  box-shadow: 0 0 4px rgba(78, 166, 133, 0.5);
 }
 
 .career-create-form button,
@@ -71,14 +71,14 @@
   border-radius: 6px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s; /* Added box-shadow */
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
 .career-create-form button:hover,
 .career-update-form button:hover {
   background-color: #3e8e6b;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hover shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .career-list {
@@ -100,7 +100,7 @@
   cursor: pointer;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeInUp 0.6s forwards 0.6s; /* Animation */
+  animation: fadeInUp 0.6s forwards 0.6s;
 }
 
 .career-card:hover {
@@ -115,7 +115,7 @@
 
 .career-card-front {
   padding: 1.5rem;
-  background-color: #33352c4f; /* Card header color */
+  background-color: #607D8B;
   color: #fff;
   text-align: center;
   font-size: 1.1rem;
@@ -170,7 +170,7 @@
 .career-apply-now-btn:hover {
   background-color: #33352c4f;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Button hover shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .career-application-modal {
@@ -186,7 +186,7 @@
   width: 90%;
   max-width: 500px;
   opacity: 0;
-  animation: modalFadeIn 0.5s forwards 0.7s; /* Animation */
+  animation: modalFadeIn 0.5s forwards 0.7s;
 }
 
 @keyframes modalFadeIn {

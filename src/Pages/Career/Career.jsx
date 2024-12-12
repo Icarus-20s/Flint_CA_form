@@ -4,6 +4,9 @@ import Loader from "../../Loaders/Loader";
 import { useAuth } from "../../Context/AuthContextProvider";
 import { useNavigate } from "react-router-dom";
 import "./Career.css";
+import WhyJoinUs from "./WhyJoinUs/WhyJoinUs";
+import ExperienceBenefits from "./ExperienceBenefits/ExperienceBenefits";
+import EmployeeReviews from "./EmployeeReview/EmployeeReview";
 const Career = () => {
     const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
@@ -32,12 +35,16 @@ const Career = () => {
         const fetchCareers = async () => {
             setLoading(true);
             try {
-                const response = await axios.get("http://127.0.0.1:8000/career/");
+                const response = await axios.get(
+                    "http://127.0.0.1:8000/career/"
+                );
                 setCareers(response.data);
                 setLoading(false);
             } catch (err) {
                 setLoading(false);
-                setErrorMessage("Error fetching careers. Please try again later.");
+                setErrorMessage(
+                    "Error fetching careers. Please try again later."
+                );
                 console.error("Error fetching careers:", err);
             }
         };
@@ -140,7 +147,11 @@ const Career = () => {
 
     const handleApplySubmit = async (e) => {
         e.preventDefault();
-        if (!applicantDetails.full_name || !applicantDetails.email || !applicantDetails.resumes) {
+        if (
+            !applicantDetails.full_name ||
+            !applicantDetails.email ||
+            !applicantDetails.resumes
+        ) {
             alert("Please fill in all fields and upload a resume.");
             return;
         }
@@ -155,11 +166,15 @@ const Career = () => {
         }
 
         try {
-            await axios.post("http://127.0.0.1:8000/jobapplication/", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            await axios.post(
+                "http://127.0.0.1:8000/jobapplication/",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
             setSuccessMessage("Application submitted successfully!");
             setApplicantDetails({
                 full_name: "",
@@ -170,23 +185,31 @@ const Career = () => {
             setApplyingForCareerId(null);
         } catch (error) {
             console.error("Error applying for career:", error);
-            setErrorMessage("Error submitting your application. Please try again later.");
+            setErrorMessage(
+                "Error submitting your application. Please try again later."
+            );
         }
     };
 
     return (
         <div className="career-page">
             <h1>Careers</h1>
-            {
-                isAuthenticated&&(
-                    <button onClick={()=>{
-                        navigate('/appliedusers')
-                    }}>See Applied users</button>
-                )
-            }
+            <WhyJoinUs />
+            <ExperienceBenefits />
+            {isAuthenticated && (
+                <button
+                    onClick={() => {
+                        navigate("/appliedusers");
+                    }}
+                >
+                    See Applied users
+                </button>
+            )}
 
             {errorMessage && <p className="career-error">{errorMessage}</p>}
-            {successMessage && <p className="career-success">{successMessage}</p>}
+            {successMessage && (
+                <p className="career-success">{successMessage}</p>
+            )}
 
             {isAuthenticated && !editingCareer && (
                 <form onSubmit={handleSubmit} className="career-create-form">
@@ -235,7 +258,10 @@ const Career = () => {
             )}
 
             {editingCareer && (
-                <form onSubmit={handleUpdateCareer} className="career-update-form">
+                <form
+                    onSubmit={handleUpdateCareer}
+                    className="career-update-form"
+                >
                     <input
                         type="text"
                         name="title"
@@ -302,7 +328,10 @@ const Career = () => {
                         required
                     />
                     <button type="submit">Update Career</button>
-                    <button type="button" onClick={() => setEditingCareer(null)}>
+                    <button
+                        type="button"
+                        onClick={() => setEditingCareer(null)}
+                    >
                         Cancel
                     </button>
                 </form>
@@ -322,21 +351,36 @@ const Career = () => {
                                     <div className="career-card-back">
                                         <p>{career.description}</p>
                                         <p>Location: {career.location}</p>
-                                        <p>Employment Type: {career.employment_type}</p>
+                                        <p>
+                                            Employment Type:{" "}
+                                            {career.employment_type}
+                                        </p>
                                         <p>Deadline: {career.deadline}</p>
                                         {isAuthenticated && (
                                             <div className="career-card-actions">
-                                                <button onClick={() => handleEditCareer(career)}>
+                                                <button
+                                                    onClick={() =>
+                                                        handleEditCareer(career)
+                                                    }
+                                                >
                                                     Edit
                                                 </button>
-                                                <button onClick={() => handleDeleteCareer(career.id)}>
+                                                <button
+                                                    onClick={() =>
+                                                        handleDeleteCareer(
+                                                            career.id
+                                                        )
+                                                    }
+                                                >
                                                     Delete
                                                 </button>
                                             </div>
                                         )}
                                         <button
                                             className="career-apply-now-btn"
-                                            onClick={() => handleApplyNow(career.id)}
+                                            onClick={() =>
+                                                handleApplyNow(career.id)
+                                            }
                                         >
                                             Apply Now
                                         </button>
@@ -349,54 +393,60 @@ const Career = () => {
                     )}
                 </div>
             )}
-{applyingForCareerId && (
-    <div className="career-application-modal">
-        <form onSubmit={handleApplySubmit} className="career-application-form">
-            {/* Get the career title based on applyingForCareerId */}
-            {careers.map((career) =>
-                career.id === applyingForCareerId ? (
-                    <h2 key={career.id}>Apply for {career.title}</h2>
-                ) : null
+             <EmployeeReviews />
+            {applyingForCareerId && (
+                <div className="career-application-modal">
+                    <form
+                        onSubmit={handleApplySubmit}
+                        className="career-application-form"
+                    >
+                        {/* Get the career title based on applyingForCareerId */}
+                        {careers.map((career) =>
+                            career.id === applyingForCareerId ? (
+                                <h2 key={career.id}>
+                                    Apply for {career.title}
+                                </h2>
+                            ) : null
+                        )}
+                        <input
+                            type="text"
+                            name="full_name"
+                            placeholder="Your Full Name"
+                            value={applicantDetails.full_name}
+                            onChange={handleApplicantChange}
+                            required
+                        />
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Your Email"
+                            value={applicantDetails.email}
+                            onChange={handleApplicantChange}
+                            required
+                        />
+                        <label>Resume</label>
+                        <input
+                            type="file"
+                            name="resumes"
+                            onChange={handleFileChange}
+                            required
+                        />
+                        <label>Cover letter</label>
+                        <input
+                            type="file"
+                            name="cover_letter"
+                            onChange={handleFileChange}
+                        />
+                        <button type="submit">Submit Application</button>
+                        <button
+                            type="button"
+                            onClick={() => setApplyingForCareerId(null)}
+                        >
+                            Cancel
+                        </button>
+                    </form>
+                </div>
             )}
-            <input
-                type="text"
-                name="full_name"
-                placeholder="Your Full Name"
-                value={applicantDetails.full_name}
-                onChange={handleApplicantChange}
-                required
-            />
-            <input
-                type="email"
-                name="email"
-                placeholder="Your Email"
-                value={applicantDetails.email}
-                onChange={handleApplicantChange}
-                required
-            />
-            <label>Resume</label>
-            <input
-                type="file"
-                name="resumes"
-                onChange={handleFileChange}
-                required
-            />
-            <label>Cover letter</label>
-            <input
-                type="file"
-                name="cover_letter"
-                onChange={handleFileChange}
-            />
-            <button type="submit">Submit Application</button>
-            <button
-                type="button"
-                onClick={() => setApplyingForCareerId(null)}
-            >
-                Cancel
-            </button>
-        </form>
-    </div>
-)}
         </div>
     );
 };
