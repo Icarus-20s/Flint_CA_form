@@ -7,22 +7,18 @@ import CaInNepal from './CaInNepal/CaInNepal';
 import OurQuality from './OurQuality/OurQuality';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-
-
 const Aboutus = () => {
   return (
     <div className="about-us-page">
-    <header>
-      <h1>About CA FIRM</h1>
-    </header>
-    <CaInNepal/>
-    <OurStory />
-    <OurValues />
-    <OurPeople />
-    <OurQuality/>
-  </div>
-         
+      <header>
+        <h1>About K.B.P.S & Associates</h1>
+      </header>
+      <CaInNepal />
+      <OurStory />
+      <OurValues />
+      <OurQuality />
+      <OurPeople />
+    </div>
   );
 };
 

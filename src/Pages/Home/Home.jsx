@@ -130,9 +130,10 @@ const Home = () => {
         <HeroSlider />
         <div className="hero-content">
           <h1>
-            <span className="highlight">Welcome</span> to Our <span className="highlight">Chartered Accountant</span> Firm
+            <span className="highlight">Welcome</span> to <span className="highlight">K.B.P.S </span>& <span className='highlight'>Associates</span>
           </h1>
-          <p>Your trusted partner for expert financial and accounting solutions.</p>
+          <p>Strengthening Compliance and Reporting for transparency and accountability.
+          </p>
           <div className="scroll-to-services">
             <Link to="services" smooth={true} duration={500} className="cta-button">
               Explore Our Services <span className="arrow">→</span>

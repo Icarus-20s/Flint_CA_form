@@ -1,0 +1,42 @@
+.our-quality {
+    padding: 5rem 2rem;
+    background-color: #f9f9f9;
+  }
+  
+  .vision-list {
+    padding-left: 1rem;
+    margin-top: 1rem;
+    list-style-type: none;
+  }
+  
+  .vision-list li {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  
+  .vision-list li::before {
+    content: '•';
+    color: #4EA685;
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+  
+  h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  h5 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.8;
+  }
+  

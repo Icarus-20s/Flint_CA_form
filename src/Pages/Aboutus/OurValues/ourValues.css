@@ -1,0 +1,31 @@
+.our-values {
+    padding: 5rem 2rem;
+    background-color: #f9f9f9;
+  }
+  
+  h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .values-list {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.8;
+  }
+  
+  .values-list ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .values-list li {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  
+  strong {
+    font-weight: bold;
+  }
+  

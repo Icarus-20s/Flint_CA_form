@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Services.css";
-import Loader from "../../Loaders/Loader";
 import { useAuth } from "../../Context/AuthContextProvider";
 import {
     Card,
@@ -16,6 +14,8 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
+import Loader from "../../Loaders/Loader";
+import "./Services.css";
 
 const Services = () => {
     const { isAuthenticated } = useAuth();
@@ -31,6 +31,7 @@ const Services = () => {
     const [selectedService, setSelectedService] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Fetch services on component mount
     useEffect(() => {
         const fetchServices = async () => {
             setLoading(true);
@@ -47,15 +48,18 @@ const Services = () => {
         fetchServices();
     }, []);
 
+    // Handle input changes in the form
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    // Handle image file changes
     const handleImageChange = (e) => {
         setFormData((prev) => ({ ...prev, image: e.target.files[0] }));
     };
 
+    // Handle form submission to add a new service
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isAuthenticated) return alert("You must be logged in to add a service.");
@@ -75,8 +79,10 @@ const Services = () => {
         }
     };
 
+    // Set the service to be edited
     const handleEditService = (service) => setEditingService(service);
 
+    // Handle updating a service
     const handleUpdateService = async (e) => {
         e.preventDefault();
         if (!isAuthenticated) return alert("You must be logged in to update a service.");
@@ -100,6 +106,7 @@ const Services = () => {
         }
     };
 
+    // Handle deleting a service
     const handleDeleteService = async (id) => {
         if (!isAuthenticated) return alert("You must be logged in to delete a service.");
 
@@ -112,16 +119,19 @@ const Services = () => {
         }
     };
 
+    // Handle 'Learn More' button click
     const handleLearnMoreClick = (service) => {
         setSelectedService(service);
         setIsModalOpen(true);
     };
 
+    // Handle modal close
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setSelectedService(null);
     };
 
+    // Render form for adding or editing service
     const renderForm = (isEdit = false) => (
         <form onSubmit={isEdit ? handleUpdateService : handleSubmit} className="service-form">
             <input
@@ -183,11 +193,11 @@ const Services = () => {
             {loading ? (
                 <Loader />
             ) : (
-                <Grid container spacing={3}>
+                <Grid container spacing={3} className="grid-container">
                     {services.length > 0 ? (
                         services.map((service) => (
-                            <Grid item xs={12} sm={6} md={4} key={service.id}>
-                                <Card>
+                            <Grid item xs={12} sm={6} md={4} key={service.id} className="grid-item">
+                                <Card className="card">
                                     {service.image && (
                                         <CardMedia
                                             component="img"

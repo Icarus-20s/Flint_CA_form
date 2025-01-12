@@ -7,42 +7,34 @@ const CaInNepal = () => {
       <Container>
         <Row>
           <Col md={12} className="text-center">
-            <h2>Chartered Accountancy in Nepal</h2>
+            <h2 className="section-title">Chartered Accountancy in Nepal</h2>
             <p className="intro-text">
-              Chartered Accountants (CAs) play a crucial role in Nepal's economy. As trusted financial advisors,
-              auditors, and tax consultants, CAs are integral to both the corporate and public sectors. The profession
-              is regulated by the Institute of Chartered Accountants of Nepal (ICAN), ensuring the highest standards
-              of financial services and compliance.
+              Chartered Accountants (CAs) in Nepal hold a critical position in the nation's financial ecosystem. As trusted financial advisors, auditors, and tax consultants, they are integral to the success of businesses and the economy. The profession is overseen by the Institute of Chartered Accountants of Nepal (ICAN), which ensures adherence to the highest standards of financial reporting, compliance, and ethics.
             </p>
           </Col>
         </Row>
         <Row>
           <Col md={4}>
-            <div className="ca-fact">
-              <h4>Growth of CA Professionals</h4>
-              <p>
-                The demand for Chartered Accountants in Nepal is growing rapidly, with an increasing number of graduates
-                choosing to pursue CA as a career. As businesses expand and financial regulations become more complex,
-                the need for qualified professionals is more pronounced than ever.
+            <div className="ca-fact card-hover-effect">
+              <h4 className="fact-title">Expanding Demand for CA Professionals</h4>
+              <p className="fact-text">
+                The demand for Chartered Accountants in Nepal has seen significant growth in recent years. As businesses evolve and expand, the need for qualified financial professionals who can navigate complex regulations and provide strategic guidance has never been higher. This has made the profession more attractive to a new generation of accounting professionals.
               </p>
             </div>
           </Col>
           <Col md={4}>
-            <div className="ca-fact">
-              <h4>ICAN – The Governing Body</h4>
-              <p>
-                ICAN is the national body for Chartered Accountants in Nepal, responsible for maintaining the standards
-                and ethical guidelines for the profession. The institute ensures that CAs in Nepal are well-trained, ethical,
-                and capable of offering top-tier accounting services.
+            <div className="ca-fact card-hover-effect">
+              <h4 className="fact-title">ICAN – Upholding Professional Standards</h4>
+              <p className="fact-text">
+                The Institute of Chartered Accountants of Nepal (ICAN) is the authoritative body regulating the CA profession in Nepal. ICAN ensures that all Chartered Accountants maintain high standards of professionalism, ethics, and expertise, offering services in audit, taxation, corporate finance, and more. It plays a pivotal role in the growth and international recognition of the profession.
               </p>
             </div>
           </Col>
           <Col md={4}>
-            <div className="ca-fact">
-              <h4>Global Recognition</h4>
-              <p>
-                Nepali CAs are globally recognized and often work in international firms, helping Nepalese businesses
-                achieve international standards and expand beyond borders.
+            <div className="ca-fact card-hover-effect">
+              <h4 className="fact-title">Global Recognition and Opportunities</h4>
+              <p className="fact-text">
+                Nepali Chartered Accountants are recognized globally and are in demand by international firms. Many Nepalese CAs work abroad in multinational corporations, helping to bridge the gap between Nepalese businesses and global markets. Their expertise enables local companies to meet international financial standards and expand their reach globally.
               </p>
             </div>
           </Col>

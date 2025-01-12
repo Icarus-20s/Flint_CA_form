@@ -92,6 +92,15 @@ const Login = () => {
           variant="text"
           color="secondary"
           className="custom-home-screen-button"
+          onClick={() => navigate('/forgot')}
+          sx={{ marginTop: 2 }}
+        >
+          Forgot Password?
+        </Button>
+        <Button
+          variant="text"
+          color="secondary"
+          className="custom-home-screen-button"
           onClick={() => navigate('/')}
           startIcon={<KeyboardBackspaceRoundedIcon />}
           sx={{ marginTop: 2 }}

@@ -49,7 +49,7 @@ const Contactus = () => {
           {/* Left Section (Contact Form) */}
           <Grid item xs={12} md={7}>
             <Paper elevation={3} sx={{ padding: 3 }} className="contactus-paper">
-              <Typography variant="h4" gutterBottom align="center" className="contactus-title">Contact Us</Typography>
+              <Typography variant="h4" gutterBottom align="center" className="contactus-title">Get Appointment.</Typography>
 
               {/* Display error message if present */}
               {error && <Alert severity="error" sx={{ mb: 2 }} className="contactus-error">{error}</Alert>}

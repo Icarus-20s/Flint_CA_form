@@ -1,46 +1,58 @@
+/* Global styles */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f7fa;
+}
+
 /* Custom login container */
 .custom-login-container {
-  background-color: #33352c4f;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   padding: 20px;
+  background-color: #f4f7fa;
 }
 
 /* Custom login box */
 .custom-login-box {
-  border-radius: 12px;
   background-color: #ffffff;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 40px;
   width: 100%;
   max-width: 450px;
-  transition: box-shadow 0.3s, transform 0.3s;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .custom-login-box:hover {
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
 }
 
 /* Login heading */
 .custom-login-heading {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 600;
   color: #2c3e50;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   text-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 /* Custom input fields */
 .custom-input {
-  border-radius: 6px;
-  padding: 10px;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-/* Input focus styling */
 .custom-input:focus {
   border-color: #2980b9;
   box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
@@ -50,15 +62,16 @@
 /* Custom login button */
 .custom-login-button {
   background-color: #2980b9;
-  color: white;
+  color: #ffffff;
   border-radius: 8px;
-  padding: 12px;
+  padding: 14px;
   font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
-  outline: none;
+  width: 100%;
+  border: none;
 }
 
 .custom-login-button:hover {
@@ -79,6 +92,7 @@
   border: none;
   cursor: pointer;
   text-decoration: underline;
+  font-size: 1rem;
   transition: color 0.3s, transform 0.3s;
 }
 
@@ -98,14 +112,17 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .custom-login-box {
-    padding: 20px;
+    padding: 25px;
   }
   
   .custom-login-heading {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
-  
-  .custom-input,
+
+  .custom-input {
+    padding: 10px;
+  }
+
   .custom-login-button {
     font-size: 0.95rem;
   }
@@ -113,10 +130,17 @@
 
 @media (max-width: 480px) {
   .custom-login-box {
-    padding: 15px;
+    padding: 20px;
   }
   
-  .custom-input,
+  .custom-login-heading {
+    font-size: 1.6rem;
+  }
+
+  .custom-input {
+    font-size: 0.9rem;
+  }
+
   .custom-login-button {
     font-size: 0.9rem;
   }
