@@ -27,6 +27,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 
 import './Footer.css';
+import axios from 'axios';
 
 const Footer = () => {
   const theme = useTheme();
@@ -34,23 +35,35 @@ const Footer = () => {
   const [email, setEmail] = React.useState('');
   const [subscribeStatus, setSubscribeStatus] = React.useState('');
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
+  
     if (!email) {
       setSubscribeStatus('Please enter your email');
       return;
     }
-    
-    // Here you would typically handle the subscription with an API call
-    setSubscribeStatus('Thank you for subscribing!');
-    setEmail('');
-    
-    // Reset status message after 3 seconds
+  
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/emailstorage/', { email });
+  
+      if (response.status === 201) {
+        setSubscribeStatus('Thank you for subscribing!');
+      } else if (response.status === 200) {
+        setSubscribeStatus('You are already subscribed.');
+      }
+  
+      setEmail('');
+    } catch (error) {
+      setSubscribeStatus('Subscription failed. Please try again.');
+    }
+  
+    // Clear message after 3 seconds
     setTimeout(() => {
       setSubscribeStatus('');
     }, 3000);
   };
-
+  
+  
   return (
     <footer className="footer">
       {/* Pre-Footer CTA */}
@@ -220,6 +233,7 @@ const Footer = () => {
                   variant="contained" 
                   className="subscribe-button"
                   endIcon={<ArrowForwardIcon />}
+                  onClick={handleSubscribe}
                 >
                   Subscribe
                 </Button>
