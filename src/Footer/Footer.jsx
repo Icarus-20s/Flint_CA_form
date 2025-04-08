@@ -1,49 +1,315 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { 
+  Container, 
+  Grid, 
+  Typography, 
+  Box, 
+  Button, 
+  TextField,
+  Divider,
+  IconButton,
+  useMediaQuery,
+  useTheme
+} from '@mui/material';
+
+// Icons
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import XIcon from '@mui/icons-material/X';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+
 import './Footer.css';
 
 const Footer = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [email, setEmail] = React.useState('');
+  const [subscribeStatus, setSubscribeStatus] = React.useState('');
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) {
+      setSubscribeStatus('Please enter your email');
+      return;
+    }
+    
+    // Here you would typically handle the subscription with an API call
+    setSubscribeStatus('Thank you for subscribing!');
+    setEmail('');
+    
+    // Reset status message after 3 seconds
+    setTimeout(() => {
+      setSubscribeStatus('');
+    }, 3000);
+  };
+
   return (
     <footer className="footer">
-      <nav>
-        <ul className="footer-nav">
-          
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/contact">Contact us</Link></li>
-        </ul>
-        <div className="social-icons">
-          
-          <h2>Follow Us</h2>
-          <ul>
-            <li>
-              <a href="https://www.facebook.com/gces.pokhara" target="_blank" rel="noopener noreferrer">
-                <FacebookRoundedIcon />
-              </a>
-            </li>
-            <li>
-              <a href="https://www.instagram.com/gcesitclub/" target="_blank" rel="noopener noreferrer">
-                <InstagramIcon />
-              </a>
-            </li>
-            <li>
-              <a href="https://twitter.com/GCES_College" target="_blank" rel="noopener noreferrer">
-                <XIcon />
-              </a>
-            </li>
-            <li>
-              <a href="https://www.youtube.com/@GCES.Pokhara" target="_blank" rel="noopener noreferrer">
-                <YouTubeIcon />
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-       <p> © 2024 Chartered Accountant Firm. All Rights Reserved.</p>
-       </footer>
+      {/* Pre-Footer CTA */}
+      <div className="pre-footer">
+        <Container maxWidth="lg">
+          <Grid container spacing={3} alignItems="center" className="cta-container">
+            <Grid item xs={12} md={7}>
+              <Typography variant="h4" className="cta-title">
+                Ready to Optimize Your Financial Strategy?
+              </Typography>
+              <Typography variant="body1" className="cta-subtitle">
+                Schedule a consultation with our expert financial advisors today
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={5} className="cta-button-container">
+              <Button 
+                component={Link} 
+                to="/contact" 
+                variant="contained" 
+                className="cta-button"
+                endIcon={<ArrowForwardIcon />}
+              >
+                Request Consultation
+              </Button>
+            </Grid>
+          </Grid>
+        </Container>
+      </div>
+      
+      {/* Main Footer Content */}
+      <div className="footer-main">
+        <Container maxWidth="lg">
+          <Grid container spacing={4}>
+            {/* About Company */}
+            <Grid item xs={12} md={4}>
+              <div className="footer-company">
+                <Typography variant="h6" className="footer-heading">
+                  <span className="highlight">K.B.P.S</span> & <span className="highlight">Associates</span>
+                </Typography>
+                <Typography variant="body2" className="company-description">
+                  We are a trusted financial partner dedicated to strengthening compliance and reporting 
+                  for transparency and accountability. With years of expertise, we provide comprehensive 
+                  financial solutions tailored to your business needs.
+                </Typography>
+                
+                <Box className="contact-info">
+                  <Box className="contact-item">
+                    <LocationOnIcon className="contact-icon" />
+                    <Typography variant="body2">
+                      1234 Financial District, Sector 5
+                      <br />New Delhi, India 110001
+                    </Typography>
+                  </Box>
+                  
+                  <Box className="contact-item">
+                    <PhoneIcon className="contact-icon" />
+                    <Typography variant="body2">
+                      +91 98765 43210
+                    </Typography>
+                  </Box>
+                  
+                  <Box className="contact-item">
+                    <EmailIcon className="contact-icon" />
+                    <Typography variant="body2">
+                      info@kbpsassociates.com
+                    </Typography>
+                  </Box>
+                  
+                  <Box className="contact-item">
+                    <AccessTimeIcon className="contact-icon" />
+                    <Typography variant="body2">
+                      Monday - Friday: 9:00 AM - 6:00 PM
+                      <br />Saturday: 10:00 AM - 2:00 PM
+                    </Typography>
+                  </Box>
+                </Box>
+              </div>
+            </Grid>
+            
+            {/* Quick Links */}
+            <Grid item xs={12} sm={6} md={2}>
+              <Typography variant="h6" className="footer-heading">
+                Quick Links
+              </Typography>
+              <ul className="footer-links">
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/about">About Us</Link>
+                </li>
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/services">Services</Link>
+                </li>
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/career">Careers</Link>
+                </li>
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/contact">Contact</Link>
+                </li>
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/resources">FAQs</Link>
+                </li>
+              </ul>
+            </Grid>
+            
+            {/* Our Services */}
+            <Grid item xs={12} sm={6} md={2}>
+              <Typography variant="h6" className="footer-heading">
+                Our Services
+              </Typography>
+              <ul className="footer-links">
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/services/tax-consultancy">Tax Consultancy</Link>
+                </li>
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/services/auditing">Auditing & Assurance</Link>
+                </li>
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/services/business-advisory">Business Advisory</Link>
+                </li>
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/services/financial-planning">Financial Planning</Link>
+                </li>
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/services/risk-management">Risk Management</Link>
+                </li>
+                <li>
+                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
+                  <Link to="/services/compliance">Compliance Services</Link>
+                </li>
+              </ul>
+            </Grid>
+            
+            {/* Newsletter */}
+            <Grid item xs={12} md={4}>
+              <Typography variant="h6" className="footer-heading">
+                Subscribe to Newsletter
+              </Typography>
+              <Typography variant="body2" className="newsletter-description">
+                Stay informed about the latest financial regulations, tax updates, and industry best practices by subscribing to our newsletter.
+              </Typography>
+              
+              <form onSubmit={handleSubscribe} className="subscribe-form">
+                <TextField
+                  variant="outlined"
+                  placeholder="Your Email Address"
+                  fullWidth
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="subscribe-input"
+                  size="small"
+                />
+                <Button 
+                  type="submit" 
+                  variant="contained" 
+                  className="subscribe-button"
+                  endIcon={<ArrowForwardIcon />}
+                >
+                  Subscribe
+                </Button>
+              </form>
+              
+              {subscribeStatus && (
+                <Typography variant="body2" className="subscribe-status">
+                  {subscribeStatus}
+                </Typography>
+              )}
+              
+              <Typography variant="h6" className="social-heading">
+                Connect With Us
+              </Typography>
+              <Box className="social-icons">
+                <IconButton 
+                  className="social-icon facebook"
+                  href="https://www.facebook.com/kbpsassociates" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                >
+                  <FacebookRoundedIcon />
+                </IconButton>
+                <IconButton 
+                  className="social-icon instagram"
+                  href="https://www.instagram.com/kbpsassociates" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                >
+                  <InstagramIcon />
+                </IconButton>
+                <IconButton 
+                  className="social-icon twitter"
+                  href="https://twitter.com/kbpsassociates" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  aria-label="Twitter"
+                >
+                  <XIcon />
+                </IconButton>
+                <IconButton 
+                  className="social-icon youtube"
+                  href="https://www.youtube.com/kbpsassociates" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  aria-label="YouTube"
+                >
+                  <YouTubeIcon />
+                </IconButton>
+                <IconButton 
+                  className="social-icon linkedin"
+                  href="https://www.linkedin.com/company/kbpsassociates" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                >
+                  <LinkedInIcon />
+                </IconButton>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </div>
+      
+      {/* Divider */}
+      <Divider className="footer-divider" />
+      
+      {/* Footer Bottom Section */}
+      <div className="footer-bottom">
+        <Container maxWidth="lg">
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Grid item xs={12} md={6}>
+              <Typography variant="body2" className="copyright">
+                &copy; {new Date().getFullYear()} K.B.P.S & Associates. All Rights Reserved.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <ul className="legal-links">
+                <li><Link to="/privacy-policy">Privacy Policy</Link></li>
+                <li><Link to="/terms-conditions">Terms & Conditions</Link></li>
+                <li><Link to="/disclaimer">Disclaimer</Link></li>
+                <li><Link to="/sitemap">Sitemap</Link></li>
+              </ul>
+            </Grid>
+          </Grid>
+        </Container>
+      </div>
+    </footer>
   );
 };
 

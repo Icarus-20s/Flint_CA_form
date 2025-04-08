@@ -132,7 +132,7 @@ const Contactus = () => {
             >
               <Typography variant="h5"><strong>Address:</strong> Lainchar, Kathmandu</Typography>
               <Typography variant="h5"><strong>Phone:</strong> 9845012445</Typography>
-              <Typography variant="h5"><strong>Email:</strong> Cafirm@gmail.com</Typography>
+              <Typography variant="h5"><strong>Email:</strong> kbpsassociates@gmail.com</Typography>
               <Typography variant="h5" sx={{ mt: 3 }}>
                 <strong>Business Hours:</strong> Mon - Fri: 9 AM - 5 PM
               </Typography>
