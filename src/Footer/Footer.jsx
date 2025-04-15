@@ -113,15 +113,15 @@ const Footer = () => {
                   <Box className="contact-item">
                     <LocationOnIcon className="contact-icon" />
                     <Typography variant="body2">
-                      1234 Financial District, Sector 5
-                      <br />New Delhi, India 110001
+                      Bagmati Provience, Nepal
+                      <br />Lainchaur, Kathmandu
                     </Typography>
                   </Box>
                   
                   <Box className="contact-item">
                     <PhoneIcon className="contact-icon" />
                     <Typography variant="body2">
-                      +91 98765 43210
+                      +977 1 1234567
                     </Typography>
                   </Box>
                   
@@ -135,7 +135,7 @@ const Footer = () => {
                   <Box className="contact-item">
                     <AccessTimeIcon className="contact-icon" />
                     <Typography variant="body2">
-                      Monday - Friday: 9:00 AM - 6:00 PM
+                      Sunday - Friday: 9:00 AM - 6:00 PM
                       <br />Saturday: 10:00 AM - 2:00 PM
                     </Typography>
                   </Box>

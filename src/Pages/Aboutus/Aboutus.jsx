@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Aboutus.css';
+import { useNavigate } from 'react-router-dom';
 
 const AboutUs = () => {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -13,6 +14,7 @@ const AboutUs = () => {
   const prevTestimonial = () => {
     setActiveTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
   };
+  const navigate = useNavigate()
 
   return (
     <div className="about-us-page">

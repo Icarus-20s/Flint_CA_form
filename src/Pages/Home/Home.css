@@ -688,6 +688,7 @@ body {
   flex: 1;
   padding: 1.5rem;
   overflow-y: auto;
+  color: #ffffff;
 }
 
 .modal-image-container {
@@ -710,7 +711,7 @@ body {
 }
 
 .modal-extended-description {
-  color: #666 !important;
+  color: #4777c5 !important;
 }
 
 .modal-footer {

@@ -1,0 +1,256 @@
+/* QuoteRequestForm.css - Consistent styling with Services.css */
+
+/* Dialog Styling */
+.quote-request-dialog .MuiDialog-paper {
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: 800px;
+  width: 100%;
+}
+
+.quote-request-dialog .MuiDialogTitle-root {
+  padding: 1.5rem 1.5rem 1rem;
+  background: linear-gradient(135deg, #f9fafc 0%, #f0f4ff 100%);
+  border-bottom: 1px solid #e0e7ff;
+}
+
+.quote-request-dialog .MuiDialogContent-root {
+  padding: 1.5rem;
+}
+
+.quote-request-dialog .MuiDialogActions-root {
+  padding: 1rem 1.5rem;
+  background-color: #f9fafc;
+  border-top: 1px solid #e0e7ff;
+}
+
+/* Form Styling */
+.quote-request-form {
+  width: 100%;
+}
+
+.quote-request-form .MuiTextField-root,
+.quote-request-form .MuiFormControl-root {
+  margin-bottom: 1rem;
+}
+
+.quote-request-form .MuiInputLabel-root {
+  font-weight: 500;
+  color: #505050;
+}
+
+.quote-request-form .MuiInputBase-root {
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.quote-request-form .MuiOutlinedInput-root {
+  transition: all 0.2s ease;
+}
+
+.quote-request-form .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #63b3ed;
+}
+
+.quote-request-form .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #2563eb;
+  border-width: 2px;
+}
+
+/* Section Styling */
+.quote-request-form .MuiDivider-root {
+  margin: 1.5rem 0;
+}
+
+.quote-request-form .section-header {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.quote-request-form .section-header:after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  height: 2px;
+  width: 40px;
+  background-color: #3b82f6;
+}
+
+/* Button Styling */
+.quote-request-form .MuiButton-root {
+  text-transform: none;
+  font-weight: 500;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+}
+
+.request-button {
+  background-color: #2563eb;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.request-button:hover {
+  background-color: #1a56db;
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+}
+
+.cancel-button {
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.cancel-button:hover {
+  background-color: rgba(107, 114, 128, 0.1);
+}
+
+/* Success Message Styling */
+.success-message {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  animation: successPulse 0.5s ease-out;
+}
+
+.success-message .MuiSvgIcon-root {
+  font-size: 4rem;
+  color: #10b981;
+  margin-bottom: 1rem;
+  animation: checkmark 0.8s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.success-message-title {
+  font-weight: 600;
+  color: #065f46;
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+}
+
+.success-message-text {
+  color: #374151;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Checkbox styling */
+.quote-request-form .MuiCheckbox-root {
+  color: #3b82f6;
+}
+
+.quote-request-form .MuiFormControlLabel-root {
+  margin-left: -11px;
+  color: #444;
+}
+
+/* Error styling */
+.quote-request-form .MuiFormHelperText-root.Mui-error {
+  font-size: 0.75rem;
+  margin-top: 4px;
+  font-weight: 500;
+  color: #ef4444;
+}
+
+/* Loading state styling */
+.quote-request-form .MuiCircularProgress-root {
+  margin-right: 0.5rem;
+  color: #fff;
+}
+
+/* Service info preview */
+.service-info-preview {
+  background-color: #f7faff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #3b82f6;
+}
+
+.service-info-title {
+  font-weight: 600;
+  color: #1e40af;
+  margin-bottom: 0.5rem;
+}
+
+.service-info-description {
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+/* Request success notification */
+.request-success-notification {
+  background-color: #ecfdf5;
+  border-radius: 8px;
+  border-left: 4px solid #10b981;
+  padding: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.request-success-icon {
+  color: #10b981;
+}
+
+.request-success-text {
+  color: #065f46;
+}
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+  .quote-request-dialog .MuiDialogTitle-root {
+    padding: 1.25rem 1.25rem 0.75rem;
+  }
+  
+  .quote-request-dialog .MuiDialogContent-root {
+    padding: 1.25rem;
+  }
+  
+  .quote-request-dialog .MuiDialogActions-root {
+    padding: 0.75rem 1.25rem 1.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .quote-request-dialog .MuiDialog-paper {
+    margin: 0.5rem;
+    max-height: calc(100% - 1rem);
+  }
+  
+  .quote-request-dialog .MuiDialogTitle-root {
+    padding: 1rem 1rem 0.75rem;
+  }
+  
+  .quote-request-dialog .MuiDialogContent-root {
+    padding: 1rem;
+  }
+  
+  .quote-request-dialog .MuiDialogActions-root {
+    padding: 0.75rem 1rem 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .quote-request-dialog .MuiDialogActions-root .MuiButton-root {
+    width: 100%;
+  }
+  
+  .quote-request-form .MuiGrid-container {
+    gap: 0.5rem;
+  }
+  
+  .section-header {
+    font-size: 0.95rem;
+  }
+  
+  .success-message {
+    padding: 1.5rem 1rem;
+  }
+  
+  .success-message-title {
+    font-size: 1.25rem;
+  }
+}

@@ -14,12 +14,14 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import SecurityIcon from '@mui/icons-material/Security';
 import CloseIcon from '@mui/icons-material/Close';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
+import { useNavigate } from 'react-router-dom';
 
 // HeroSlider Component with fade transitions
 const HeroSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const slideRef = useRef(null);
+  const navigate = useNavigate();
   
   const images = [
     'public/Images/homepageImg/slide1.jpg',
@@ -454,7 +456,8 @@ const Home = () => {
                 With a client-centric approach and attention to detail, we provide tailored solutions that address your 
                 unique challenges and help you achieve your financial goals.
               </Typography>
-              <Button variant="outlined" className="intro-button">
+              <Button variant="outlined" className="intro-button" onClick={() => navigate("/about")}
+              >
                 About Us
               </Button>
             </Grid>
