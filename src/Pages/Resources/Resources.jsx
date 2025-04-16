@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import "./Resources.css";
@@ -85,145 +85,48 @@ const Resources = () => {
   const [subscribeStatus, setSubscribeStatus] = useState("");
   const [email, setEmail] = useState("");
   
-  // Mock data - in a real application, this would come from an API
-  const notices = [
-    {
-      date: "April 2, 2025",
-      url: "/notices/tax-filing-deadline",
-      title: "Extended Tax Filing Deadline",
-      description: "Income Tax Department announces extended filing deadline for specified assessees to May 31, 2025.",
-      tag: "Urgent",
-      tagType: "urgent"
-    },
-    {
-      date: "March 28, 2025",
-      url: "/notices/itat-ruling",
-      title: "ITAT Ruling: Significant Impact on Section 54F Claims",
-      description: "Recent ITAT ruling clarifies conditions for capital gains exemption under Section 54F.",
-      tag: "Important"
-    },
-    {
-      date: "March 15, 2025",
-      url: "/notices/revised-audit-standards",
-      title: "Revised Audit Standards SAS 145 & 146",
-      description: "Implementation guidelines for revised Standards on Auditing effective from April 15, 2025.",
-      tag: "Standards"
-    }
-  ];
+  // State for API data
+  const [notices, setNotices] = useState([]);
+  const [news, setNews] = useState([]);
+  const [learningResources, setLearningResources] = useState([]);
+  const [links, setLinks] = useState([]);
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Format date utility function
-  const formatDate = (daysAgo) => {
-    const date = new Date();
-    date.setDate(date.getDate() - daysAgo);
-    return date.toLocaleDateString("en-US", { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    });
-  };
+  // Base URL for API - adjust as needed for your environment
+  const API_BASE_URL = 'http://127.0.0.1:8000';
 
-  // News data
-  const news = [
-    {
-      image: "/api/placeholder/400/200",
-      imageAlt: "New tax law changes",
-      date: formatDate(2),
-      url: "/news/tax-reform-2025",
-      title: "Finance Act 2025: Key Changes Affecting CA Practice",
-      description: "Analysis of significant amendments in the Finance Act 2025 and their impact on CA practice, client advisory, and compliance requirements.",
-      tag: "Tax Reform"
-    },
-    {
-      image: "/api/placeholder/400/200",
-      imageAlt: "Firm partnership announcement",
-      date: formatDate(5),
-      url: "/news/faceless-assessment-updates",
-      title: "Faceless Assessment 2.0: Enhanced Procedures & Practitioner Guidelines",
-      description: "Tax department announces updated procedures for faceless assessments with new documentation requirements and timeline modifications.",
-      tag: "Regulatory"
-    },
-    {
-      image: "/api/placeholder/400/200",
-      imageAlt: "Digital transformation",
-      date: formatDate(10),
-      url: "/news/digital-transformation",
-      title: "AI & Automation: Reshaping Accounting Practices",
-      description: "How AI and automation technologies are transforming audit, tax, and advisory services in accounting firms.",
-      tag: "Technology"
-    }
-  ];
+  // Fetch data from API
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Fetch all resources in parallel
+        const [noticesRes, newsRes, learningRes, linksRes, faqsRes] = await Promise.all([
+          axios.get(`${API_BASE_URL}/notices/`),
+          axios.get(`${API_BASE_URL}/news/`),
+          axios.get(`${API_BASE_URL}/learning/`),
+          axios.get(`${API_BASE_URL}/links/`),
+          axios.get(`${API_BASE_URL}/faqs/`),
+        ]);
+        
+        setNotices(noticesRes.data);
+        setNews(newsRes.data);
+        setLearningResources(learningRes.data);
+        setLinks(linksRes.data);
+        setFaqs(faqsRes.data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching resources:", err);
+        setError("Failed to load resources. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Learning resources data
-  const learningResources = [
-    {
-      url: "/learning/gst-masterclass",
-      title: "GST Masterclass: Advanced Concepts",
-      description: "A comprehensive course covering complex GST scenarios, dispute resolution, and recent case laws.",
-      meta: ["12 Modules", "24 CPE Hours"]
-    },
-    {
-      url: "/learning/ifrs-webinar",
-      title: "Webinar: IFRS Updates & Implementation Challenges",
-      description: "Join industry experts discussing recent IFRS amendments and practical implementation approaches.",
-      meta: ["April 15, 2025", "3 CPE Hours"]
-    },
-    {
-      url: "/learning/forensic-accounting",
-      title: "Certificate Course: Forensic Accounting & Fraud Detection",
-      description: "Develop specialized skills in forensic accounting, fraud investigation techniques, and evidence handling.",
-      meta: ["8 Modules", "16 CPE Hours"]
-    }
-  ];
-
-  // External links data
-  const links = [
-    {
-      url: "https://www.icai.org",
-      title: "ICAI Official Portal",
-      description: "Institute of Chartered Accountants of India - Official website"
-    },
-    {
-      url: "https://www.incometax.gov.in",
-      title: "Income Tax Department",
-      description: "Official Income Tax Department portal for e-filing and tax services"
-    },
-    {
-      url: "https://www.gst.gov.in",
-      title: "GST Portal",
-      description: "Official GST portal for returns filing and GST compliance"
-    },
-    {
-      url: "https://www.mca.gov.in",
-      title: "Ministry of Corporate Affairs",
-      description: "MCA portal for company registration and compliance"
-    },
-    {
-      url: "https://www.taxmann.com",
-      title: "Taxmann",
-      description: "Tax and corporate laws research platform"
-    },
-    {
-      url: "https://www.cbic.gov.in",
-      title: "Central Board of Indirect Taxes & Customs",
-      description: "Official CBIC website for customs and indirect tax information"
-    }
-  ];
-
-  // FAQ data
-  const faqs = [
-    {
-      question: "How do I earn CPE credit hours from your resources?",
-      answer: "CPE credits are awarded upon completion of eligible courses and webinars. Each learning resource specifies the number of CPE hours available. Certificates are issued automatically upon completion of required assessments."
-    },
-    {
-      question: "How frequently are tax resources updated?",
-      answer: "Our tax resources are updated within 48 hours of any significant change in tax legislation, circulars, or notifications. All resources include a \"Last Updated\" timestamp for reference."
-    },
-    {
-      question: "Can I access these resources on mobile devices?",
-      answer: "Yes, our resource portal is fully responsive and optimized for mobile access. We also offer a dedicated mobile app for iOS and Android that allows offline access to downloaded resources."
-    }
-  ];
+    fetchData();
+  }, []);
 
   // Handle email subscription
   const handleSubscribe = async (e) => {
@@ -235,7 +138,7 @@ const Resources = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/emailstorage/', { email });
+      const response = await axios.post(`${API_BASE_URL}/emailstorage/`, { email });
   
       setSubscribeStatus(
         response.status === 201 
@@ -261,6 +164,14 @@ const Resources = () => {
     { id: "learning", label: "Learning" },
     { id: "links", label: "Links" }
   ];
+
+  if (loading) {
+    return <div className="loading-spinner">Loading resources...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
 
   return (
     <div className="resources-container">
@@ -303,7 +214,7 @@ const Resources = () => {
       </div>
 
       {/* Notices Section */}
-      {(activeTab === "all" || activeTab === "notices") && (
+      {(activeTab === "all" || activeTab === "notices") && notices.length > 0 && (
         <section 
           className="resources-section fade-in" 
           role="tabpanel" 
@@ -315,18 +226,20 @@ const Resources = () => {
             <h2 className="section-title">Important Notices</h2>
           </div>
           <div className="resources-items">
-            {notices.map((notice, index) => (
+            {notices.slice(0, 3).map((notice, index) => (
               <ResourceItem key={index} item={notice} type="notice" />
             ))}
           </div>
-          <NavLink to="/all-notices" className="see-all-link">
-            View all notices <ExternalLink size={16} aria-hidden="true" />
-          </NavLink>
+          {notices.length > 3 && (
+            <NavLink to="/all-notices" className="see-all-link">
+              View all notices <ExternalLink size={16} aria-hidden="true" />
+            </NavLink>
+          )}
         </section>
       )}
 
       {/* News and Updates Section */}
-      {(activeTab === "all" || activeTab === "news") && (
+      {(activeTab === "all" || activeTab === "news") && news.length > 0 && (
         <section 
           className="resources-section fade-in"
           role="tabpanel"
@@ -338,18 +251,20 @@ const Resources = () => {
             <h2 className="section-title">News & Updates</h2>
           </div>
           <div className="resources-items">
-            {news.map((item, index) => (
+            {news.slice(0, 3).map((item, index) => (
               <ResourceItem key={index} item={item} type="news" />
             ))}
           </div>
-          <NavLink to="/all-news" className="see-all-link">
-            View all news <ExternalLink size={16} aria-hidden="true" />
-          </NavLink>
+          {news.length > 3 && (
+            <NavLink to="/all-news" className="see-all-link">
+              View all news <ExternalLink size={16} aria-hidden="true" />
+            </NavLink>
+          )}
         </section>
       )}
 
       {/* Learning Resources Section */}
-      {(activeTab === "all" || activeTab === "learning") && (
+      {(activeTab === "all" || activeTab === "learning") && learningResources.length > 0 && (
         <section 
           className="resources-section fade-in"
           role="tabpanel"
@@ -361,18 +276,20 @@ const Resources = () => {
             <h2 className="section-title">Learning Resources</h2>
           </div>
           <div className="resources-items">
-            {learningResources.map((item, index) => (
+            {learningResources.slice(0, 3).map((item, index) => (
               <ResourceItem key={index} item={item} type="learning" />
             ))}
           </div>
-          <NavLink to="/all-learning" className="see-all-link">
-            View all learning resources <ExternalLink size={16} aria-hidden="true" />
-          </NavLink>
+          {learningResources.length > 3 && (
+            <NavLink to="/all-learning" className="see-all-link">
+              View all learning resources <ExternalLink size={16} aria-hidden="true" />
+            </NavLink>
+          )}
         </section>
       )}
 
       {/* Helpful Links Section */}
-      {(activeTab === "all" || activeTab === "links") && (
+      {(activeTab === "all" || activeTab === "links") && links.length > 0 && (
         <section 
           className="resources-section fade-in"
           role="tabpanel"
@@ -392,20 +309,22 @@ const Resources = () => {
       )}
 
       {/* FAQs Section */}
-      {activeTab === "all" && (
+      {activeTab === "all" && faqs.length > 0 && (
         <section className="resources-section fade-in">
           <div className="section-header">
             <HelpCircle size={22} aria-hidden="true" />
             <h2 className="section-title">Frequently Asked Questions</h2>
           </div>
           <div className="faq-container">
-            {faqs.map((faq, index) => (
+            {faqs.slice(0, 3).map((faq, index) => (
               <FaqItem key={index} question={faq.question} answer={faq.answer} />
             ))}
           </div>
-          <NavLink to="/faqs" className="see-all-link">
-            View all FAQs <ExternalLink size={16} aria-hidden="true" />
-          </NavLink>
+          {faqs.length > 3 && (
+            <NavLink to="/faqs" className="see-all-link">
+              View all FAQs <ExternalLink size={16} aria-hidden="true" />
+            </NavLink>
+          )}
         </section>
       )}
 

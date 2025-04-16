@@ -22,6 +22,7 @@ const App = () => {
   return (
     <AuthContextProvider>
            <Navbar />
+      <TransitionWrapper>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<Aboutus />} />
@@ -37,6 +38,7 @@ const App = () => {
           <Route path="/logout" element={<Logout />}/>
           </Route>
         </Routes>
+      </TransitionWrapper>
       <Footer />
     </AuthContextProvider>
   );

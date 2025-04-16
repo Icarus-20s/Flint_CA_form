@@ -187,7 +187,7 @@ const Contactus = () => {
                   <AccessTime />
                 </div>
                 <Typography variant="h6" className="contact-card-title">Business Hours</Typography>
-                <Typography variant="body1">Monday - Friday</Typography>
+                <Typography variant="body1">Sunday - Friday</Typography>
                 <Typography variant="body2">9:00 AM - 5:00 PM</Typography>
               </CardContent>
             </Card>

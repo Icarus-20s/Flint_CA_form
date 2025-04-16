@@ -1,8 +1,40 @@
-.fade {
+.transition-wrapper {
   opacity: 0;
-  transition: opacity 0.6s ease-out;
+  transform: translateY(10px);
+  transition-property: opacity, transform;
+  transition-timing-function: ease;
+  will-change: opacity, transform;
 }
 
-.fade.show {
+/* Generic fade */
+.transition-wrapper.fade.in {
   opacity: 1;
+  transform: translateY(0);
+}
+
+.transition-wrapper.fade.out {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Slide up */
+.transition-wrapper.slide-up.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.transition-wrapper.slide-up.out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Zoom in */
+.transition-wrapper.zoom.in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.transition-wrapper.zoom.out {
+  opacity: 0;
+  transform: scale(0.95);
 }
