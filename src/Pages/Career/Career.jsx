@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Loader from "../../Loaders/Loader";
+import Loader from "../../Loaders/LoadingSpinner";
 import { useAuth } from "../../Context/AuthContextProvider";
 import { useNavigate } from "react-router-dom";
 import "./Career.css";
 import WhyJoinUs from "./WhyJoinUs/WhyJoinUs";
 import ExperienceBenefits from "./ExperienceBenefits/ExperienceBenefits";
 import EmployeeReviews from "./EmployeeReview/EmployeeReview";
+import api from "../../Api/api";
 
 const Career = () => {
     const { isAuthenticated } = useAuth();
@@ -41,7 +41,7 @@ const Career = () => {
     const fetchCareers = async () => {
         setLoading(true);
         try {
-            const response = await axios.get("http://127.0.0.1:8000/career/");
+            const response = await api.get("/career/");
             setCareers(response.data);
             setLoading(false);
         } catch (err) {
@@ -88,8 +88,8 @@ const Career = () => {
         }
 
         try {
-            const response = await axios.post(
-                "http://127.0.0.1:8000/career/create/",
+            const response = await api.post(
+                "/career/create/",
                 newCareer
             );
             setCareers((prev) => [...prev, response.data]);
@@ -119,8 +119,8 @@ const Career = () => {
         }
 
         try {
-            const response = await axios.put(
-                `http://127.0.0.1:8000/career/${editingCareer.id}/update/`,
+            const response = await api.put(
+                `/career/${editingCareer.id}/update/`,
                 editingCareer
             );
             setCareers((prev) =>
@@ -144,7 +144,7 @@ const Career = () => {
 
         if (window.confirm("Are you sure you want to delete this career opportunity?")) {
             try {
-                await axios.delete(`http://127.0.0.1:8000/career/${id}/delete/`);
+                await api.delete(`/career/${id}/delete/`);
                 setCareers((prev) => prev.filter((career) => career.id !== id));
                 setSuccessMessage("Career opportunity deleted successfully!");
             } catch (err) {
@@ -179,8 +179,8 @@ const Career = () => {
         }
 
         try {
-            await axios.post(
-                "http://127.0.0.1:8000/jobapplication/",
+            await api.post(
+                "/jobapplication/",
                 formData,
                 {
                     headers: {

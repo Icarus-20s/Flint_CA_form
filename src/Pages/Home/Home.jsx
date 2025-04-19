@@ -15,13 +15,11 @@ import SecurityIcon from '@mui/icons-material/Security';
 import CloseIcon from '@mui/icons-material/Close';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import { useNavigate } from 'react-router-dom';
-
 // HeroSlider Component with fade transitions
 const HeroSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const slideRef = useRef(null);
-  const navigate = useNavigate();
   
   const images = [
     'public/Images/homepageImg/slide1.jpg',
@@ -124,6 +122,7 @@ const ServiceCard = ({ service, onLearnMore }) => {
 
 // Enhanced Modal Component
 const Modal = ({ service, onClose }) => (
+
   <div className="modal-overlay" onClick={onClose}>
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
       <div className="modal-header">
@@ -144,21 +143,9 @@ const Modal = ({ service, onClose }) => (
         </Typography>
       </div>
       <div className="modal-footer">
-        <Button 
-          variant="contained" 
-          className="contact-btn"
-          onClick={onClose}
-        >
-          Contact Us
-        </Button>
-        <Button 
-          variant="outlined" 
-          className="close-btn"
-          onClick={onClose}
-        >
-          Close
-        </Button>
-      </div>
+
+</div>
+
     </div>
   </div>
 );

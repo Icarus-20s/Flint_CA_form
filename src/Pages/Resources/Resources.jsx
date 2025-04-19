@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
 import "./Resources.css";
 import { 
   Calendar, 
@@ -9,8 +8,11 @@ import {
   ExternalLink, 
   HelpCircle, 
   Bell, 
-  Newspaper 
+  Newspaper,
+  Loader
 } from "lucide-react";
+
+import api from "../../Api/api";
 
 // Component for resource items
 const ResourceItem = ({ item, type }) => {
@@ -79,6 +81,16 @@ const FaqItem = ({ question, answer }) => (
   </div>
 );
 
+// Loading spinner component
+const LoadingSpinner = () => (
+  <div className="loading-container">
+    <div className="spinner-overlay">
+      <Loader size={32} className="loading-spinner-icon" />
+      <p>Loading resources...</p>
+    </div>
+  </div>
+);
+
 // Main Resources component
 const Resources = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -93,22 +105,23 @@ const Resources = () => {
   const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [contentVisible, setContentVisible] = useState(false);
 
-  // Base URL for API - adjust as needed for your environment
-  const API_BASE_URL = 'http://127.0.0.1:8000';
 
   // Fetch data from API
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setContentVisible(false);
+      
       try {
         // Fetch all resources in parallel
         const [noticesRes, newsRes, learningRes, linksRes, faqsRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/notices/`),
-          axios.get(`${API_BASE_URL}/news/`),
-          axios.get(`${API_BASE_URL}/learning/`),
-          axios.get(`${API_BASE_URL}/links/`),
-          axios.get(`${API_BASE_URL}/faqs/`),
+          api.get(`/notices/`),
+          api.get(`/news/`),
+          api.get(`/learning/`),
+          api.get(`/links/`),
+          api.get(`/faqs/`),
         ]);
         
         setNotices(noticesRes.data);
@@ -117,16 +130,35 @@ const Resources = () => {
         setLinks(linksRes.data);
         setFaqs(faqsRes.data);
         setError(null);
+        
+        // Delay to ensure smooth transition
+        setTimeout(() => {
+          setLoading(false);
+          setTimeout(() => {
+            setContentVisible(true);
+          }, 100); // Small delay before showing content
+        }, 300); // Minimum loading time for better UX
+        
       } catch (err) {
         console.error("Error fetching resources:", err);
         setError("Failed to load resources. Please try again later.");
-      } finally {
         setLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
+  // Handle tab changes with smooth transitions
+  const handleTabChange = (tabId) => {
+    setContentVisible(false);
+    setTimeout(() => {
+      setActiveTab(tabId);
+      setTimeout(() => {
+        setContentVisible(true);
+      }, 50);
+    }, 200);
+  };
 
   // Handle email subscription
   const handleSubscribe = async (e) => {
@@ -166,15 +198,31 @@ const Resources = () => {
   ];
 
   if (loading) {
-    return <div className="loading-spinner">Loading resources...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {
-    return <div className="error-message">{error}</div>;
+    return (
+      <div className="error-container">
+        <div className="error-message">
+          <HelpCircle size={32} />
+          <h2>Something went wrong</h2>
+          <p>{error}</p>
+          <button 
+            className="retry-button" 
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
   }
 
+  const contentClass = contentVisible ? 'content-visible' : '';
+
   return (
-    <div className="resources-container">
+    <div className={`resources-container ${contentClass}`}>
       <div className="resources-header">
         <h1 className="resources-heading">CA Professionals Resources</h1>
         <p className="resources-subtitle">
@@ -188,7 +236,7 @@ const Resources = () => {
           <button 
             key={item.id}
             className={`filter-btn ${activeTab === item.id ? "active" : ""}`}
-            onClick={() => setActiveTab(item.id)}
+            onClick={() => handleTabChange(item.id)}
             role="tab"
             aria-selected={activeTab === item.id}
             aria-controls={`${item.id}-panel`}
@@ -199,7 +247,7 @@ const Resources = () => {
       </div>
 
       {/* Featured Resource Banner */}
-      <div className="featured-resource">
+      <div className={`featured-resource ${contentClass}`}>
         <div className="featured-content">
           <span className="featured-tag">Featured Resource</span>
           <h2>Updated GST Compliance Framework 2025</h2>
@@ -216,7 +264,7 @@ const Resources = () => {
       {/* Notices Section */}
       {(activeTab === "all" || activeTab === "notices") && notices.length > 0 && (
         <section 
-          className="resources-section fade-in" 
+          className={`resources-section fade-in ${contentClass}`}
           role="tabpanel" 
           id="notices-panel"
           aria-labelledby="notices-tab"
@@ -241,7 +289,7 @@ const Resources = () => {
       {/* News and Updates Section */}
       {(activeTab === "all" || activeTab === "news") && news.length > 0 && (
         <section 
-          className="resources-section fade-in"
+          className={`resources-section fade-in ${contentClass}`}
           role="tabpanel"
           id="news-panel"
           aria-labelledby="news-tab"
@@ -266,7 +314,7 @@ const Resources = () => {
       {/* Learning Resources Section */}
       {(activeTab === "all" || activeTab === "learning") && learningResources.length > 0 && (
         <section 
-          className="resources-section fade-in"
+          className={`resources-section fade-in ${contentClass}`}
           role="tabpanel"
           id="learning-panel"
           aria-labelledby="learning-tab"
@@ -291,7 +339,7 @@ const Resources = () => {
       {/* Helpful Links Section */}
       {(activeTab === "all" || activeTab === "links") && links.length > 0 && (
         <section 
-          className="resources-section fade-in"
+          className={`resources-section fade-in ${contentClass}`}
           role="tabpanel"
           id="links-panel"
           aria-labelledby="links-tab"
@@ -310,7 +358,7 @@ const Resources = () => {
 
       {/* FAQs Section */}
       {activeTab === "all" && faqs.length > 0 && (
-        <section className="resources-section fade-in">
+        <section className={`resources-section fade-in ${contentClass}`}>
           <div className="section-header">
             <HelpCircle size={22} aria-hidden="true" />
             <h2 className="section-title">Frequently Asked Questions</h2>
@@ -329,7 +377,7 @@ const Resources = () => {
       )}
 
       {/* Newsletter Signup */}
-      <section className="newsletter-section">
+      <section className={`newsletter-section ${contentClass}`}>
         <div className="newsletter-content">
           <h2>Stay Updated</h2>
           <p>Subscribe to our newsletter for latest updates, resources, and professional insights</p>

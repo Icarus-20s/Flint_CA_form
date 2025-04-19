@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
 import {
   Card,
   CardContent,
@@ -33,7 +32,7 @@ import parse from 'html-react-parser';
 import "./Services.css";
 import { useNavigate } from "react-router-dom";
 import QuoteRequestForm from "../QuoteRequestForm/QuoteRequestForm";
-
+import api from "../../Api/api";
 // Service category icons mapping
 const SERVICE_ICONS = {
   "Tax Planning": <CalculateIcon />,
@@ -57,8 +56,7 @@ const Services = () => {
   const [quoteRequestOpen, setQuoteRequestOpen] = useState(false);
   const [serviceForQuote, setServiceForQuote] = useState(null);
   
-  // API URL as a constant
-  const API_BASE_URL = "http://127.0.0.1:8000";
+
 
   useEffect(() => {
     fetchServices();
@@ -68,7 +66,7 @@ const Services = () => {
   const fetchServices = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/services/`);
+      const response = await api.get(`/services/`);
       setServices(response.data);
     } catch (err) {
       setError("Error fetching services. Please try again later.");

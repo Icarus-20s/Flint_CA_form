@@ -590,3 +590,151 @@
     font-size: 0.95rem;
   }
 }
+/* Add these styles to your Resources.css file */
+
+/* ==========================================================================
+   Loading Spinner
+   ========================================================================== */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f8f9fa;
+}
+
+.spinner-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.loading-spinner-icon {
+  color: #3498db;
+  animation: spin 1.5s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   Error Message
+   ========================================================================== */
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f8f9fa;
+}
+
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 90%;
+}
+
+.error-message h2 {
+  color: #e74c3c;
+  margin: 1rem 0;
+}
+
+.error-message svg {
+  color: #e74c3c;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  display: inline-block;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  margin-top: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.retry-button:hover {
+  background-color: #2980b9;
+}
+
+/* ==========================================================================
+   Content Animations
+   ========================================================================== */
+/* Global content visibility */
+.resources-container {
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.resources-container.content-visible {
+  opacity: 1;
+}
+
+/* Element specific animations */
+.featured-resource,
+.resources-section,
+.newsletter-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.featured-resource.content-visible,
+.resources-section.content-visible,
+.newsletter-section.content-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animations for sections */
+.resources-section:nth-child(odd).content-visible {
+  transition-delay: 0.1s;
+}
+
+.resources-section:nth-child(even).content-visible {
+  transition-delay: 0.2s;
+}
+
+.newsletter-section.content-visible {
+  transition-delay: 0.3s;
+}
+
+/* Enhanced fade-in animation for tab switching */
+.fade-in {
+  animation: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Enhanced animations for resource items */
+.resource-item {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInItems 0.5s forwards;
+  animation-delay: calc(0.05s * var(--item-index, 0));
+}
+
+@keyframes fadeInItems {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Add this to your Resources.css file - this complements the existing styles */

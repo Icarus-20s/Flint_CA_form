@@ -90,7 +90,7 @@ const QuoteRequestForm = ({ open, onClose, service }) => {
       };
       
       // Send request to your Django API
-      await axios.post('http://127.0.0.1:8000/quote-requests/', requestData);
+      await api.post('/quote-requests/', requestData);
       
       setSubmitSuccess(true);
       setTimeout(() => {

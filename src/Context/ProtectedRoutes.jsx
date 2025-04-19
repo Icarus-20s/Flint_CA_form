@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../Context/AuthContextProvider.jsx";
-import Loader from "../Loaders/Loader.jsx";
+import Loader from "../Loaders/LoadingSpinner.jsx";
 
 const ProtectedRoutes = () => {
   const location = useLocation()
