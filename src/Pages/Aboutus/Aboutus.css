@@ -25,7 +25,7 @@
 
 /* Hero Section */
 .hero-section {
-  background: url('/Images/accounting-hero.jpg') no-repeat center center;
+  background: url('public/Images/bg.png') no-repeat center center;
   background-size: cover;
   height: 60vh;
   position: relative;

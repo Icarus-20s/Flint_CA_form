@@ -518,6 +518,12 @@ const Career = () => {
                                 >
                                     Remote
                                 </button>
+                                <button 
+                                    className={`filter-tab ${activeFilter === "Internship" ? "active" : ""}`} 
+                                    onClick={() => setActiveFilter("Internship")}
+                                >
+                                    Internship
+                                </button>
                             </div>
                         </div>
 

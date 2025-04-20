@@ -3,7 +3,7 @@ import { Link as ScrollLink } from 'react-scroll';
 import './Home.css';
 import { 
   Card, CardContent, Button, Typography, 
-  Grid, Box, Container, IconButton
+  Grid, Box, Container, IconButton, TextField, Paper, Chip, Divider
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -14,7 +14,17 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import SecurityIcon from '@mui/icons-material/Security';
 import CloseIcon from '@mui/icons-material/Close';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
+import EmailIcon from '@mui/icons-material/Email';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ArticleIcon from '@mui/icons-material/Article';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import StoreIcon from '@mui/icons-material/Store';
+import ApartmentIcon from '@mui/icons-material/Apartment';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../../Loaders/LoadingSpinner';
+import api from '../../Api/api';
+
 // HeroSlider Component with fade transitions
 const HeroSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -96,7 +106,7 @@ const ServiceCard = ({ service, onLearnMore }) => {
 
   return (
     <Grid item xs={12} sm={6} md={4}>
-      <Card className="service-card">
+      <Card className="service-card" elevation={3}>
         <div className="service-icon">
           {icons[service.title]}
         </div>
@@ -122,7 +132,6 @@ const ServiceCard = ({ service, onLearnMore }) => {
 
 // Enhanced Modal Component
 const Modal = ({ service, onClose }) => (
-
   <div className="modal-overlay" onClick={onClose}>
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
       <div className="modal-header">
@@ -141,11 +150,34 @@ const Modal = ({ service, onClose }) => (
         <Typography variant="body1" className="modal-extended-description">
           {service?.extendedDescription || `Our ${service?.title} service is designed to provide comprehensive solutions tailored to your specific needs. With our expert team and years of experience, we ensure optimal results and satisfaction.`}
         </Typography>
+        
+        {/* Added service benefits list */}
+        <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Key Benefits</Typography>
+        <ul className="service-benefits">
+          {service?.benefits?.map((benefit, index) => (
+            <li key={index} className="benefit-item">
+              <CheckCircleOutlineIcon className="benefit-icon" /> {benefit}
+            </li>
+          )) || (
+            <>
+              <li className="benefit-item"><CheckCircleOutlineIcon className="benefit-icon" /> Personalized approach tailored to your specific needs</li>
+              <li className="benefit-item"><CheckCircleOutlineIcon className="benefit-icon" /> Expert team with specialized industry knowledge</li>
+              <li className="benefit-item"><CheckCircleOutlineIcon className="benefit-icon" /> Regular updates and transparent communication</li>
+              <li className="benefit-item"><CheckCircleOutlineIcon className="benefit-icon" /> Compliance with all regulatory requirements</li>
+            </>
+          )}
+        </ul>
       </div>
       <div className="modal-footer">
-
-</div>
-
+        <Button 
+          variant="contained" 
+          color="primary" 
+          className="modal-action-btn"
+          onClick={() => window.location.href = '/contact'}
+        >
+          Schedule a Consultation
+        </Button>
+      </div>
     </div>
   </div>
 );
@@ -171,7 +203,7 @@ const Testimonials = ({ testimonials }) => {
         style={{ transform: `translateX(-${current * 100 / (maxIndex + 1)}%)` }}
       >
         {testimonials.map((testimonial) => (
-          <Box key={testimonial.id} className="testimonial-card">
+          <Box key={testimonial.id} className="testimonial-card" component={Paper} elevation={2}>
             <div className="testimonial-quote-icon">
               <FormatQuoteIcon />
             </div>
@@ -307,8 +339,317 @@ const Statistics = () => {
   );
 };
 
+// NEW: Industry Expertise Component
+const IndustryExpertise = () => {
+  const industries = [
+    {
+      icon: <StoreIcon fontSize="large" />,
+      name: 'Retail',
+      description: 'Specialized services for retail businesses facing unique tax and financial challenges.'
+    },
+    {
+      icon: <ApartmentIcon fontSize="large" />,
+      name: 'Real Estate',
+      description: 'Expert guidance for property investments, development, and management companies.'
+    },
+    {
+      icon: <BusinessCenterIcon fontSize="large" />,
+      name: 'Professional Services',
+      description: 'Tailored solutions for law firms, medical practices, and consulting companies.'
+    },
+    {
+      icon: <AssessmentIcon fontSize="large" />,
+      name: 'Manufacturing',
+      description: 'Comprehensive financial services for manufacturing and production businesses.'
+    },
+  ];
+
+  return (
+    <Box className="industry-expertise-container">
+      <Typography variant="h2" className="section-title">
+        Industry Expertise
+      </Typography>
+      <Typography variant="subtitle1" className="section-subtitle">
+        Specialized knowledge across diverse business sectors
+      </Typography>
+      
+      <Grid container spacing={4} sx={{ mt: 4 }}>
+        {industries.map((industry, index) => (
+          <Grid item xs={12} sm={6} md={3} key={index}>
+            <Paper elevation={2} className="industry-card">
+              <div className="industry-icon">
+                {industry.icon}
+              </div>
+              <Typography variant="h6" className="industry-name">
+                {industry.name}
+              </Typography>
+              <Typography variant="body2" className="industry-description">
+                {industry.description}
+              </Typography>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
+};
+
+const LatestInsights = () => {
+  const [insights, setInsights] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchInsights = async () => {
+      try {
+        const response = await api.get('/news'); // Update to your actual endpoint
+        setInsights(response.data);
+      } catch (error) {
+        console.error('Error fetching insights:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInsights();
+  }, []);
+
+  if (loading) {
+    return <LoadingSpinner/>;
+  }
+
+
+  return (
+<Box className="insights-container">
+      <Typography variant="h2" className="section-title">
+        Latest Insights
+      </Typography>
+      <Typography variant="subtitle1" className="section-subtitle">
+        Expert knowledge and analysis from our team
+      </Typography>
+
+      <Grid container spacing={4} sx={{ mt: 4 }}>
+        {insights.map((insight, index) => (
+          <Grid item xs={12} md={4} key={index}>
+            <Paper elevation={3} className="insight-card">
+              <div className="insight-image-container">
+                <img
+                  src={insight.image}
+                  alt={insight.title}
+                  className="insight-image"
+                />
+                <div className="insight-date">
+                  <CalendarTodayIcon fontSize="small" /> {insight.date}
+                </div>
+              </div>
+              <div className="insight-content">
+                <Typography variant="h6" className="insight-title">
+                  {insight.title}
+                </Typography>
+                <Typography variant="body2" className="insight-excerpt">
+                  {insight.excerpt}
+                </Typography>
+
+              </div>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
+};
+
+// NEW: Quick Contact Form Component
+const QuickContactForm = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Form submission logic would go here
+    console.log('Form submitted:', formData);
+    // Reset form
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      message: ''
+    });
+    // Show success message
+    alert('Thank you for your message. We will get back to you shortly.');
+  };
+
+  return (
+    <Box className="quick-contact-container">
+      <Paper elevation={3} className="contact-form-paper">
+        <Typography variant="h4" className="contact-form-title">
+          Get in Touch
+        </Typography>
+        <Typography variant="body1" className="contact-form-subtitle">
+          Have questions? We're here to help. Fill out the form below for a prompt response.
+        </Typography>
+        
+        <form onSubmit={handleSubmit} className="quick-contact-form">
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Full Name"
+                name="name"
+                variant="outlined"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="form-field"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Email Address"
+                name="email"
+                type="email"
+                variant="outlined"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="form-field"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Phone Number"
+                name="phone"
+                variant="outlined"
+                value={formData.phone}
+                onChange={handleChange}
+                className="form-field"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="How can we help you?"
+                name="message"
+                multiline
+                rows={4}
+                variant="outlined"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                className="form-field"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                className="submit-button"
+                startIcon={<EmailIcon />}
+              >
+                Send Message
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
+    </Box>
+  );
+};
+
+// NEW: Trust Elements Component
+const TrustElements = () => {
+  const certifications = [
+    {
+      name: 'ICAI',
+      logo: 'public/Images/certification1.png'
+    },
+    {
+      name: 'ISO 9001',
+      logo: 'public/Images/certification2.png'
+    },
+    {
+      name: 'ACCA',
+      logo: 'public/Images/certification3.png'
+    },
+    {
+      name: 'CMA',
+      logo: 'public/Images/certification4.png'
+    }
+  ];
+
+  return (
+    <Box className="trust-elements-container">
+      <Container>
+        <Typography variant="h5" align="center" className="trust-heading">
+          <VerifiedUserIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+          Trusted by Businesses Nationwide
+        </Typography>
+        
+        <Grid container spacing={4} className="certification-logos" justifyContent="center" alignItems="center">
+          {certifications.map((cert, index) => (
+            <Grid item key={index} xs={6} sm={3}>
+              <Box className="certification-logo-container">
+                <img src={cert.logo} alt={cert.name} className="certification-logo" />
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </Box>
+  );
+};
+
+// NEW: Value Proposition Component
+const ValuePropositionBanner = () => {
+  return (
+    <Box className="value-proposition-container">
+      <Container>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item xs={12} md={4}>
+            <Box className="value-item">
+              <CheckCircleOutlineIcon className="value-icon" />
+              <Typography variant="h6" className="value-title">Expertise & Experience</Typography>
+              <Typography variant="body2">Team of certified professionals with proven industry expertise</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Box className="value-item">
+              <CheckCircleOutlineIcon className="value-icon" />
+              <Typography variant="h6" className="value-title">Client-Focused Approach</Typography>
+              <Typography variant="body2">Personalized solutions tailored to your specific business needs</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Box className="value-item">
+              <CheckCircleOutlineIcon className="value-icon" />
+              <Typography variant="h6" className="value-title">Integrity & Reliability</Typography>
+              <Typography variant="body2">Committed to highest standards of professional ethics</Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  );
+};
+
+
 // Main Home Component
 const Home = () => {
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [currentService, setCurrentService] = useState(null);
 
@@ -318,35 +659,65 @@ const Home = () => {
       title: 'Tax Consultancy',
       description: 'Expert advice on tax planning, optimization, and compliance for businesses and individuals.',
       image: 'public/Images/img8.jpg',
-      extendedDescription: 'Our comprehensive tax consultancy services help clients navigate complex tax regulations, minimize tax liabilities, and ensure full compliance with local and international tax laws. We provide personalized tax solutions tailored to your specific needs.'
+      extendedDescription: 'Our comprehensive tax consultancy services help clients navigate complex tax regulations, minimize tax liabilities, and ensure full compliance with local and international tax laws. We provide personalized tax solutions tailored to your specific needs.',
+      benefits: [
+        'Strategic tax planning to minimize liabilities',
+        'Comprehensive compliance with all tax regulations',
+        'Representation during tax audits and investigations',
+        'Regular tax health checks and optimization'
+      ]
     },
     {
       id: 2,
       title: 'Auditing & Assurance',
       description: 'Rigorous financial statement audits and assurance services to enhance credibility and transparency.',
       image: 'public/Images/img5.jpg',
-      extendedDescription: 'Our auditing and assurance services provide an objective evaluation of financial statements and operational processes. We help identify risks, improve internal controls, and enhance the reliability of your financial reporting.'
+      extendedDescription: 'Our auditing and assurance services provide an objective evaluation of financial statements and operational processes. We help identify risks, improve internal controls, and enhance the reliability of your financial reporting.',
+      benefits: [
+        'Enhanced financial statement credibility',
+        'Identification of control weaknesses and improvement opportunities',
+        'Compliance with regulatory requirements',
+        'Expert risk assessment and mitigation strategies'
+      ]
     },
     {
       id: 3,
       title: 'Business Advisory',
       description: 'Strategic guidance for business growth, operational efficiency, and sustainable development.',
       image: 'public/Images/img6.jpg',
-      extendedDescription: 'Our business advisory services provide strategic insights and practical solutions to help your business thrive. From startup guidance to succession planning, we work with you to achieve your business objectives.'
+      extendedDescription: 'Our business advisory services provide strategic insights and practical solutions to help your business thrive. From startup guidance to succession planning, we work with you to achieve your business objectives.',
+      benefits: [
+        'Strategic business planning and implementation',
+        'Performance improvement and optimization',
+        'Merger and acquisition support',
+        'Business restructuring and transformation'
+      ]
     },
     {
       id: 4,
       title: 'Financial Planning',
       description: 'Customized financial strategies to secure your future and achieve long-term financial goals.',
       image: 'public/Images/story.jpg',
-      extendedDescription: 'Our financial planning services help you create a roadmap for your financial future. We analyze your current situation, define goals, and develop strategies for wealth creation, retirement planning, and wealth preservation.'
+      extendedDescription: 'Our financial planning services help you create a roadmap for your financial future. We analyze your current situation, define goals, and develop strategies for wealth creation, retirement planning, and wealth preservation.',
+      benefits: [
+        'Comprehensive financial needs assessment',
+        'Strategic investment planning and portfolio management',
+        'Retirement and succession planning',
+        'Regular financial health check-ups and plan adjustments'
+      ]
     },
     {
       id: 5,
       title: 'Risk Management',
       description: 'Comprehensive risk assessment and mitigation strategies to protect your business interests.',
       image: 'public/Images/img10.png',
-      extendedDescription: 'Our risk management services help identify, assess, and mitigate financial and operational risks. We develop robust risk management frameworks tailored to your business environment and objectives.'
+      extendedDescription: 'Our risk management services help identify, assess, and mitigate financial and operational risks. We develop robust risk management frameworks tailored to your business environment and objectives.',
+      benefits: [
+        'Comprehensive risk identification and assessment',
+        'Development of risk mitigation strategies',
+        'Implementation of risk management frameworks',
+        'Regular risk monitoring and reporting'
+      ]
     },
   ];
 
@@ -426,7 +797,12 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Introduction Section */}
+      {/* NEW: Value Proposition Banner */}
+      <section className="value-proposition-section">
+        <ValuePropositionBanner />
+      </section>
+
+      {/* Introduction Section - Enhanced */}
       <section className="intro-section">
         <Container>
           <Grid container spacing={4} alignItems="center">
@@ -440,10 +816,42 @@ const Home = () => {
                 financial landscapes with confidence and clarity.
               </Typography>
               <Typography variant="body1" className="intro-text">
-                With a client-centric approach and attention to detail, we provide tailored solutions that address your 
+                With a client-centric approach and attention to detail,With a client-centric approach and attention to detail, we provide tailored solutions that address your 
                 unique challenges and help you achieve your financial goals.
               </Typography>
-              <Button variant="outlined" className="intro-button" onClick={() => navigate("/about")}
+              <Box sx={{ mt: 3 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Box className="key-feature">
+                      <CheckCircleOutlineIcon className="feature-icon" />
+                      <Typography variant="body1">Certified CA Professionals</Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Box className="key-feature">
+                      <CheckCircleOutlineIcon className="feature-icon" />
+                      <Typography variant="body1">Tailored Financial Solutions</Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Box className="key-feature">
+                      <CheckCircleOutlineIcon className="feature-icon" />
+                      <Typography variant="body1">Regulatory Compliance</Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Box className="key-feature">
+                      <CheckCircleOutlineIcon className="feature-icon" />
+                      <Typography variant="body1">Industry-Specific Expertise</Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Box>
+              <Button 
+                variant="outlined" 
+                className="intro-button" 
+                onClick={() => navigate("/about")}
+                sx={{ mt: 3 }}
               >
                 About Us
               </Button>
@@ -478,10 +886,22 @@ const Home = () => {
         </Container>
       </section>
 
+      {/* NEW: Trust Elements Section */}
+      <section className="trust-elements-section">
+        <TrustElements />
+      </section>
+
       {/* Statistics Section */}
       <section className="statistics-section" id="statistics-section">
         <Container>
           <Statistics />
+        </Container>
+      </section>
+
+      {/* NEW: Industry Expertise Section */}
+      <section className="industry-expertise-section">
+        <Container>
+          <IndustryExpertise />
         </Container>
       </section>
 
@@ -492,13 +912,67 @@ const Home = () => {
             What Our Clients Say
           </Typography>
           <Typography variant="subtitle1" className="section-subtitle">
-            Success stories from businesses we've helped
+            Success sexport default Home;tories from businesses we've helped
           </Typography>
           <Testimonials testimonials={testimonials} />
         </Container>
       </section>
 
-        {/* Modal for Service Details */}
+      {/* NEW: Latest Insights Section */}
+      <section className="insights-section">
+        <Container>
+          <LatestInsights />
+        </Container>
+      </section>
+
+      {/* NEW: Quick Contact Form Section */}
+      <section className="quick-contact-section">
+        <Container>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={6}>
+              <QuickContactForm />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <div className="contact-image-container">
+                <img 
+                  src="public/Images/story.jpg" 
+                  alt="Contact us" 
+                  className="contact-image" 
+                />
+                <Box className="contact-details">
+                  <Typography variant="h4" className="contact-heading">
+                    Let's Connect
+                  </Typography>
+                  <Divider sx={{ my: 2 }} />
+                  <Typography variant="body1" className="contact-address">
+                    <strong>Address:</strong> 123 Business Avenue, Financial District, City, 123456
+                  </Typography>
+                  <Typography variant="body1" className="contact-phone">
+                    <strong>Phone:</strong> +91 98765 43210
+                  </Typography>
+                  <Typography variant="body1" className="contact-email">
+                    <strong>Email:</strong> info@kbpsassociates.com
+                  </Typography>
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="body1" className="contact-hours">
+                      <strong>Business Hours:</strong>
+                    </Typography>
+                    <Typography variant="body2">
+                      Monday - Friday: 9:00 AM - 6:00 PM
+                    </Typography>
+                    <Typography variant="body2">
+                      Saturday: 10:00 AM - 2:00 PM
+                    </Typography>
+                  </Box>
+                </Box>
+              </div>
+            </Grid>
+          </Grid>
+        </Container>
+      </section>
+
+
+      {/* Modal for Service Details */}
       {showModal && <Modal service={currentService} onClose={closeModal} />}
     </main>
   );
