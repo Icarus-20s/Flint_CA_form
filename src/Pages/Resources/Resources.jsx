@@ -13,6 +13,7 @@ import {
 
 import api from "../../Api/api";
 import "./Resources.css";
+import LoadingSpinner from "../../Loaders/LoadingSpinner";
 
 // Resource card component with different variations
 const ResourceCard = ({ item, variant }) => {
@@ -99,12 +100,7 @@ const FaqAccordion = ({ question, answer }) => {
 
 // Loading component
 const LoadingState = () => (
-  <div className="loading-wrapper">
-    <div className="loading-overlay">
-      <Loader size={32} className="loading-icon" />
-      <p>Loading resources...</p>
-    </div>
-  </div>
+  <LoadingSpinner />
 );
 
 // Main component

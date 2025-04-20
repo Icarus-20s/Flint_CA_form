@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import Loader from "../../Loaders/LoadingSpinner";
 import { useAuth } from "../../Context/AuthContextProvider";
 import { useNavigate } from "react-router-dom";
-import "./Career.css";
+import api from "../../Api/api";
 import WhyJoinUs from "./WhyJoinUs/WhyJoinUs";
 import ExperienceBenefits from "./ExperienceBenefits/ExperienceBenefits";
 import EmployeeReviews from "./EmployeeReview/EmployeeReview";
-import api from "../../Api/api";
+import "./Career.css";
 
 const Career = () => {
     const { isAuthenticated } = useAuth();
@@ -32,6 +32,37 @@ const Career = () => {
     const [applyingForCareerId, setApplyingForCareerId] = useState(null);
     const [activeFilter, setActiveFilter] = useState("All");
     const [searchTerm, setSearchTerm] = useState("");
+    const [expandedCardId, setExpandedCardId] = useState(null);
+    
+    // Animation states - revised
+    const [isLoading, setIsLoading] = useState(true);
+    const [isContentVisible, setIsContentVisible] = useState(false);
+    const [animationComplete, setAnimationComplete] = useState(false);
+
+    // Improved animation sequence
+    useEffect(() => {
+        // Set initial loading state
+        const loadTimer = setTimeout(() => {
+            // Mark loading as complete
+            setIsLoading(false);
+            
+            // After a short delay, start showing content
+            const visibilityTimer = setTimeout(() => {
+                setIsContentVisible(true);
+                
+                // After transition completes, mark animation as done
+                const completeTimer = setTimeout(() => {
+                    setAnimationComplete(true);
+                }, 600); // Match this to your CSS transition duration
+                
+                return () => clearTimeout(completeTimer);
+            }, 100); // Short delay for better visual effect
+            
+            return () => clearTimeout(visibilityTimer);
+        }, 800);
+        
+        return () => clearTimeout(loadTimer);
+    }, []);
 
     // Fetch careers on component mount
     useEffect(() => {
@@ -88,10 +119,7 @@ const Career = () => {
         }
 
         try {
-            const response = await api.post(
-                "/career/create/",
-                newCareer
-            );
+            const response = await api.post("/career/create/", newCareer);
             setCareers((prev) => [...prev, response.data]);
             setNewCareer({
                 title: "",
@@ -204,6 +232,11 @@ const Career = () => {
         }
     };
 
+    // Toggle expanded card
+    const toggleExpandCard = (id) => {
+        setExpandedCardId(expandedCardId === id ? null : id);
+    };
+
     // Filter careers by employment type
     const filteredCareers = careers.filter(career => {
         const matchesFilter = activeFilter === "All" || career.employment_type === activeFilter;
@@ -213,380 +246,467 @@ const Career = () => {
         return matchesFilter && matchesSearch;
     });
 
+    // Apply animation classes based on state - revised for better transitions
+    const contentClasses = `careers-container ${isLoading ? 'loading' : ''} ${isContentVisible ? 'visible' : ''} ${animationComplete ? 'animation-complete' : ''}`;
+
     return (
-        <div className="career-page">
-            <div className="career-hero">
-                <h1>Join Our Team</h1>
-                <p>Discover exciting career opportunities and become part of our growing team</p>
-            </div>
-
-            <WhyJoinUs />
-            <ExperienceBenefits />
-
-            <div className="career-opportunities-section">
-                <h2>Current Opportunities</h2>
-                
-                {isAuthenticated && (
-                    <div className="admin-actions">
-                        <button 
-                            className="admin-button view-applications"
-                            onClick={() => navigate("/appliedusers")}
-                        >
-                            View Applications
-                        </button>
-                    </div>
-                )}
-
-                {(errorMessage || successMessage) && (
-                    <div className={`notification ${errorMessage ? 'error' : 'success'}`}>
-                        <p>{errorMessage || successMessage}</p>
-                    </div>
-                )}
-
-                {isAuthenticated && !editingCareer && (
-                    <div className="admin-form-container">
-                        <h3>Add New Career Opportunity</h3>
-                        <form onSubmit={handleSubmit} className="career-create-form">
-                            <div className="form-group">
-                                <input
-                                    type="text"
-                                    name="title"
-                                    value={newCareer.title}
-                                    onChange={handleInputChange}
-                                    placeholder="Job Title"
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <textarea
-                                    name="description"
-                                    value={newCareer.description}
-                                    onChange={handleInputChange}
-                                    placeholder="Job Description"
-                                    required
-                                />
-                            </div>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <input
-                                        type="text"
-                                        name="location"
-                                        value={newCareer.location}
-                                        onChange={handleInputChange}
-                                        placeholder="Location"
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <select
-                                        name="employment_type"
-                                        value={newCareer.employment_type}
-                                        onChange={handleInputChange}
-                                    >
-                                        <option value="Full-Time">Full-Time</option>
-                                        <option value="Part-Time">Part-Time</option>
-                                        <option value="Contract">Contract</option>
-                                        <option value="Internship">Internship</option>
-                                        <option value="Remote">Remote</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <input
-                                        type="date"
-                                        name="deadline"
-                                        value={newCareer.deadline}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <button type="submit" className="submit-button">Add Career</button>
-                        </form>
-                    </div>
-                )}
-
-                {editingCareer && (
-                    <div className="admin-form-container">
-                        <h3>Edit Career Opportunity</h3>
-                        <form onSubmit={handleUpdateCareer} className="career-update-form">
-                            <div className="form-group">
-                                <input
-                                    type="text"
-                                    name="title"
-                                    value={editingCareer.title}
-                                    onChange={(e) =>
-                                        setEditingCareer((prev) => ({
-                                            ...prev,
-                                            title: e.target.value,
-                                        }))
-                                    }
-                                    placeholder="Job Title"
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <textarea
-                                    name="description"
-                                    value={editingCareer.description}
-                                    onChange={(e) =>
-                                        setEditingCareer((prev) => ({
-                                            ...prev,
-                                            description: e.target.value,
-                                        }))
-                                    }
-                                    placeholder="Job Description"
-                                    required
-                                />
-                            </div>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <input
-                                        type="text"
-                                        name="location"
-                                        value={editingCareer.location}
-                                        onChange={(e) =>
-                                            setEditingCareer((prev) => ({
-                                                ...prev,
-                                                location: e.target.value,
-                                            }))
-                                        }
-                                        placeholder="Location"
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <select
-                                        name="employment_type"
-                                        value={editingCareer.employment_type}
-                                        onChange={(e) =>
-                                            setEditingCareer((prev) => ({
-                                                ...prev,
-                                                employment_type: e.target.value,
-                                            }))
-                                        }
-                                    >
-                                        <option value="Full-Time">Full-Time</option>
-                                        <option value="Part-Time">Part-Time</option>
-                                        <option value="Contract">Contract</option>
-                                        <option value="Internship">Internship</option>
-                                        <option value="Remote">Remote</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <input
-                                        type="date"
-                                        name="deadline"
-                                        value={editingCareer.deadline}
-                                        onChange={(e) =>
-                                            setEditingCareer((prev) => ({
-                                                ...prev,
-                                                deadline: e.target.value,
-                                            }))
-                                        }
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div className="form-actions">
-                                <button type="submit" className="submit-button">Update</button>
-                                <button
-                                    type="button"
-                                    className="cancel-button"
-                                    onClick={() => setEditingCareer(null)}
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                )}
-
-                <div className="career-filters">
-                    <div className="search-box">
-                        <input 
-                            type="text" 
-                            placeholder="Search positions..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                    <div className="filter-buttons">
-                        <button 
-                            className={activeFilter === "All" ? "active" : ""} 
-                            onClick={() => setActiveFilter("All")}
-                        >
-                            All
-                        </button>
-                        <button 
-                            className={activeFilter === "Full-Time" ? "active" : ""} 
-                            onClick={() => setActiveFilter("Full-Time")}
-                        >
-                            Full-Time
-                        </button>
-                        <button 
-                            className={activeFilter === "Part-Time" ? "active" : ""} 
-                            onClick={() => setActiveFilter("Part-Time")}
-                        >
-                            Part-Time
-                        </button>
-                        <button 
-                            className={activeFilter === "Contract" ? "active" : ""} 
-                            onClick={() => setActiveFilter("Contract")}
-                        >
-                            Contract
-                        </button>
-                        <button 
-                            className={activeFilter === "Remote" ? "active" : ""} 
-                            onClick={() => setActiveFilter("Remote")}
-                        >
-                            Remote
-                        </button>
-                    </div>
+        <div className={contentClasses}>
+            {isLoading ? (
+                <div className="page-loader">
+                    <Loader />
                 </div>
+            ) : (
+                <>
+                    <section className="careers-hero">
+                        <div className="careers-hero-content">
+                            <h1>Shape the Future With Us</h1>
+                            <p>Join our innovative team and build your career in a collaborative, growth-oriented environment</p>
+                            <a href="#current-opportunities" className="explore-btn">Explore Opportunities</a>
+                        </div>
+                    </section>
 
-                {loading ? (
-                    <div className="loader-container">
-                        <Loader />
-                    </div>
-                ) : (
-                    <div className="career-list">
-                        {filteredCareers.length > 0 ? (
-                            filteredCareers.map((career) => (
-                                <div className="career-card" key={career.id}>
-                                    <div className="career-card-inner">
-                                        <div className="career-card-front">
-                                            <div className="career-badge">{career.employment_type}</div>
-                                            <h3>{career.title}</h3>
-                                            <p className="career-location">{career.location}</p>
-                                        </div>
-                                        <div className="career-card-back">
-                                            <h3>{career.title}</h3>
-                                            <div className="career-details">
-                                                <p className="career-description">{career.description}</p>
-                                                <div className="career-meta">
-                                                    <p><strong>Location:</strong> {career.location}</p>
-                                                    <p><strong>Type:</strong> {career.employment_type}</p>
-                                                    <p><strong>Apply by:</strong> {new Date(career.deadline).toLocaleDateString()}</p>
-                                                </div>
-                                            </div>
-                                            {isAuthenticated && (
-                                                <div className="career-card-actions">
-                                                    <button
-                                                        className="edit-button"
-                                                        onClick={() => handleEditCareer(career)}
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                    <button
-                                                        className="delete-button"
-                                                        onClick={() => handleDeleteCareer(career.id)}
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            )}
-                                            <button
-                                                className="career-apply-now-btn"
-                                                onClick={() => handleApplyNow(career.id)}
-                                            >
-                                                Apply Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="no-results">
-                                <p>No career opportunities found matching your criteria</p>
+                    <WhyJoinUs />
+                    <ExperienceBenefits />
+
+                    <section id="current-opportunities" className="careers-opportunities">
+                        <div className="section-header">
+                            <h2>Current Opportunities</h2>
+                            <p>Find your perfect role and take the next step in your career journey</p>
+                        </div>
+                        
+                        {(errorMessage || successMessage) && (
+                            <div className={`notification-banner ${errorMessage ? 'error' : 'success'}`}>
+                                <p>{errorMessage || successMessage}</p>
                             </div>
                         )}
-                    </div>
-                )}
-            </div>
 
-            <EmployeeReviews />
-
-            {applyingForCareerId && (
-                <div className="career-application-overlay">
-                    <div className="career-application-modal">
-                        <button 
-                            className="close-modal" 
-                            onClick={() => setApplyingForCareerId(null)}
-                        >
-                            &times;
-                        </button>
-                        <form
-                            onSubmit={handleApplySubmit}
-                            className="career-application-form"
-                        >
-                            {careers.map((career) =>
-                                career.id === applyingForCareerId ? (
-                                    <div key={career.id} className="application-header">
-                                        <h2>Apply for {career.title}</h2>
-                                        <p className="application-subheader">
-                                            {career.location} • {career.employment_type}
-                                        </p>
-                                    </div>
-                                ) : null
-                            )}
-                            <div className="form-group">
-                                <label htmlFor="full_name">Full Name</label>
-                                <input
-                                    id="full_name"
-                                    type="text"
-                                    name="full_name"
-                                    placeholder="Enter your full name"
-                                    value={applicantDetails.full_name}
-                                    onChange={handleApplicantChange}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="email">Email Address</label>
-                                <input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    placeholder="Enter your email address"
-                                    value={applicantDetails.email}
-                                    onChange={handleApplicantChange}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="resumes">Resume (Required)</label>
-                                <input
-                                    id="resumes"
-                                    type="file"
-                                    name="resumes"
-                                    onChange={handleFileChange}
-                                    required
-                                />
-                                <p className="file-hint">Accepted formats: PDF, DOC, DOCX (Max 5MB)</p>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="cover_letter">Cover Letter (Optional)</label>
-                                <input
-                                    id="cover_letter"
-                                    type="file"
-                                    name="cover_letter"
-                                    onChange={handleFileChange}
-                                />
-                                <p className="file-hint">Accepted formats: PDF, DOC, DOCX (Max 2MB)</p>
-                            </div>
-                            <div className="form-actions">
-                                <button type="submit" className="submit-button">Submit Application</button>
-                                <button
-                                    type="button"
-                                    className="cancel-button"
-                                    onClick={() => setApplyingForCareerId(null)}
+                        {isAuthenticated && (
+                            <div className="admin-controls">
+                                <button 
+                                    className="admin-btn applications-btn"
+                                    onClick={() => navigate("/appliedusers")}
                                 >
-                                    Cancel
+                                    <span className="icon">📋</span>
+                                    View All Applications
                                 </button>
                             </div>
-                        </form>
-                    </div>
-                </div>
+                        )}
+
+                        {isAuthenticated && !editingCareer && (
+                            <div className="admin-form-panel">
+                                <h3 className="panel-title">Add New Position</h3>
+                                <form onSubmit={handleSubmit} className="position-form">
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label htmlFor="title">Job Title</label>
+                                            <input
+                                                id="title"
+                                                type="text"
+                                                name="title"
+                                                value={newCareer.title}
+                                                onChange={handleInputChange}
+                                                placeholder="e.g., Senior Software Engineer"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="location">Location</label>
+                                            <input
+                                                id="location"
+                                                type="text"
+                                                name="location"
+                                                value={newCareer.location}
+                                                onChange={handleInputChange}
+                                                placeholder="e.g., New York, NY or Remote"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label htmlFor="employment_type">Employment Type</label>
+                                            <select
+                                                id="employment_type"
+                                                name="employment_type"
+                                                value={newCareer.employment_type}
+                                                onChange={handleInputChange}
+                                            >
+                                                <option value="Full-Time">Full-Time</option>
+                                                <option value="Part-Time">Part-Time</option>
+                                                <option value="Contract">Contract</option>
+                                                <option value="Internship">Internship</option>
+                                                <option value="Remote">Remote</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="deadline">Application Deadline</label>
+                                            <input
+                                                id="deadline"
+                                                type="date"
+                                                name="deadline"
+                                                value={newCareer.deadline}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="description">Job Description</label>
+                                        <textarea
+                                            id="description"
+                                            name="description"
+                                            value={newCareer.description}
+                                            onChange={handleInputChange}
+                                            placeholder="Describe job responsibilities, requirements, and benefits"
+                                            rows="6"
+                                            required
+                                        />
+                                    </div>
+                                    <button type="submit" className="submit-btn">Publish Position</button>
+                                </form>
+                            </div>
+                        )}
+
+                        {/* Rest of the component remains the same */}
+                        {/* ... */}
+                        
+                        {editingCareer && (
+                            <div className="admin-form-panel editing">
+                                <h3 className="panel-title">Edit Position</h3>
+                                <form onSubmit={handleUpdateCareer} className="position-form">
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label htmlFor="edit-title">Job Title</label>
+                                            <input
+                                                id="edit-title"
+                                                type="text"
+                                                name="title"
+                                                value={editingCareer.title}
+                                                onChange={(e) =>
+                                                    setEditingCareer((prev) => ({
+                                                        ...prev,
+                                                        title: e.target.value,
+                                                    }))
+                                                }
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="edit-location">Location</label>
+                                            <input
+                                                id="edit-location"
+                                                type="text"
+                                                name="location"
+                                                value={editingCareer.location}
+                                                onChange={(e) =>
+                                                    setEditingCareer((prev) => ({
+                                                        ...prev,
+                                                        location: e.target.value,
+                                                    }))
+                                                }
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label htmlFor="edit-type">Employment Type</label>
+                                            <select
+                                                id="edit-type"
+                                                name="employment_type"
+                                                value={editingCareer.employment_type}
+                                                onChange={(e) =>
+                                                    setEditingCareer((prev) => ({
+                                                        ...prev,
+                                                        employment_type: e.target.value,
+                                                    }))
+                                                }
+                                            >
+                                                <option value="Full-Time">Full-Time</option>
+                                                <option value="Part-Time">Part-Time</option>
+                                                <option value="Contract">Contract</option>
+                                                <option value="Internship">Internship</option>
+                                                <option value="Remote">Remote</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="edit-deadline">Application Deadline</label>
+                                            <input
+                                                id="edit-deadline"
+                                                type="date"
+                                                name="deadline"
+                                                value={editingCareer.deadline}
+                                                onChange={(e) =>
+                                                    setEditingCareer((prev) => ({
+                                                        ...prev,
+                                                        deadline: e.target.value,
+                                                    }))
+                                                }
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="edit-description">Job Description</label>
+                                        <textarea
+                                            id="edit-description"
+                                            name="description"
+                                            value={editingCareer.description}
+                                            onChange={(e) =>
+                                                setEditingCareer((prev) => ({
+                                                    ...prev,
+                                                    description: e.target.value,
+                                                }))
+                                            }
+                                            rows="6"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-actions">
+                                        <button type="submit" className="submit-btn">Save Changes</button>
+                                        <button
+                                            type="button"
+                                            className="cancel-btn"
+                                            onClick={() => setEditingCareer(null)}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        )}
+
+                        <div className="careers-search-filter">
+                            <div className="search-wrapper">
+                                <span className="search-icon">🔍</span>
+                                <input 
+                                    type="text" 
+                                    placeholder="Search by keyword, location, or title..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="search-input"
+                                />
+                            </div>
+                            <div className="filter-tabs">
+                                <button 
+                                    className={`filter-tab ${activeFilter === "All" ? "active" : ""}`} 
+                                    onClick={() => setActiveFilter("All")}
+                                >
+                                    All Positions
+                                </button>
+                                <button 
+                                    className={`filter-tab ${activeFilter === "Full-Time" ? "active" : ""}`} 
+                                    onClick={() => setActiveFilter("Full-Time")}
+                                >
+                                    Full-Time
+                                </button>
+                                <button 
+                                    className={`filter-tab ${activeFilter === "Part-Time" ? "active" : ""}`} 
+                                    onClick={() => setActiveFilter("Part-Time")}
+                                >
+                                    Part-Time
+                                </button>
+                                <button 
+                                    className={`filter-tab ${activeFilter === "Contract" ? "active" : ""}`} 
+                                    onClick={() => setActiveFilter("Contract")}
+                                >
+                                    Contract
+                                </button>
+                                <button 
+                                    className={`filter-tab ${activeFilter === "Remote" ? "active" : ""}`} 
+                                    onClick={() => setActiveFilter("Remote")}
+                                >
+                                    Remote
+                                </button>
+                            </div>
+                        </div>
+
+                        {loading ? (
+                            <div className="loader-container">
+                                <Loader />
+                            </div>
+                        ) : (
+                            <div className="careers-listing">
+                                {filteredCareers.length > 0 ? (
+                                    filteredCareers.map((career) => (
+                                        <div 
+                                            className={`career-item ${expandedCardId === career.id ? 'expanded' : ''}`} 
+                                            key={career.id}
+                                        >
+                                            <div className="career-item-header" onClick={() => toggleExpandCard(career.id)}>
+                                                <div className="career-item-title">
+                                                    <h3>{career.title}</h3>
+                                                    <div className="career-meta-brief">
+                                                        <span className="career-badge">{career.employment_type}</span>
+                                                        <span className="career-location-icon">{career.location}</span>
+                                                    </div>
+                                                </div>
+                                                <span className="expand-icon">{expandedCardId === career.id ? '−' : '+'}</span>
+                                            </div>
+                                            
+                                            {expandedCardId === career.id && (
+                                                <div className="career-item-details">
+                                                    <div className="career-description">
+                                                        <p>{career.description}</p>
+                                                    </div>
+                                                    <div className="career-item-footer">
+                                                        <div className="career-meta">
+                                                            <div className="meta-item">
+                                                                <span className="meta-label">Location:</span>
+                                                                <span className="meta-value">{career.location}</span>
+                                                            </div>
+                                                            <div className="meta-item">
+                                                                <span className="meta-label">Type:</span>
+                                                                <span className="meta-value">{career.employment_type}</span>
+                                                            </div>
+                                                            <div className="meta-item">
+                                                                <span className="meta-label">Apply by:</span>
+                                                                <span className="meta-value">{new Date(career.deadline).toLocaleDateString()}</span>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div className="career-actions">
+                                                            {isAuthenticated && (
+                                                                <div className="admin-actions">
+                                                                    <button
+                                                                        className="edit-btn"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            handleEditCareer(career);
+                                                                        }}
+                                                                    >
+                                                                        Edit
+                                                                    </button>
+                                                                    <button
+                                                                        className="delete-btn"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            handleDeleteCareer(career.id);
+                                                                        }}
+                                                                    >
+                                                                        Delete
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                            <button
+                                                                className="apply-btn"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleApplyNow(career.id);
+                                                                }}
+                                                            >
+                                                                Apply Now
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="no-results">
+                                        <div className="no-results-icon">🔍</div>
+                                        <h3>No Positions Found</h3>
+                                        <p>We couldn't find any positions matching your search criteria. Try adjusting your filters or check back later.</p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </section>
+
+                    <EmployeeReviews />
+
+                    {applyingForCareerId && (
+                        <div className="application-overlay">
+                            <div className="application-modal">
+                                <button 
+                                    className="close-modal-btn" 
+                                    onClick={() => setApplyingForCareerId(null)}
+                                >
+                                    &times;
+                                </button>
+                                <form
+                                    onSubmit={handleApplySubmit}
+                                    className="application-form"
+                                >
+                                    {careers.map((career) =>
+                                        career.id === applyingForCareerId ? (
+                                            <div key={career.id} className="application-header">
+                                                <h2>Apply for {career.title}</h2>
+                                                <p className="application-meta">
+                                                    {career.location} • {career.employment_type} • Application deadline: {new Date(career.deadline).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                        ) : null
+                                    )}
+                                    <div className="application-form-body">
+                                        <div className="form-row">
+                                            <div className="form-group">
+                                                <label htmlFor="full_name">Full Name</label>
+                                                <input
+                                                    id="full_name"
+                                                    type="text"
+                                                    name="full_name"
+                                                    placeholder="Enter your full name"
+                                                    value={applicantDetails.full_name}
+                                                    onChange={handleApplicantChange}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="email">Email Address</label>
+                                                <input
+                                                    id="email"
+                                                    type="email"
+                                                    name="email"
+                                                    placeholder="Enter your email address"
+                                                    value={applicantDetails.email}
+                                                    onChange={handleApplicantChange}
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="form-group file-upload">
+                                            <label htmlFor="resumes">
+                                                Resume <span className="required-tag">Required</span>
+                                            </label>
+                                            <input
+                                                id="resumes"
+                                                type="file"
+                                                name="resumes"
+                                                onChange={handleFileChange}
+                                                required
+                                            />
+                                            <p className="file-instructions">Accepted formats: PDF, DOC, DOCX (Max 5MB)</p>
+                                        </div>
+                                        <div className="form-group file-upload">
+                                            <label htmlFor="cover_letter">
+                                                Cover Letter <span className="optional-tag">Optional</span>
+                                            </label>
+                                            <input
+                                                id="cover_letter"
+                                                type="file"
+                                                name="cover_letter"
+                                                onChange={handleFileChange}
+                                            />
+                                            <p className="file-instructions">Accepted formats: PDF, DOC, DOCX (Max 2MB)</p>
+                                        </div>
+                                    </div>
+                                    <div className="application-footer">
+                                        <button type="submit" className="submit-application-btn">Submit Application</button>
+                                        <button
+                                            type="button"
+                                            className="cancel-application-btn"
+                                            onClick={() => setApplyingForCareerId(null)}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );

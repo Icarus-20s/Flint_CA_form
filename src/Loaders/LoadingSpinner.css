@@ -1,74 +1,77 @@
-/* src/components/LoadingSpinner/LoadingSpinner.css */
+/* ==========================================================================
+   Loading Spinner - Global Styles
+   ========================================================================== */
+
+/* Main container for full-page/section overlay loading */
 .loading-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(248, 249, 250, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(2px);
+  min-height: 400px;
+  width: 100%;
 }
 
+/* Overlay styling */
 .spinner-overlay {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2rem;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  gap: 1rem;
 }
 
+/* Inline spinner for smaller UI elements */
 .inline-spinner {
-  display: flex;
-  flex-direction: row;
+  display: inline-flex;
+  flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem;
+  margin: 1rem 0;
 }
 
+/* Loading spinner icon animation */
 .loading-spinner-icon {
-  color: #3498db;
   animation: spin 1.5s linear infinite;
+  color: #4a90e2;
 }
 
+/* Loading message styling */
 .loading-message {
-  margin-top: 0.75rem;
-  color: #5a6a7a;
+  color: #64748b;
+  font-weight: 500;
   font-size: 0.95rem;
 }
 
-.inline-spinner .loading-message {
-  margin-top: 0;
-  margin-left: 0.5rem;
-}
-
+/* Spinning animation */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* Animation for fade-in/out */
-.loading-container {
-  animation: fadeIn 0.3s ease forwards;
+/* Legacy class support for existing code */
+.loader-container { 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  width: 100%;
 }
 
-.loading-container.exit {
-  animation: fadeOut 0.3s ease forwards;
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.loading-icon {
+  animation: spin 1.5s linear infinite;
+  color: #4a90e2;
 }
 
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+/* Make sure loading states are visible in high contrast mode */
+@media (forced-colors: active) {
+  .loading-spinner-icon,
+  .loading-icon {
+    forced-color-adjust: none;
+  }
 }
