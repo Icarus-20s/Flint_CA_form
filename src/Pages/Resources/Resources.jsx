@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import "./Resources.css";
 import { 
   Calendar, 
   FileText, 
@@ -13,58 +12,62 @@ import {
 } from "lucide-react";
 
 import api from "../../Api/api";
+import "./Resources.css";
 
-// Component for resource items
-const ResourceItem = ({ item, type }) => {
-  switch(type) {
-    case "notice":
+// Resource card component with different variations
+const ResourceCard = ({ item, variant }) => {
+  switch(variant) {
+    case "notification":
       return (
-        <div className="resource-item notice">
-          <span className="resource-date">{item.date}</span>
-          <a href={item.url} className="resource-link">
-            <h3>{item.title}</h3>
-            <p className="resource-description">{item.description}</p>
-            <span className={`resource-tag ${item.tagType || ""}`}>{item.tag}</span>
+        <div className="notification-card">
+          <span className="card-date">{item.date}</span>
+          <a href={item.url} className="card-anchor">
+            <h3 className="card-title">{item.title}</h3>
+            <p className="card-summary">{item.description}</p>
+            <span className={`card-badge ${item.tagType || ""}`}>{item.tag}</span>
           </a>
         </div>
       );
-    case "news":
+    case "article":
       return (
-        <div className="resource-item news-card">
-          <img src={item.image} alt={item.imageAlt} className="news-image" />
-          <div className="news-content">
-            <span className="resource-date">{item.date}</span>
-            <NavLink to={item.url}>
-              <h3>{item.title}</h3>
-              <p className="resource-description">{item.description}</p>
+        <div className="article-card">
+          <img src={item.image} alt={item.imageAlt} className="article-image" />
+          <div className="article-body">
+            <span className="card-date">{item.date}</span>
+            <NavLink to={item.url} className="card-anchor">
+              <h3 className="card-title">{item.title}</h3>
+              <p className="card-summary">{item.description}</p>
             </NavLink>
-            <span className="resource-tag">{item.tag}</span>
+            <span className="card-badge">{item.tag}</span>
           </div>
         </div>
       );
-    case "learning":
+    case "educational":
       return (
-        <div className="resource-item learning-card">
-          <div className="learning-icon">
+        <div className="educational-card">
+          <div className="card-icon">
             <FileText size={28} />
           </div>
-          <NavLink to={item.url}>
-            <h3>{item.title}</h3>
-            <p className="resource-description">{item.description}</p>
-            <div className="resource-meta">
+          <NavLink to={item.url} className="card-anchor">
+            <h3 className="card-title">{item.title}</h3>
+            <p className="card-summary">{item.description}</p>
+            <div className="card-metadata">
               {item.meta.map((meta, index) => (
-                <span key={index} className="resource-meta-item">{meta}</span>
+                <span key={index} className="metadata-item">{meta}</span>
               ))}
             </div>
           </NavLink>
         </div>
       );
-    case "link":
+    case "external":
       return (
-        <div className="resource-item link-card">
-          <a href={item.url} target="_blank" rel="noopener noreferrer">
-            <h3>{item.title}</h3>
-            <p className="resource-description">{item.description}</p>
+        <div className="external-card">
+          <a href={item.url} target="_blank" rel="noopener noreferrer" className="card-anchor">
+            <h3 className="card-title">{item.title}</h3>
+            <p className="card-summary">{item.description}</p>
+            <div className="link-icon">
+              <ExternalLink size={16} />
+            </div>
           </a>
         </div>
       );
@@ -73,29 +76,42 @@ const ResourceItem = ({ item, type }) => {
   }
 };
 
-// Component for FAQ items
-const FaqItem = ({ question, answer }) => (
-  <div className="faq-item">
-    <h3>{question}</h3>
-    <p>{answer}</p>
-  </div>
-);
+// FAQ component
+const FaqAccordion = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <div className="faq-accordion">
+      <button 
+        className={`accordion-header ${isOpen ? 'active' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+      >
+        <h3>{question}</h3>
+        <span className="accordion-icon">{isOpen ? '−' : '+'}</span>
+      </button>
+      <div className={`accordion-content ${isOpen ? 'expanded' : ''}`}>
+        <p>{answer}</p>
+      </div>
+    </div>
+  );
+};
 
-// Loading spinner component
-const LoadingSpinner = () => (
-  <div className="loading-container">
-    <div className="spinner-overlay">
-      <Loader size={32} className="loading-spinner-icon" />
+// Loading component
+const LoadingState = () => (
+  <div className="loading-wrapper">
+    <div className="loading-overlay">
+      <Loader size={32} className="loading-icon" />
       <p>Loading resources...</p>
     </div>
   </div>
 );
 
-// Main Resources component
-const Resources = () => {
-  const [activeTab, setActiveTab] = useState("all");
-  const [subscribeStatus, setSubscribeStatus] = useState("");
-  const [email, setEmail] = useState("");
+// Main component
+const CAProfessionalResources = () => {
+  const [currentTab, setCurrentTab] = useState("all");
+  const [newsletterStatus, setNewsletterStatus] = useState("");
+  const [emailInput, setEmailInput] = useState("");
   
   // State for API data
   const [notices, setNotices] = useState([]);
@@ -103,16 +119,15 @@ const Resources = () => {
   const [learningResources, setLearningResources] = useState([]);
   const [links, setLinks] = useState([]);
   const [faqs, setFaqs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [contentVisible, setContentVisible] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+  const [isContentVisible, setIsContentVisible] = useState(false);
 
   // Fetch data from API
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setContentVisible(false);
+    const fetchResources = async () => {
+      setIsLoading(true);
+      setIsContentVisible(false);
       
       try {
         // Fetch all resources in parallel
@@ -129,277 +144,273 @@ const Resources = () => {
         setLearningResources(learningRes.data);
         setLinks(linksRes.data);
         setFaqs(faqsRes.data);
-        setError(null);
+        setFetchError(null);
         
-        // Delay to ensure smooth transition
+        // Animation timing
         setTimeout(() => {
-          setLoading(false);
+          setIsLoading(false);
           setTimeout(() => {
-            setContentVisible(true);
-          }, 100); // Small delay before showing content
-        }, 300); // Minimum loading time for better UX
+            setIsContentVisible(true);
+          }, 100);
+        }, 300);
         
       } catch (err) {
         console.error("Error fetching resources:", err);
-        setError("Failed to load resources. Please try again later.");
-        setLoading(false);
+        setFetchError("Unable to load resources. Please try again later.");
+        setIsLoading(false);
       }
     };
 
-    fetchData();
+    fetchResources();
   }, []);
 
-  // Handle tab changes with smooth transitions
-  const handleTabChange = (tabId) => {
-    setContentVisible(false);
+  // Handle tab transitions
+  const switchTab = (tabId) => {
+    setIsContentVisible(false);
     setTimeout(() => {
-      setActiveTab(tabId);
+      setCurrentTab(tabId);
       setTimeout(() => {
-        setContentVisible(true);
+        setIsContentVisible(true);
       }, 50);
     }, 200);
   };
 
-  // Handle email subscription
-  const handleSubscribe = async (e) => {
+  // Handle newsletter subscription
+  const handleEmailSubscription = async (e) => {
     e.preventDefault();
   
-    if (!email.trim()) {
-      setSubscribeStatus('Please enter your email');
+    if (!emailInput.trim()) {
+      setNewsletterStatus('Please enter a valid email address');
       return;
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/emailstorage/`, { email });
+      // Replace with actual API endpoint
+      const response = await api.post(`/email-subscriptions/`, { email: emailInput });
   
-      setSubscribeStatus(
-        response.status === 201 
-          ? 'Thank you for subscribing!' 
-          : 'You are already subscribed.'
-      );
-  
-      setEmail('');
+      setNewsletterStatus('Thank you for subscribing to our newsletter!');
+      setEmailInput('');
     } catch (error) {
       console.error('Subscription error:', error);
-      setSubscribeStatus('Subscription failed. Please try again.');
+      setNewsletterStatus('Subscription failed. Please try again.');
     }
   
-    // Clear message after 3 seconds
-    setTimeout(() => setSubscribeStatus(''), 3000);
+    // Clear message after delay
+    setTimeout(() => setNewsletterStatus(''), 3000);
   };
 
-  // Filter nav items
-  const filterItems = [
+  // Navigation tabs
+  const tabOptions = [
     { id: "all", label: "All Resources" },
-    { id: "notices", label: "Notices" },
-    { id: "news", label: "News" },
-    { id: "learning", label: "Learning" },
-    { id: "links", label: "Links" }
+    { id: "notices", label: "Notifications & Alerts" },
+    { id: "news", label: "Industry News" },
+    { id: "learning", label: "Learning Material" },
+    { id: "links", label: "Professional Links" }
   ];
 
-  if (loading) {
-    return <LoadingSpinner />;
+  if (isLoading) {
+    return <LoadingState />;
   }
 
-  if (error) {
+  if (fetchError) {
     return (
-      <div className="error-container">
-        <div className="error-message">
+      <div className="error-wrapper">
+        <div className="error-container">
           <HelpCircle size={32} />
-          <h2>Something went wrong</h2>
-          <p>{error}</p>
+          <h2>Resource Loading Error</h2>
+          <p>{fetchError}</p>
           <button 
-            className="retry-button" 
+            className="refresh-button" 
             onClick={() => window.location.reload()}
           >
-            Try Again
+            Refresh Page
           </button>
         </div>
       </div>
     );
   }
 
-  const contentClass = contentVisible ? 'content-visible' : '';
+  const contentClassNames = isContentVisible ? 'content-visible' : '';
 
   return (
-    <div className={`resources-container ${contentClass}`}>
-      <div className="resources-header">
-        <h1 className="resources-heading">CA Professionals Resources</h1>
-        <p className="resources-subtitle">
+    <div className={`ca-resources-wrapper ${contentClassNames}`}>
+      <header className="page-header">
+        <h1 className="page-title">CA Professionals Resources</h1>
+        <p className="page-subtitle">
           Access the latest updates, educational resources, and professional tools for Chartered Accountants
         </p>
-      </div>
+      </header>
 
-      {/* Filter Navigation */}
-      <div className="resources-filter" role="tablist">
-        {filterItems.map(item => (
+      {/* Tab Navigation */}
+      <nav className="tab-navigation" role="tablist">
+        {tabOptions.map(tab => (
           <button 
-            key={item.id}
-            className={`filter-btn ${activeTab === item.id ? "active" : ""}`}
-            onClick={() => handleTabChange(item.id)}
+            key={tab.id}
+            className={`tab-button ${currentTab === tab.id ? "active" : ""}`}
+            onClick={() => switchTab(tab.id)}
             role="tab"
-            aria-selected={activeTab === item.id}
-            aria-controls={`${item.id}-panel`}
+            aria-selected={currentTab === tab.id}
+            aria-controls={`${tab.id}-panel`}
           >
-            {item.label}
+            {tab.label}
           </button>
         ))}
-      </div>
+      </nav>
 
-      {/* Featured Resource Banner */}
-      <div className={`featured-resource ${contentClass}`}>
-        <div className="featured-content">
-          <span className="featured-tag">Featured Resource</span>
+      {/* Spotlight Feature */}
+      <div className={`spotlight-feature ${contentClassNames}`}>
+        <div className="spotlight-content">
+          <span className="spotlight-tag">Spotlight Resource</span>
           <h2>Updated GST Compliance Framework 2025</h2>
           <p>
             New GST compliance framework effective April 1, 2025. Access comprehensive guide, compliance 
-            checklists, and implementation strategies.
+            checklists, and implementation strategies for seamless transition.
           </p>
-          <NavLink to="/resources/gst-compliance-2025" className="featured-btn">
+          <NavLink to="/resources/gst-compliance-2025" className="spotlight-button">
             Access Resource
           </NavLink>
         </div>
       </div>
 
-      {/* Notices Section */}
-      {(activeTab === "all" || activeTab === "notices") && notices.length > 0 && (
+      {/* Notifications Section */}
+      {(currentTab === "all" || currentTab === "notices") && notices.length > 0 && (
         <section 
-          className={`resources-section fade-in ${contentClass}`}
+          className={`content-section animate-in ${contentClassNames}`}
           role="tabpanel" 
           id="notices-panel"
           aria-labelledby="notices-tab"
         >
-          <div className="section-header">
+          <div className="section-heading">
             <Bell size={22} aria-hidden="true" />
-            <h2 className="section-title">Important Notices</h2>
+            <h2>Important Notifications</h2>
           </div>
-          <div className="resources-items">
+          <div className="card-grid">
             {notices.slice(0, 3).map((notice, index) => (
-              <ResourceItem key={index} item={notice} type="notice" />
+              <ResourceCard key={index} item={notice} variant="notification" />
             ))}
           </div>
           {notices.length > 3 && (
-            <NavLink to="/all-notices" className="see-all-link">
-              View all notices <ExternalLink size={16} aria-hidden="true" />
+            <NavLink to="/all-notices" className="view-all-link">
+              View all notifications <ExternalLink size={16} aria-hidden="true" />
             </NavLink>
           )}
         </section>
       )}
 
-      {/* News and Updates Section */}
-      {(activeTab === "all" || activeTab === "news") && news.length > 0 && (
+      {/* News Section */}
+      {(currentTab === "all" || currentTab === "news") && news.length > 0 && (
         <section 
-          className={`resources-section fade-in ${contentClass}`}
+          className={`content-section animate-in ${contentClassNames}`}
           role="tabpanel"
           id="news-panel"
           aria-labelledby="news-tab"
         >
-          <div className="section-header">
+          <div className="section-heading">
             <Newspaper size={22} aria-hidden="true" />
-            <h2 className="section-title">News & Updates</h2>
+            <h2>Industry News & Updates</h2>
           </div>
-          <div className="resources-items">
+          <div className="card-grid">
             {news.slice(0, 3).map((item, index) => (
-              <ResourceItem key={index} item={item} type="news" />
+              <ResourceCard key={index} item={item} variant="article" />
             ))}
           </div>
           {news.length > 3 && (
-            <NavLink to="/all-news" className="see-all-link">
+            <NavLink to="/all-news" className="view-all-link">
               View all news <ExternalLink size={16} aria-hidden="true" />
             </NavLink>
           )}
         </section>
       )}
 
-      {/* Learning Resources Section */}
-      {(activeTab === "all" || activeTab === "learning") && learningResources.length > 0 && (
+      {/* Learning Section */}
+      {(currentTab === "all" || currentTab === "learning") && learningResources.length > 0 && (
         <section 
-          className={`resources-section fade-in ${contentClass}`}
+          className={`content-section animate-in ${contentClassNames}`}
           role="tabpanel"
           id="learning-panel"
           aria-labelledby="learning-tab"
         >
-          <div className="section-header">
+          <div className="section-heading">
             <BookOpen size={22} aria-hidden="true" />
-            <h2 className="section-title">Learning Resources</h2>
+            <h2>Learning Materials</h2>
           </div>
-          <div className="resources-items">
+          <div className="card-grid">
             {learningResources.slice(0, 3).map((item, index) => (
-              <ResourceItem key={index} item={item} type="learning" />
+              <ResourceCard key={index} item={item} variant="educational" />
             ))}
           </div>
           {learningResources.length > 3 && (
-            <NavLink to="/all-learning" className="see-all-link">
-              View all learning resources <ExternalLink size={16} aria-hidden="true" />
+            <NavLink to="/all-learning" className="view-all-link">
+              View all learning materials <ExternalLink size={16} aria-hidden="true" />
             </NavLink>
           )}
         </section>
       )}
 
-      {/* Helpful Links Section */}
-      {(activeTab === "all" || activeTab === "links") && links.length > 0 && (
+      {/* Links Section */}
+      {(currentTab === "all" || currentTab === "links") && links.length > 0 && (
         <section 
-          className={`resources-section fade-in ${contentClass}`}
+          className={`content-section animate-in ${contentClassNames}`}
           role="tabpanel"
           id="links-panel"
           aria-labelledby="links-tab"
         >
-          <div className="section-header">
+          <div className="section-heading">
             <ExternalLink size={22} aria-hidden="true" />
-            <h2 className="section-title">Professional Links</h2>
+            <h2>Professional Resources</h2>
           </div>
-          <div className="resources-items links-grid">
+          <div className="link-grid">
             {links.map((item, index) => (
-              <ResourceItem key={index} item={item} type="link" />
+              <ResourceCard key={index} item={item} variant="external" />
             ))}
           </div>
         </section>
       )}
 
       {/* FAQs Section */}
-      {activeTab === "all" && faqs.length > 0 && (
-        <section className={`resources-section fade-in ${contentClass}`}>
-          <div className="section-header">
+      {currentTab === "all" && faqs.length > 0 && (
+        <section className={`content-section animate-in ${contentClassNames}`}>
+          <div className="section-heading">
             <HelpCircle size={22} aria-hidden="true" />
-            <h2 className="section-title">Frequently Asked Questions</h2>
+            <h2>Frequently Asked Questions</h2>
           </div>
           <div className="faq-container">
             {faqs.slice(0, 3).map((faq, index) => (
-              <FaqItem key={index} question={faq.question} answer={faq.answer} />
+              <FaqAccordion key={index} question={faq.question} answer={faq.answer} />
             ))}
           </div>
           {faqs.length > 3 && (
-            <NavLink to="/faqs" className="see-all-link">
+            <NavLink to="/faqs" className="view-all-link">
               View all FAQs <ExternalLink size={16} aria-hidden="true" />
             </NavLink>
           )}
         </section>
       )}
 
-      {/* Newsletter Signup */}
-      <section className={`newsletter-section ${contentClass}`}>
-        <div className="newsletter-content">
-          <h2>Stay Updated</h2>
+      {/* Newsletter */}
+      <section className={`newsletter-container ${contentClassNames}`}>
+        <div className="newsletter-wrapper">
+          <h2>Stay Informed</h2>
           <p>Subscribe to our newsletter for latest updates, resources, and professional insights</p>
-          <form className="newsletter-form" onSubmit={handleSubscribe}>
+          <form className="subscribe-form" onSubmit={handleEmailSubscription}>
             <input 
               type="email" 
               placeholder="Your email address" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={emailInput}
+              onChange={(e) => setEmailInput(e.target.value)}
               aria-label="Email address"
               required 
             />
             <button type="submit">Subscribe</button>
           </form>
-          {subscribeStatus && (
-            <p className="subscription-status">{subscribeStatus}</p>
+          {newsletterStatus && (
+            <p className="subscription-message">{newsletterStatus}</p>
           )}
-          <p className="newsletter-note">We respect your privacy. Unsubscribe anytime.</p>
+          <p className="privacy-note">We respect your privacy. Unsubscribe anytime.</p>
         </div>
       </section>
     </div>
   );
 };
 
-export default Resources;
+export default CAProfessionalResources;

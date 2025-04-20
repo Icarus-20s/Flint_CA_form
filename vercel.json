@@ -1,0 +1,6 @@
+{
+  "env": {
+    "REACT_APP_API_URL": "https://ca-associates-backend-1.onrender.com",
+    "REACT_APP_MEDIA_URL": "https://ca-associates-backend-1.onrender.com"
+  }
+}
