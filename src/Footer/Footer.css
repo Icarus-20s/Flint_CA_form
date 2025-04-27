@@ -160,7 +160,7 @@
 }
 
 .subscribe-input .MuiOutlinedInput-input {
-  color: #fff;
+  color: #000000;
   padding: 12px 15px;
 }
 
@@ -327,6 +327,7 @@
   
   .subscribe-form {
     flex-direction: column;
+    color: #0A121E;
   }
   
   .footer-heading {
