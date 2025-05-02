@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
-import './Home.css';
 import { 
   Card, CardContent, Button, Typography, 
   Grid, Box, Container, IconButton, TextField, Paper, Chip, Divider
@@ -25,8 +24,11 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../Loaders/LoadingSpinner';
 import api from '../../Api/api';
 
-// HeroSlider Component with fade transitions
-const HeroSlider = () => {
+// CSS Import to be created separately
+import './Home.css';
+
+// Advanced Hero Slider with fade and zoom effects
+const ModernHeroSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const slideRef = useRef(null);
@@ -46,44 +48,47 @@ const HeroSlider = () => {
       : (currentIndex - 1 + images.length) % images.length;
     
     setCurrentIndex(newIndex);
-    setTimeout(() => setIsTransitioning(false), 600);
+    setTimeout(() => setIsTransitioning(false), 800);
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
       changeSlide('next');
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [currentIndex]);
 
   return (
-    <div className="hero-slider">
+    <div className="modern-hero__slider">
       <div 
-        className={`slide-container ${isTransitioning ? 'transitioning' : ''}`} 
+        className={`modern-hero__slide-container ${isTransitioning ? 'modern-hero__transitioning' : ''}`} 
         ref={slideRef}
       >
-        <div className="slide active" style={{ backgroundImage: `url(${images[currentIndex]})` }} />
+        <div 
+          className="modern-hero__slide modern-hero__active" 
+          style={{ backgroundImage: `url(${images[currentIndex]})` }} 
+        />
       </div>
-      <div className="slider-controls">
+      <div className="modern-hero__controls">
         <IconButton 
-          className="slider-arrow prev" 
+          className="modern-hero__arrow modern-hero__prev" 
           onClick={() => changeSlide('prev')}
           aria-label="Previous slide"
         >
           <ArrowBackIcon />
         </IconButton>
-        <div className="slider-dots">
+        <div className="modern-hero__indicators">
           {images.map((_, index) => (
             <button 
               key={index} 
-              className={`slider-dot ${index === currentIndex ? 'active' : ''}`}
+              className={`modern-hero__indicator ${index === currentIndex ? 'modern-hero__indicator--active' : ''}`}
               onClick={() => setCurrentIndex(index)}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
         <IconButton 
-          className="slider-arrow next" 
+          className="modern-hero__arrow modern-hero__next" 
           onClick={() => changeSlide('next')}
           aria-label="Next slide"
         >
@@ -94,8 +99,8 @@ const HeroSlider = () => {
   );
 };
 
-// ServiceCard Component with hover effects
-const ServiceCard = ({ service, onLearnMore }) => {
+// Enhanced Service Card with hover animations
+const ModernServiceCard = ({ service, onLearnMore }) => {
   const icons = {
     'Tax Consultancy': <BusinessCenterIcon fontSize="large" />,
     'Auditing & Assurance': <AccountBalanceIcon fontSize="large" />,
@@ -106,19 +111,21 @@ const ServiceCard = ({ service, onLearnMore }) => {
 
   return (
     <Grid item xs={12} sm={6} md={4}>
-      <Card className="service-card" elevation={3}>
-        <div className="service-icon">
-          {icons[service.title]}
+      <Card className="modern-service__card" elevation={2}>
+        <div className="modern-service__icon-wrapper">
+          <div className="modern-service__icon">
+            {icons[service.title]}
+          </div>
         </div>
-        <CardContent className="service-content">
-          <Typography variant="h5" component="h3" className="service-title">
+        <CardContent className="modern-service__content">
+          <Typography variant="h5" component="h3" className="modern-service__title">
             {service.title}
           </Typography>
-          <Typography variant="body2" className="service-description">
+          <Typography variant="body2" className="modern-service__description">
             {service.description}
           </Typography>
           <Button 
-            className="learn-more-btn"
+            className="modern-service__button"
             onClick={() => onLearnMore(service)}
             endIcon={<ArrowForwardIcon />}
           >
@@ -130,49 +137,48 @@ const ServiceCard = ({ service, onLearnMore }) => {
   );
 };
 
-// Enhanced Modal Component
-const Modal = ({ service, onClose }) => (
-  <div className="modal-overlay" onClick={onClose}>
-    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      <div className="modal-header">
+// Modal Component with animation effects
+const ModernModal = ({ service, onClose }) => (
+  <div className="modern-modal__overlay" onClick={onClose}>
+    <div className="modern-modal__content" onClick={(e) => e.stopPropagation()}>
+      <div className="modern-modal__header">
         <Typography variant="h5">{service?.title}</Typography>
-        <IconButton onClick={onClose} aria-label="close">
+        <IconButton onClick={onClose} aria-label="close" className="modern-modal__close">
           <CloseIcon />
         </IconButton>
       </div>
-      <div className="modal-body">
-        <div className="modal-image-container">
-          <img src={service?.image} alt={service?.title} className="modal-image" />
+      <div className="modern-modal__body">
+        <div className="modern-modal__image-container">
+          <img src={service?.image} alt={service?.title} className="modern-modal__image" />
         </div>
-        <Typography variant="body1" className="modal-description">
+        <Typography variant="body1" className="modern-modal__description">
           {service?.description}
         </Typography>
-        <Typography variant="body1" className="modal-extended-description">
+        <Typography variant="body1" className="modern-modal__extended-description">
           {service?.extendedDescription || `Our ${service?.title} service is designed to provide comprehensive solutions tailored to your specific needs. With our expert team and years of experience, we ensure optimal results and satisfaction.`}
         </Typography>
         
-        {/* Added service benefits list */}
         <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Key Benefits</Typography>
-        <ul className="service-benefits">
+        <ul className="modern-modal__benefits-list">
           {service?.benefits?.map((benefit, index) => (
-            <li key={index} className="benefit-item">
-              <CheckCircleOutlineIcon className="benefit-icon" /> {benefit}
+            <li key={index} className="modern-modal__benefit-item">
+              <CheckCircleOutlineIcon className="modern-modal__benefit-icon" /> {benefit}
             </li>
           )) || (
             <>
-              <li className="benefit-item"><CheckCircleOutlineIcon className="benefit-icon" /> Personalized approach tailored to your specific needs</li>
-              <li className="benefit-item"><CheckCircleOutlineIcon className="benefit-icon" /> Expert team with specialized industry knowledge</li>
-              <li className="benefit-item"><CheckCircleOutlineIcon className="benefit-icon" /> Regular updates and transparent communication</li>
-              <li className="benefit-item"><CheckCircleOutlineIcon className="benefit-icon" /> Compliance with all regulatory requirements</li>
+              <li className="modern-modal__benefit-item"><CheckCircleOutlineIcon className="modern-modal__benefit-icon" /> Personalized approach tailored to your specific needs</li>
+              <li className="modern-modal__benefit-item"><CheckCircleOutlineIcon className="modern-modal__benefit-icon" /> Expert team with specialized industry knowledge</li>
+              <li className="modern-modal__benefit-item"><CheckCircleOutlineIcon className="modern-modal__benefit-icon" /> Regular updates and transparent communication</li>
+              <li className="modern-modal__benefit-item"><CheckCircleOutlineIcon className="modern-modal__benefit-icon" /> Compliance with all regulatory requirements</li>
             </>
           )}
         </ul>
       </div>
-      <div className="modal-footer">
+      <div className="modern-modal__footer">
         <Button 
           variant="contained" 
           color="primary" 
-          className="modal-action-btn"
+          className="modern-modal__action-btn"
           onClick={() => window.location.href = '/contact'}
         >
           Schedule a Consultation
@@ -182,10 +188,10 @@ const Modal = ({ service, onClose }) => (
   </div>
 );
 
-// Enhanced Testimonials Component with carousel
-const Testimonials = ({ testimonials }) => {
+// Testimonials Carousel with modern styling
+const ModernTestimonials = ({ testimonials }) => {
   const [current, setCurrent] = useState(0);
-  const testimonialsPerView = 2;
+  const testimonialsPerView = window.innerWidth < 768 ? 1 : 2;
   const maxIndex = Math.ceil(testimonials.length / testimonialsPerView) - 1;
 
   const next = () => {
@@ -196,46 +202,57 @@ const Testimonials = ({ testimonials }) => {
     setCurrent(current => Math.max(current - 1, 0));
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      const newTestimonialsPerView = window.innerWidth < 768 ? 1 : 2;
+      const newMaxIndex = Math.ceil(testimonials.length / newTestimonialsPerView) - 1;
+      setCurrent(prevCurrent => Math.min(prevCurrent, newMaxIndex));
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [testimonials.length]);
+
   return (
-    <div className="testimonials-container">
+    <div className="modern-testimonials__container">
       <div 
-        className="testimonials-list"
+        className="modern-testimonials__list"
         style={{ transform: `translateX(-${current * 100 / (maxIndex + 1)}%)` }}
       >
         {testimonials.map((testimonial) => (
-          <Box key={testimonial.id} className="testimonial-card" component={Paper} elevation={2}>
-            <div className="testimonial-quote-icon">
+          <Box key={testimonial.id} className="modern-testimonials__card" component={Paper} elevation={2}>
+            <div className="modern-testimonials__quote-icon">
               <FormatQuoteIcon />
             </div>
-            <Typography variant="body1" className="testimonial-text">
+            <Typography variant="body1" className="modern-testimonials__text">
               "{testimonial.testimonial}"
             </Typography>
-            <div className="testimonial-profile">
-              <div className="testimonial-image-container">
-                <img src={testimonial.image} alt={testimonial.name} className="testimonial-image" />
+            <div className="modern-testimonials__profile">
+              <div className="modern-testimonials__image-container">
+                <img src={testimonial.image} alt={testimonial.name} className="modern-testimonials__image" />
               </div>
-              <div className="testimonial-info">
-                <Typography variant="h6" className="testimonial-name">{testimonial.name}</Typography>
-                <Typography variant="subtitle2" className="testimonial-title">{testimonial.title}</Typography>
+              <div className="modern-testimonials__info">
+                <Typography variant="h6" className="modern-testimonials__name">{testimonial.name}</Typography>
+                <Typography variant="subtitle2" className="modern-testimonials__title">{testimonial.title}</Typography>
               </div>
             </div>
           </Box>
         ))}
       </div>
       {maxIndex > 0 && (
-        <div className="testimonial-controls">
+        <div className="modern-testimonials__controls">
           <IconButton 
             onClick={prev} 
             disabled={current === 0}
-            className={`testimonial-arrow ${current === 0 ? 'disabled' : ''}`}
+            className={`modern-testimonials__arrow ${current === 0 ? 'modern-testimonials__arrow--disabled' : ''}`}
           >
             <ArrowBackIcon />
           </IconButton>
-          <div className="testimonial-dots">
+          <div className="modern-testimonials__dots">
             {Array(maxIndex + 1).fill().map((_, idx) => (
               <button 
                 key={idx} 
-                className={`testimonial-dot ${idx === current ? 'active' : ''}`} 
+                className={`modern-testimonials__dot ${idx === current ? 'modern-testimonials__dot--active' : ''}`} 
                 onClick={() => setCurrent(idx)}
               />
             ))}
@@ -243,7 +260,7 @@ const Testimonials = ({ testimonials }) => {
           <IconButton 
             onClick={next} 
             disabled={current === maxIndex}
-            className={`testimonial-arrow ${current === maxIndex ? 'disabled' : ''}`}
+            className={`modern-testimonials__arrow ${current === maxIndex ? 'modern-testimonials__arrow--disabled' : ''}`}
           >
             <ArrowForwardIcon />
           </IconButton>
@@ -253,8 +270,8 @@ const Testimonials = ({ testimonials }) => {
   );
 };
 
-// Statistics Component
-const Statistics = () => {
+// Animated Statistics Component
+const ModernStatistics = () => {
   const [stats, setStats] = useState({
     clients: 0,
     projects: 0,
@@ -299,7 +316,7 @@ const Statistics = () => {
       { threshold: 0.1 }
     );
     
-    const element = document.getElementById('statistics-section');
+    const element = document.getElementById('modern-statistics__section');
     if (element) observer.observe(element);
     
     return () => {
@@ -308,30 +325,30 @@ const Statistics = () => {
   }, []);
   
   return (
-    <Box className="statistics-container">
+    <Box className="modern-statistics__container">
       <Grid container spacing={3}>
         <Grid item xs={6} md={3}>
-          <div className="stat-card">
-            <Typography variant="h3" className="stat-number">{stats.clients}+</Typography>
-            <Typography variant="subtitle1" className="stat-label">Happy Clients</Typography>
+          <div className="modern-statistics__card">
+            <Typography variant="h3" className="modern-statistics__number">{stats.clients}+</Typography>
+            <Typography variant="subtitle1" className="modern-statistics__label">Happy Clients</Typography>
           </div>
         </Grid>
         <Grid item xs={6} md={3}>
-          <div className="stat-card">
-            <Typography variant="h3" className="stat-number">{stats.projects}+</Typography>
-            <Typography variant="subtitle1" className="stat-label">Projects Completed</Typography>
+          <div className="modern-statistics__card">
+            <Typography variant="h3" className="modern-statistics__number">{stats.projects}+</Typography>
+            <Typography variant="subtitle1" className="modern-statistics__label">Projects Completed</Typography>
           </div>
         </Grid>
         <Grid item xs={6} md={3}>
-          <div className="stat-card">
-            <Typography variant="h3" className="stat-number">{stats.experience}+</Typography>
-            <Typography variant="subtitle1" className="stat-label">Years Experience</Typography>
+          <div className="modern-statistics__card">
+            <Typography variant="h3" className="modern-statistics__number">{stats.experience}+</Typography>
+            <Typography variant="subtitle1" className="modern-statistics__label">Years Experience</Typography>
           </div>
         </Grid>
         <Grid item xs={6} md={3}>
-          <div className="stat-card">
-            <Typography variant="h3" className="stat-number">{stats.satisfaction}%</Typography>
-            <Typography variant="subtitle1" className="stat-label">Client Satisfaction</Typography>
+          <div className="modern-statistics__card">
+            <Typography variant="h3" className="modern-statistics__number">{stats.satisfaction}%</Typography>
+            <Typography variant="subtitle1" className="modern-statistics__label">Client Satisfaction</Typography>
           </div>
         </Grid>
       </Grid>
@@ -339,8 +356,8 @@ const Statistics = () => {
   );
 };
 
-// NEW: Industry Expertise Component
-const IndustryExpertise = () => {
+// Industry Expertise Component with hover effects
+const ModernIndustryExpertise = () => {
   const industries = [
     {
       icon: <StoreIcon fontSize="large" />,
@@ -365,25 +382,25 @@ const IndustryExpertise = () => {
   ];
 
   return (
-    <Box className="industry-expertise-container">
-      <Typography variant="h2" className="section-title">
+    <Box className="modern-industry__container">
+      <Typography variant="h2" className="modern-section__title">
         Industry Expertise
       </Typography>
-      <Typography variant="subtitle1" className="section-subtitle">
+      <Typography variant="subtitle1" className="modern-section__subtitle">
         Specialized knowledge across diverse business sectors
       </Typography>
       
       <Grid container spacing={4} sx={{ mt: 4 }}>
         {industries.map((industry, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
-            <Paper elevation={2} className="industry-card">
-              <div className="industry-icon">
+            <Paper elevation={2} className="modern-industry__card">
+              <div className="modern-industry__icon-wrapper">
                 {industry.icon}
               </div>
-              <Typography variant="h6" className="industry-name">
+              <Typography variant="h6" className="modern-industry__name">
                 {industry.name}
               </Typography>
-              <Typography variant="body2" className="industry-description">
+              <Typography variant="body2" className="modern-industry__description">
                 {industry.description}
               </Typography>
             </Paper>
@@ -394,17 +411,42 @@ const IndustryExpertise = () => {
   );
 };
 
-const LatestInsights = () => {
+// Latest Insights with modern card layout
+const ModernLatestInsights = () => {
   const [insights, setInsights] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchInsights = async () => {
       try {
-        const response = await api.get('/news'); // Update to your actual endpoint
+        const response = await api.get('/news');
         setInsights(response.data);
       } catch (error) {
         console.error('Error fetching insights:', error);
+        // Fallback data in case API fails
+        setInsights([
+          {
+            id: 1,
+            title: "Latest Tax Reforms and Your Business",
+            excerpt: "Understanding the impact of recent tax changes on small and medium enterprises.",
+            date: "April 28, 2025",
+            image: "public/Images/img8.jpg"
+          },
+          {
+            id: 2,
+            title: "Financial Planning Strategies for 2025",
+            excerpt: "Expert advice on optimizing your financial strategy in the current economic climate.",
+            date: "April 15, 2025",
+            image: "public/Images/img6.jpg"
+          },
+          {
+            id: 3,
+            title: "Navigating Audit Requirements for Startups",
+            excerpt: "Essential guidelines for new businesses to ensure compliance and financial transparency.",
+            date: "April 5, 2025",
+            image: "public/Images/img5.jpg"
+          }
+        ]);
       } finally {
         setLoading(false);
       }
@@ -417,38 +459,42 @@ const LatestInsights = () => {
     return <LoadingSpinner/>;
   }
 
-
   return (
-<Box className="insights-container">
-      <Typography variant="h2" className="section-title">
+    <Box className="modern-insights__container">
+      <Typography variant="h2" className="modern-section__title">
         Latest Insights
       </Typography>
-      <Typography variant="subtitle1" className="section-subtitle">
+      <Typography variant="subtitle1" className="modern-section__subtitle">
         Expert knowledge and analysis from our team
       </Typography>
 
       <Grid container spacing={4} sx={{ mt: 4 }}>
         {insights.map((insight, index) => (
           <Grid item xs={12} md={4} key={index}>
-            <Paper elevation={3} className="insight-card">
-              <div className="insight-image-container">
+            <Paper elevation={3} className="modern-insights__card">
+              <div className="modern-insights__image-container">
                 <img
                   src={insight.image}
                   alt={insight.title}
-                  className="insight-image"
+                  className="modern-insights__image"
                 />
-                <div className="insight-date">
+                <div className="modern-insights__date">
                   <CalendarTodayIcon fontSize="small" /> {insight.date}
                 </div>
               </div>
-              <div className="insight-content">
-                <Typography variant="h6" className="insight-title">
+              <div className="modern-insights__content">
+                <Typography variant="h6" className="modern-insights__title">
                   {insight.title}
                 </Typography>
-                <Typography variant="body2" className="insight-excerpt">
+                <Typography variant="body2" className="modern-insights__excerpt">
                   {insight.excerpt}
                 </Typography>
-
+                <Button 
+                  className="modern-insights__button"
+                  endIcon={<ArrowForwardIcon />}
+                >
+                  Read More
+                </Button>
               </div>
             </Paper>
           </Grid>
@@ -458,14 +504,35 @@ const LatestInsights = () => {
   );
 };
 
-// NEW: Quick Contact Form Component
-const QuickContactForm = () => {
+// Modern Contact Form with validation
+const ModernContactForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     message: ''
   });
+  
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.name.trim()) errors.name = "Name is required";
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Email is invalid";
+    }
+    if (formData.phone && !/^\d{10}$/.test(formData.phone.replace(/[^0-9]/g, ''))) {
+      errors.phone = "Phone number is invalid";
+    }
+    if (!formData.message.trim()) errors.message = "Message is required";
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -473,34 +540,59 @@ const QuickContactForm = () => {
       ...prev,
       [name]: value
     }));
+    
+    // Clear error when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: null
+      }));
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Form submission logic would go here
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      message: ''
-    });
-    // Show success message
-    alert('Thank you for your message. We will get back to you shortly.');
+    
+    if (validateForm()) {
+      setIsSubmitting(true);
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('Form submitted:', formData);
+        setSubmitSuccess(true);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          message: ''
+        });
+        setTimeout(() => setSubmitSuccess(false), 5000);
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
   };
 
   return (
-    <Box className="quick-contact-container">
-      <Paper elevation={3} className="contact-form-paper">
-        <Typography variant="h4" className="contact-form-title">
+    <Box className="modern-contact__container">
+      <Paper elevation={3} className="modern-contact__paper">
+        <Typography variant="h4" className="modern-contact__title">
           Get in Touch
         </Typography>
-        <Typography variant="body1" className="contact-form-subtitle">
+        <Typography variant="body1" className="modern-contact__subtitle">
           Have questions? We're here to help. Fill out the form below for a prompt response.
         </Typography>
         
-        <form onSubmit={handleSubmit} className="quick-contact-form">
+        {submitSuccess && (
+          <Paper className="modern-contact__success-message">
+            <CheckCircleOutlineIcon className="modern-contact__success-icon" />
+            <Typography variant="body1">Thank you for your message. We will get back to you shortly.</Typography>
+          </Paper>
+        )}
+        
+        <form onSubmit={handleSubmit} className="modern-contact__form">
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -510,8 +602,10 @@ const QuickContactForm = () => {
                 variant="outlined"
                 value={formData.name}
                 onChange={handleChange}
+                error={!!formErrors.name}
+                helperText={formErrors.name}
                 required
-                className="form-field"
+                className="modern-contact__field"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -523,8 +617,10 @@ const QuickContactForm = () => {
                 variant="outlined"
                 value={formData.email}
                 onChange={handleChange}
+                error={!!formErrors.email}
+                helperText={formErrors.email}
                 required
-                className="form-field"
+                className="modern-contact__field"
               />
             </Grid>
             <Grid item xs={12}>
@@ -535,7 +631,9 @@ const QuickContactForm = () => {
                 variant="outlined"
                 value={formData.phone}
                 onChange={handleChange}
-                className="form-field"
+                error={!!formErrors.phone}
+                helperText={formErrors.phone}
+                className="modern-contact__field"
               />
             </Grid>
             <Grid item xs={12}>
@@ -548,8 +646,10 @@ const QuickContactForm = () => {
                 variant="outlined"
                 value={formData.message}
                 onChange={handleChange}
+                error={!!formErrors.message}
+                helperText={formErrors.message}
                 required
-                className="form-field"
+                className="modern-contact__field"
               />
             </Grid>
             <Grid item xs={12}>
@@ -557,10 +657,11 @@ const QuickContactForm = () => {
                 type="submit"
                 variant="contained"
                 fullWidth
-                className="submit-button"
+                className="modern-contact__button"
                 startIcon={<EmailIcon />}
+                disabled={isSubmitting}
               >
-                Send Message
+                {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
             </Grid>
           </Grid>
@@ -570,41 +671,46 @@ const QuickContactForm = () => {
   );
 };
 
-// NEW: Trust Elements Component
-const TrustElements = () => {
+// Modified Trust Elements with text-based badges instead of images
+const ModernTrustElements = () => {
   const certifications = [
     {
-      name: 'ICAI',
-      logo: 'public/Images/certification1.png'
+      name: 'Certified Public Accountants',
+      icon: <ArticleIcon fontSize="large" />
     },
     {
-      name: 'ISO 9001',
-      logo: 'public/Images/certification2.png'
+      name: 'Tax Specialists',
+      icon: <BusinessCenterIcon fontSize="large" />
     },
     {
-      name: 'ACCA',
-      logo: 'public/Images/certification3.png'
+      name: 'Financial Advisors',
+      icon: <AssessmentIcon fontSize="large" />
     },
     {
-      name: 'CMA',
-      logo: 'public/Images/certification4.png'
+      name: 'Risk Management Experts',
+      icon: <SecurityIcon fontSize="large" />
     }
   ];
 
   return (
-    <Box className="trust-elements-container">
+    <Box className="modern-trust__container">
       <Container>
-        <Typography variant="h5" align="center" className="trust-heading">
+        <Typography variant="h5" align="center" className="modern-trust__heading">
           <VerifiedUserIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
           Trusted by Businesses Nationwide
         </Typography>
         
-        <Grid container spacing={4} className="certification-logos" justifyContent="center" alignItems="center">
+        <Grid container spacing={4} className="modern-trust__badges" justifyContent="center" alignItems="center">
           {certifications.map((cert, index) => (
             <Grid item key={index} xs={6} sm={3}>
-              <Box className="certification-logo-container">
-                <img src={cert.logo} alt={cert.name} className="certification-logo" />
-              </Box>
+              <Paper elevation={2} className="modern-trust__badge">
+                <div className="modern-trust__icon-wrapper">
+                  {cert.icon}
+                </div>
+                <Typography variant="subtitle1" className="modern-trust__name" align="center">
+                  {cert.name}
+                </Typography>
+              </Paper>
             </Grid>
           ))}
         </Grid>
@@ -613,31 +719,37 @@ const TrustElements = () => {
   );
 };
 
-// NEW: Value Proposition Component
-const ValuePropositionBanner = () => {
+// Value Proposition with modernized design
+const ModernValueProposition = () => {
   return (
-    <Box className="value-proposition-container">
+    <Box className="modern-value__container">
       <Container>
-        <Grid container spacing={2} justifyContent="center">
+        <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4}>
-            <Box className="value-item">
-              <CheckCircleOutlineIcon className="value-icon" />
-              <Typography variant="h6" className="value-title">Expertise & Experience</Typography>
-              <Typography variant="body2">Team of certified professionals with proven industry expertise</Typography>
+            <Box className="modern-value__item">
+              <div className="modern-value__icon-wrapper">
+                <CheckCircleOutlineIcon className="modern-value__icon" />
+              </div>
+              <Typography variant="h6" className="modern-value__title">Expertise & Experience</Typography>
+              <Typography variant="body2" className="modern-value__description">Team of certified professionals with proven industry expertise</Typography>
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Box className="value-item">
-              <CheckCircleOutlineIcon className="value-icon" />
-              <Typography variant="h6" className="value-title">Client-Focused Approach</Typography>
-              <Typography variant="body2">Personalized solutions tailored to your specific business needs</Typography>
+            <Box className="modern-value__item">
+              <div className="modern-value__icon-wrapper">
+                <CheckCircleOutlineIcon className="modern-value__icon" />
+              </div>
+              <Typography variant="h6" className="modern-value__title">Client-Focused Approach</Typography>
+              <Typography variant="body2" className="modern-value__description">Personalized solutions tailored to your specific business needs</Typography>
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Box className="value-item">
-              <CheckCircleOutlineIcon className="value-icon" />
-              <Typography variant="h6" className="value-title">Integrity & Reliability</Typography>
-              <Typography variant="body2">Committed to highest standards of professional ethics</Typography>
+            <Box className="modern-value__item">
+              <div className="modern-value__icon-wrapper">
+                <CheckCircleOutlineIcon className="modern-value__icon" />
+              </div>
+              <Typography variant="h6" className="modern-value__title">Integrity & Reliability</Typography>
+              <Typography variant="body2" className="modern-value__description">Committed to highest standards of professional ethics</Typography>
             </Box>
           </Grid>
         </Grid>
@@ -646,8 +758,7 @@ const ValuePropositionBanner = () => {
   );
 };
 
-
-// Main Home Component
+// Main Home Component with revised layout and structure
 const Home = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -726,255 +837,163 @@ const Home = () => {
       id: 1,
       name: 'John Doe',
       title: 'CEO, XYZ Corporation',
-      testimonial: 'K.B.P.S & Associates has transformed our financial strategy completely. Their advisory services helped us achieve significant growth while maintaining full compliance with regulatory requirements.',
-      image: '/public/Images/img4.jpg',
+      testimonial: 'K.B.P.S & Associates has transformed our financial strategy completely. Their advisory services helped us achieve 30% growth in just one year. Their team\'s expertise and dedication are unmatched in the industry.',
+      image: 'public/Images/client1.jpg'
     },
     {
       id: 2,
       name: 'Jane Smith',
-      title: 'CFO, ABC Ltd.',
-      testimonial: "The team's expertise in tax planning saved us significant costs while ensuring complete compliance. Their professional approach and attention to detail make them our trusted financial partners.",
-      image: 'public/Images/img1.jpg',
+      title: 'CFO, ABC Enterprises',
+      testimonial: 'Working with K.B.P.S & Associates for our tax planning has been a game-changer. They identified optimization opportunities we had never considered, resulting in significant savings.',
+      image: 'public/Images/client2.jpg'
     },
     {
       id: 3,
-      name: 'Michael Johnson',
-      title: 'Founder, FinTech Solutions',
-      testimonial: 'I highly recommend their business advisory services for growth-oriented companies. Their strategic insights and practical solutions have been instrumental in our expansion plans.',
-      image: 'public/Images/img2.jpg',
+      name: 'Robert Johnson',
+      title: 'Owner, Johnson Retail Group',
+      testimonial: 'The audit services provided by K.B.P.S & Associates were thorough, professional, and delivered valuable insights for improving our internal controls. Highly recommended!',
+      image: 'public/Images/client3.jpg'
     },
     {
       id: 4,
-      name: 'Emily Taylor',
-      title: 'Owner, Startup Inc.',
-      testimonial: 'Their risk management services identified critical vulnerabilities in our operations and provided actionable solutions that helped us minimize potential losses and strengthen our business model.',
-      image: 'public/Images/img3.jpg',
-    },
+      name: 'Sarah Williams',
+      title: 'Director, Global Investments Ltd',
+      testimonial: 'Their risk management team helped us navigate challenging market conditions with confidence. The strategic guidance we received was invaluable to our continued success.',
+      image: 'public/Images/client4.jpg'
+    }
   ];
 
-  const openModal = (service) => {
+  const handleLearnMore = (service) => {
     setCurrentService(service);
     setShowModal(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-    document.body.style.overflow = 'visible';
-    setTimeout(() => setCurrentService(null), 300);
   };
 
   return (
-    <main className="home-page">
+    <div className="modern-home__container">
       {/* Hero Section */}
-      <section className="hero-section" id="home">
-        <HeroSlider />
-        <div className="hero-overlay">
-          <Container>
-            <div className="hero-content">
-              <Typography variant="h1" className="hero-title">
-                <span className="hero-title-first">K.B.P.S</span> 
-                <span className="hero-title-and">&</span> 
-                <span className="hero-title-second">Associates</span>
-              </Typography>
-              <Typography variant="h2" className="hero-subtitle">
-                Strengthening Compliance and Reporting
-              </Typography>
-              <Typography variant="h3" className="hero-tagline">
-                for transparency and accountability
-              </Typography>
-              <ScrollLink to="services" smooth={true} duration={800} className="hero-cta">
-                <Button 
-                  variant="contained" 
-                  className="cta-button"
-                  endIcon={<ArrowForwardIcon />}
-                >
-                  Explore Our Services
-                </Button>
-              </ScrollLink>
-            </div>
+      <section className="modern-hero__section">
+        <ModernHeroSlider />
+        <div className="modern-hero__content">
+          <Container maxWidth="lg">
+            <Grid container alignItems="center" justifyContent="center">
+              <Grid item xs={12} md={8} className="modern-hero__text-container">
+                <Typography variant="h1" className="modern-hero__title">
+                  Your Trusted Financial Partner
+                </Typography>
+                <Typography variant="h5" className="modern-hero__subtitle">
+                  Expert accounting, tax & financial advisory services tailored for your success
+                </Typography>
+                <div className="modern-hero__buttons">
+                  <Button 
+                    variant="contained" 
+                    color="primary" 
+                    className="modern-hero__button"
+                    onClick={() => navigate('/contact')}
+                  >
+                    Schedule a Consultation
+                  </Button>
+                  <ScrollLink
+                    to="services"
+                    spy={true}
+                    smooth={true}
+                    offset={-70}
+                    duration={500}
+                  >
+                    <Button 
+                      variant="outlined" 
+                      className="modern-hero__button modern-hero__button--outline"
+                    >
+                      Explore Services
+                    </Button>
+                  </ScrollLink>
+                </div>
+              </Grid>
+            </Grid>
           </Container>
         </div>
       </section>
 
-      {/* NEW: Value Proposition Banner */}
-      <section className="value-proposition-section">
-        <ValuePropositionBanner />
-      </section>
-
-      {/* Introduction Section - Enhanced */}
-      <section className="intro-section">
+      {/* Value Proposition Section */}
+      <section className="modern-value-proposition__section">
         <Container>
-          <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Typography variant="h2" className="section-title intro-title">
-                Your Trusted Financial Partner
-              </Typography>
-              <Typography variant="body1" className="intro-text">
-                At K.B.P.S & Associates, we combine expertise with innovation to deliver exceptional financial services. 
-                Our team of certified professionals is committed to helping businesses and individuals navigate complex 
-                financial landscapes with confidence and clarity.
-              </Typography>
-              <Typography variant="body1" className="intro-text">
-                With a client-centric approach and attention to detail,With a client-centric approach and attention to detail, we provide tailored solutions that address your 
-                unique challenges and help you achieve your financial goals.
-              </Typography>
-              <Box sx={{ mt: 3 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <Box className="key-feature">
-                      <CheckCircleOutlineIcon className="feature-icon" />
-                      <Typography variant="body1">Certified CA Professionals</Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box className="key-feature">
-                      <CheckCircleOutlineIcon className="feature-icon" />
-                      <Typography variant="body1">Tailored Financial Solutions</Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box className="key-feature">
-                      <CheckCircleOutlineIcon className="feature-icon" />
-                      <Typography variant="body1">Regulatory Compliance</Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box className="key-feature">
-                      <CheckCircleOutlineIcon className="feature-icon" />
-                      <Typography variant="body1">Industry-Specific Expertise</Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </Box>
-              <Button 
-                variant="outlined" 
-                className="intro-button" 
-                onClick={() => navigate("/about")}
-                sx={{ mt: 3 }}
-              >
-                About Us
-              </Button>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <div className="intro-image-container">
-                <img 
-                  src="public/Images/img6.jpg" 
-                  alt="K.B.P.S & Associates team" 
-                  className="intro-image" 
-                />
-              </div>
-            </Grid>
-          </Grid>
+          <ModernValueProposition />
         </Container>
       </section>
 
       {/* Services Section */}
-      <section className="services-section" id="services">
-        <Container>
-          <Typography variant="h2" className="section-title services-title">
-            Our Expertise
+      <section id="services" className="modern-services__section">
+        <Container maxWidth="lg">
+          <Typography variant="h2" className="modern-section__title">
+            Our Services
           </Typography>
-          <Typography variant="subtitle1" className="section-subtitle">
+          <Typography variant="subtitle1" className="modern-section__subtitle">
             Comprehensive financial solutions tailored to your needs
           </Typography>
-          <Grid container spacing={4} className="services-grid">
+          
+          <Grid container spacing={4} className="modern-services__grid" sx={{ mt: 4 }}>
             {services.map((service) => (
-              <ServiceCard key={service.id} service={service} onLearnMore={openModal} />
+              <ModernServiceCard 
+                key={service.id} 
+                service={service} 
+                onLearnMore={handleLearnMore} 
+              />
             ))}
           </Grid>
         </Container>
       </section>
 
-      {/* NEW: Trust Elements Section */}
-      <section className="trust-elements-section">
-        <TrustElements />
-      </section>
-
       {/* Statistics Section */}
-      <section className="statistics-section" id="statistics-section">
+      <section id="modern-statistics__section" className="modern-statistics__section">
         <Container>
-          <Statistics />
+          <ModernStatistics />
         </Container>
       </section>
 
-      {/* NEW: Industry Expertise Section */}
-      <section className="industry-expertise-section">
+      {/* Industry Expertise Section */}
+      <section className="modern-industry__section">
         <Container>
-          <IndustryExpertise />
+          <ModernIndustryExpertise />
         </Container>
       </section>
 
       {/* Testimonials Section */}
-      <section className="testimonials-section" id="testimonials">
-        <Container>
-          <Typography variant="h2" className="section-title testimonials-title">
-            What Our Clients Say
+      <section className="modern-testimonials__section">
+        <Container maxWidth="lg">
+          <Typography variant="h2" className="modern-section__title">
+            Client Testimonials
           </Typography>
-          <Typography variant="subtitle1" className="section-subtitle">
-            Success sexport default Home;tories from businesses we've helped
+          <Typography variant="subtitle1" className="modern-section__subtitle">
+            Don't take our word for it - hear what our clients have to say
           </Typography>
-          <Testimonials testimonials={testimonials} />
+          
+          <ModernTestimonials testimonials={testimonials} />
         </Container>
       </section>
 
-      {/* NEW: Latest Insights Section */}
-      <section className="insights-section">
+      {/* Trust Elements Section */}
+      <section className="modern-trust__section">
+        <ModernTrustElements />
+      </section>
+
+      {/* Latest Insights Section */}
+      <section className="modern-insights__section">
         <Container>
-          <LatestInsights />
+          <ModernLatestInsights />
         </Container>
       </section>
 
-      {/* NEW: Quick Contact Form Section */}
-      <section className="quick-contact-section">
+      {/* Contact Form Section */}
+      <section className="modern-contact__section">
         <Container>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
-              <QuickContactForm />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <div className="contact-image-container">
-                <img 
-                  src="public/Images/story.jpg" 
-                  alt="Contact us" 
-                  className="contact-image" 
-                />
-                <Box className="contact-details">
-                  <Typography variant="h4" className="contact-heading">
-                    Let's Connect
-                  </Typography>
-                  <Divider sx={{ my: 2 }} />
-                  <Typography variant="body1" className="contact-address">
-                    <strong>Address:</strong> 123 Business Avenue, Financial District, City, 123456
-                  </Typography>
-                  <Typography variant="body1" className="contact-phone">
-                    <strong>Phone:</strong> +91 98765 43210
-                  </Typography>
-                  <Typography variant="body1" className="contact-email">
-                    <strong>Email:</strong> info@kbpsassociates.com
-                  </Typography>
-                  <Box sx={{ mt: 2 }}>
-                    <Typography variant="body1" className="contact-hours">
-                      <strong>Business Hours:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      Monday - Friday: 9:00 AM - 6:00 PM
-                    </Typography>
-                    <Typography variant="body2">
-                      Saturday: 10:00 AM - 2:00 PM
-                    </Typography>
-                  </Box>
-                </Box>
-              </div>
-            </Grid>
-          </Grid>
+          <ModernContactForm />
         </Container>
       </section>
 
-
-      {/* Modal for Service Details */}
-      {showModal && <Modal service={currentService} onClose={closeModal} />}
-    </main>
+      {/* Service Modal */}
+      {showModal && currentService && (
+        <ModernModal service={currentService} onClose={() => setShowModal(false)} />
+      )}
+    </div>
   );
 };
 

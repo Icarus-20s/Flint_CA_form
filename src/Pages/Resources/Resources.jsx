@@ -182,7 +182,7 @@ const CAProfessionalResources = () => {
 
     try {
       // Replace with actual API endpoint
-      const response = await api.post(`/email-subscriptions/`, { email: emailInput });
+      const response = await api.post(`emailstorage/`, { email: emailInput });
   
       setNewsletterStatus('Thank you for subscribing to our newsletter!');
       setEmailInput('');
