@@ -42,7 +42,6 @@ const HeroSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const autoplayRef = useRef(null);
-  const navigate = useNavigate();
   
   const images = [
     'public/Images/homepageImg/slide1.jpg',
@@ -235,14 +234,6 @@ const ServiceModal = ({ service, onClose }) => {
           </ul>
         </div>
         <div className="modern-modal__footer">
-          <Button 
-            variant="contained" 
-            color="primary" 
-            className="modern-modal__action-btn"
-            onClick={() => window.location.href = '/contact'}
-          >
-            Schedule a Consultation
-          </Button>
         </div>
       </div>
     </div>
@@ -578,7 +569,7 @@ const LatestInsights = () => {
     };
   }, []);
 
-  const handleReadMore = (id) => navigate(`/resources/${id}`);
+  const handleReadMore = (id) => navigate(`/news/${id}`);
 
   if (loading) {
     return (
@@ -636,6 +627,10 @@ const LatestInsights = () => {
 };
 
 const CTASection = () => {
+  const navigate = useNavigate();
+  const handleScheduleClick = () => {
+    navigate('/contact');
+  };
   return (
     <Box className="modern-cta__container">
       <Container maxWidth="lg">
@@ -650,18 +645,16 @@ const CTASection = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={4} className="modern-cta__action">
-              <Button 
-                variant="contained" 
-                color="primary" 
-                size="large"
-                className="modern-cta__button"
-                component={ScrollLink}
-                to="contact-section"
-                smooth={true}
-                duration={800}
-              >
-                Schedule a Consultation
-              </Button>
+            <Button 
+  variant="contained" 
+  color="primary" 
+  size="large"
+  className="modern-cta__button"
+  onClick={handleScheduleClick}
+>
+  Schedule a Consultation
+</Button>
+
               <Button 
                 variant="outlined" 
                 color="primary" 
@@ -940,17 +933,14 @@ const Home = () => {
                   Explore Services
                 </Button>
                 <Button 
-                  variant="outlined" 
-                  color="primary" 
-                  size="large"
-                  className="modern-hero__button modern-hero__button--outline"
-                  component={ScrollLink}
-                  to="contact-section"
-                  smooth={true}
-                  duration={800}
-                >
-                  Contact Us
-                </Button>
+  variant="outlined" 
+  color="primary" 
+  size="large"
+  className="modern-hero__button modern-hero__button--outline"
+  href="/contact"
+>
+  Contact Us
+</Button>
               </Box>
               <Box className="modern-hero__chips">
                 <Chip 
