@@ -43,7 +43,7 @@
 .kbps-hero-section {
   position: relative;
   height: 500px;
-  background: url('/Images/hero-bg.jpg') center/cover no-repeat;
+  background: url('public/Images/img15.jpg') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;

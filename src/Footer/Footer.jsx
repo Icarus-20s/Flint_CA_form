@@ -176,38 +176,6 @@ const Footer = () => {
               </ul>
             </Grid>
             
-            {/* Our Services */}
-            <Grid item xs={12} sm={6} md={2}>
-              <Typography variant="h6" className="footer-heading">
-                Our Services
-              </Typography>
-              <ul className="footer-links">
-                <li>
-                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
-                  <Link to="/services/tax-consultancy">Tax Consultancy</Link>
-                </li>
-                <li>
-                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
-                  <Link to="/services/auditing">Auditing & Assurance</Link>
-                </li>
-                <li>
-                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
-                  <Link to="/services/business-advisory">Business Advisory</Link>
-                </li>
-                <li>
-                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
-                  <Link to="/services/financial-planning">Financial Planning</Link>
-                </li>
-                <li>
-                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
-                  <Link to="/services/risk-management">Risk Management</Link>
-                </li>
-                <li>
-                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
-                  <Link to="/services/compliance">Compliance Services</Link>
-                </li>
-              </ul>
-            </Grid>
             
             {/* Newsletter */}
             <Grid item xs={12} md={4}>
