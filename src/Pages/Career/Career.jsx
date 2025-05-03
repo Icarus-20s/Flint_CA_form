@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Loader from "../../Loaders/LoadingSpinner";
 import { useAuth } from "../../Context/AuthContextProvider";
 import { useNavigate } from "react-router-dom";
 import api from "../../Api/api";
 import WhyJoinUs from "./WhyJoinUs/WhyJoinUs";
 import ExperienceBenefits from "./ExperienceBenefits/ExperienceBenefits";
 import EmployeeReviews from "./EmployeeReview/EmployeeReview";
+import LoadingSpinner from "../../Loaders/LoadingSpinner";
 import "./Career.css";
 
 const Career = () => {
@@ -34,29 +34,25 @@ const Career = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [expandedCardId, setExpandedCardId] = useState(null);
     
-    // Animation states - revised
+    // Animation states
     const [isLoading, setIsLoading] = useState(true);
     const [isContentVisible, setIsContentVisible] = useState(false);
     const [animationComplete, setAnimationComplete] = useState(false);
 
     // Improved animation sequence
     useEffect(() => {
-        // Set initial loading state
         const loadTimer = setTimeout(() => {
-            // Mark loading as complete
             setIsLoading(false);
             
-            // After a short delay, start showing content
             const visibilityTimer = setTimeout(() => {
                 setIsContentVisible(true);
                 
-                // After transition completes, mark animation as done
                 const completeTimer = setTimeout(() => {
                     setAnimationComplete(true);
-                }, 600); // Match this to your CSS transition duration
+                }, 600);
                 
                 return () => clearTimeout(completeTimer);
-            }, 100); // Short delay for better visual effect
+            }, 100);
             
             return () => clearTimeout(visibilityTimer);
         }, 800);
@@ -246,14 +242,14 @@ const Career = () => {
         return matchesFilter && matchesSearch;
     });
 
-    // Apply animation classes based on state - revised for better transitions
+    // Apply animation classes based on state
     const contentClasses = `careers-container ${isLoading ? 'loading' : ''} ${isContentVisible ? 'visible' : ''} ${animationComplete ? 'animation-complete' : ''}`;
 
     return (
         <div className={contentClasses}>
             {isLoading ? (
                 <div className="page-loader">
-                    <Loader />
+                    <LoadingSpinner />
                 </div>
             ) : (
                 <>
@@ -274,12 +270,14 @@ const Career = () => {
                             <p>Find your perfect role and take the next step in your career journey</p>
                         </div>
                         
+                        {/* Notification Banner */}
                         {(errorMessage || successMessage) && (
                             <div className={`notification-banner ${errorMessage ? 'error' : 'success'}`}>
                                 <p>{errorMessage || successMessage}</p>
                             </div>
                         )}
 
+                        {/* Admin View Applications Button */}
                         {isAuthenticated && (
                             <div className="admin-controls">
                                 <button 
@@ -292,6 +290,7 @@ const Career = () => {
                             </div>
                         )}
 
+                        {/* Admin Add New Position Form */}
                         {isAuthenticated && !editingCareer && (
                             <div className="admin-form-panel">
                                 <h3 className="panel-title">Add New Position</h3>
@@ -366,10 +365,8 @@ const Career = () => {
                                 </form>
                             </div>
                         )}
-
-                        {/* Rest of the component remains the same */}
-                        {/* ... */}
                         
+                        {/* Admin Edit Position Form */}
                         {editingCareer && (
                             <div className="admin-form-panel editing">
                                 <h3 className="panel-title">Edit Position</h3>
@@ -476,6 +473,7 @@ const Career = () => {
                             </div>
                         )}
 
+                        {/* Search and Filter Section */}
                         <div className="careers-search-filter">
                             <div className="search-wrapper">
                                 <span className="search-icon">🔍</span>
@@ -521,9 +519,10 @@ const Career = () => {
                             </div>
                         </div>
 
+                        {/* Job Listings */}
                         {loading ? (
                             <div className="loader-container">
-                                <Loader />
+                                <LoadingSpinner />
                             </div>
                         ) : (
                             <div className="careers-listing">
@@ -616,6 +615,7 @@ const Career = () => {
 
                     <EmployeeReviews />
 
+                    {/* Application Modal */}
                     {applyingForCareerId && (
                         <div className="application-overlay">
                             <div className="application-modal">
