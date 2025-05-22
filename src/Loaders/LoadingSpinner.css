@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Loading Spinner - Global Styles
+   Loading Spinner - Global Styles (Updated Palette)
    ========================================================================== */
 
 /* Main container for full-page/section overlay loading */
@@ -31,12 +31,12 @@
 /* Loading spinner icon animation */
 .loading-spinner-icon {
   animation: spin 1.5s linear infinite;
-  color: #4a90e2;
+  color: #06D001; /* updated from #4a90e2 */
 }
 
 /* Loading message styling */
 .loading-message {
-  color: #64748b;
+  color: #059212; /* deeper green for text */
   font-weight: 500;
   font-size: 0.95rem;
 }
@@ -48,7 +48,7 @@
 }
 
 /* Legacy class support for existing code */
-.loader-container { 
+.loader-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -65,7 +65,7 @@
 
 .loading-icon {
   animation: spin 1.5s linear infinite;
-  color: #4a90e2;
+  color: #06D001; /* updated from #4a90e2 */
 }
 
 /* Make sure loading states are visible in high contrast mode */

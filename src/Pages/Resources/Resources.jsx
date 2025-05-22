@@ -198,7 +198,6 @@ const CAProfessionalResources = () => {
   // Navigation tabs
   const tabOptions = [
     { id: "all", label: "All Resources" },
-    { id: "notices", label: "Notifications & Alerts" },
     { id: "news", label: "Industry News" },
     { id: "learning", label: "Learning Material" },
     { id: "links", label: "Professional Links" }
@@ -262,36 +261,11 @@ const CAProfessionalResources = () => {
             New GST compliance framework effective April 1, 2025. Access comprehensive guide, compliance 
             checklists, and implementation strategies for seamless transition.
           </p>
-          <NavLink to="/resources/gst-compliance-2025" className="spotlight-button">
+          <NavLink to="/access-resources" className="spotlight-button">
             Access Resource
           </NavLink>
         </div>
       </div>
-
-      {/* Notifications Section */}
-      {(currentTab === "all" || currentTab === "notices") && notices.length > 0 && (
-        <section 
-          className={`content-section animate-in ${contentClassNames}`}
-          role="tabpanel" 
-          id="notices-panel"
-          aria-labelledby="notices-tab"
-        >
-          <div className="section-heading">
-            <Bell size={22} aria-hidden="true" />
-            <h2>Important Notifications</h2>
-          </div>
-          <div className="card-grid">
-            {notices.slice(0, 3).map((notice, index) => (
-              <ResourceCard key={index} item={notice} variant="notification" />
-            ))}
-          </div>
-          {notices.length > 3 && (
-            <NavLink to="/all-notices" className="view-all-link">
-              View all notifications <ExternalLink size={16} aria-hidden="true" />
-            </NavLink>
-          )}
-        </section>
-      )}
 
       {/* News Section */}
       {(currentTab === "all" || currentTab === "news") && news.length > 0 && (

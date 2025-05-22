@@ -169,10 +169,6 @@ const Footer = () => {
                   <KeyboardDoubleArrowRightIcon className="link-arrow" />
                   <Link to="/contact">Contact</Link>
                 </li>
-                <li>
-                  <KeyboardDoubleArrowRightIcon className="link-arrow" />
-                  <Link to="/resources">FAQs</Link>
-                </li>
               </ul>
             </Grid>
             

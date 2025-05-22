@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback,useMemo } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -365,16 +365,18 @@ const Statistics = () => {
     satisfaction: 0
   });
   
-  const targetStats = {
+  // Use useMemo to prevent targetStats from changing on every render
+  const targetStats = useMemo(() => ({
     clients: 250,
     projects: 500,
     experience: 15,
     satisfaction: 98
-  };
+  }), []);
   
   const sectionRef = useRef(null);
   const animationRef = useRef(null);
   const startTimeRef = useRef(null);
+  const hasAnimatedRef = useRef(false); // Prevent multiple animations
   const animationDuration = 2000; // 2 seconds
   
   const animateStats = useCallback((timestamp) => {
@@ -394,26 +396,53 @@ const Statistics = () => {
     } else {
       // Ensure final values are exact
       setStats(targetStats);
+      animationRef.current = null;
+      hasAnimatedRef.current = true;
     }
   }, [targetStats]);
   
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !animationRef.current) {
+        console.log('Statistics section in view:', entry.isIntersecting);
+        
+        if (entry.isIntersecting && !hasAnimatedRef.current && !animationRef.current) {
           startTimeRef.current = null;
           animationRef.current = requestAnimationFrame(animateStats);
         }
       },
-      { threshold: 0.2, rootMargin: '0px 0px -100px 0px' }
+      { 
+        threshold: 0.1, // Trigger when 10% visible
+        rootMargin: '0px 0px -50px 0px' 
+      }
     );
     
-    if (sectionRef.current) observer.observe(sectionRef.current);
+    const currentSection = sectionRef.current;
+    if (currentSection) {
+      observer.observe(currentSection);
+    }
     
     return () => {
-      if (sectionRef.current) observer.unobserve(sectionRef.current);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      if (currentSection) {
+        observer.unobserve(currentSection);
+      }
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
     };
+  }, [animateStats]);
+  
+  // Fallback: Start animation after component mounts if intersection observer fails
+  useEffect(() => {
+    const fallbackTimer = setTimeout(() => {
+      if (!hasAnimatedRef.current && !animationRef.current) {
+        console.log('Starting fallback animation');
+        startTimeRef.current = null;
+        animationRef.current = requestAnimationFrame(animateStats);
+      }
+    }, 1000);
+    
+    return () => clearTimeout(fallbackTimer);
   }, [animateStats]);
   
   return (
@@ -421,33 +450,48 @@ const Statistics = () => {
       <Grid container spacing={3}>
         <Grid item xs={6} md={3}>
           <div className="modern-statistics__card">
-            <Typography variant="h3" className="modern-statistics__number">{stats.clients}+</Typography>
-            <Typography variant="subtitle1" className="modern-statistics__label">Happy Clients</Typography>
+            <Typography variant="h3" className="modern-statistics__number">
+              {stats.clients}+
+            </Typography>
+            <Typography variant="subtitle1" className="modern-statistics__label">
+              Happy Clients
+            </Typography>
           </div>
         </Grid>
         <Grid item xs={6} md={3}>
           <div className="modern-statistics__card">
-            <Typography variant="h3" className="modern-statistics__number">{stats.projects}+</Typography>
-            <Typography variant="subtitle1" className="modern-statistics__label">Projects Completed</Typography>
+            <Typography variant="h3" className="modern-statistics__number">
+              {stats.projects}+
+            </Typography>
+            <Typography variant="subtitle1" className="modern-statistics__label">
+              Projects Completed
+            </Typography>
           </div>
         </Grid>
         <Grid item xs={6} md={3}>
           <div className="modern-statistics__card">
-            <Typography variant="h3" className="modern-statistics__number">{stats.experience}+</Typography>
-            <Typography variant="subtitle1" className="modern-statistics__label">Years Experience</Typography>
+            <Typography variant="h3" className="modern-statistics__number">
+              {stats.experience}+
+            </Typography>
+            <Typography variant="subtitle1" className="modern-statistics__label">
+              Years Experience
+            </Typography>
           </div>
         </Grid>
         <Grid item xs={6} md={3}>
           <div className="modern-statistics__card">
-            <Typography variant="h3" className="modern-statistics__number">{stats.satisfaction}%</Typography>
-            <Typography variant="subtitle1" className="modern-statistics__label">Client Satisfaction</Typography>
+            <Typography variant="h3" className="modern-statistics__number">
+              {stats.satisfaction}%
+            </Typography>
+            <Typography variant="subtitle1" className="modern-statistics__label">
+              Client Satisfaction
+            </Typography>
           </div>
         </Grid>
       </Grid>
     </Box>
   );
 };
-
 /**
  * Industry Expertise Component
  * Displays industry specializations in a grid
@@ -505,174 +549,6 @@ const IndustryExpertise = () => {
     </Box>
   );
 };
-
-/**
- * Latest Insights Component
- * Displays recent blog posts or news articles
- */
-const LatestInsights = () => {
-  const [insights, setInsights] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const insightsRef = useRef(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchInsights = async () => {
-      try {
-        const response = await api.get('/news');
-        setInsights(response.data);
-      } catch (error) {
-        console.error('Error fetching insights:', error);
-        // Fallback data
-        setInsights([
-          {
-            id: 1,
-            title: "Latest Tax Reforms and Your Business",
-            excerpt: "Understanding the impact of recent tax changes on small and medium enterprises.",
-            date: "April 28, 2025",
-            image: "public/Images/img8.jpg"
-          },
-          {
-            id: 2,
-            title: "Financial Planning Strategies for 2025",
-            excerpt: "Expert advice on optimizing your financial strategy in the current economic climate.",
-            date: "April 15, 2025",
-            image: "public/Images/img6.jpg"
-          },
-          {
-            id: 3,
-            title: "Navigating Audit Requirements for Startups",
-            excerpt: "Essential guidelines for new businesses to ensure compliance and financial transparency.",
-            date: "April 5, 2025",
-            image: "public/Images/img5.jpg"
-          }
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          fetchInsights();
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    
-    if (insightsRef.current) observer.observe(insightsRef.current);
-    
-    return () => {
-      if (insightsRef.current) observer.disconnect();
-    };
-  }, []);
-
-  const handleReadMore = (id) => navigate(`/news/${id}`);
-
-  if (loading) {
-    return (
-      <Box className="modern-insights__loading" ref={insightsRef}>
-        <LoadingSpinner />
-      </Box>
-    );
-  }
-
-  return (
-    <Box className="modern-insights__container" ref={insightsRef}>
-      <Typography variant="h2" className="modern-section__title">
-        Latest Insights
-      </Typography>
-      <Typography variant="subtitle1" className="modern-section__subtitle">
-        Expert knowledge and analysis from our team
-      </Typography>
-
-      <Grid container spacing={4} sx={{ mt: 4 }}>
-        {insights.map((insight, index) => (
-          <Grid item xs={12} md={4} key={index}>
-            <Paper elevation={3} className="modern-insights__card">
-              <div className="modern-insights__image-container">
-                <img
-                  src={insight.image}
-                  alt={insight.title}
-                  className="modern-insights__image"
-                  loading="lazy"
-                />
-                <div className="modern-insights__date">
-                  <CalendarTodayIcon fontSize="small" /> {insight.date}
-                </div>
-              </div>
-              <div className="modern-insights__content">
-                <Typography variant="h6" className="modern-insights__title">
-                  {insight.title}
-                </Typography>
-                <Typography variant="body2" className="modern-insights__excerpt">
-                  {insight.excerpt}
-                </Typography>
-                <Button 
-                  className="modern-insights__button"
-                  endIcon={<ArrowForwardIcon />}
-                  onClick={() => handleReadMore(insight.id)}
-                >
-                  Read More
-                </Button>
-              </div>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
-  );
-};
-
-const CTASection = () => {
-  const navigate = useNavigate();
-  const handleScheduleClick = () => {
-    navigate('/contact');
-  };
-  return (
-    <Box className="modern-cta__container">
-      <Container maxWidth="lg">
-        <Paper elevation={0} className="modern-cta__paper">
-          <Grid container alignItems="center" spacing={4}>
-            <Grid item xs={12} md={8}>
-              <Typography variant="h3" className="modern-cta__title">
-                Ready to optimize your financial strategy?
-              </Typography>
-              <Typography variant="body1" className="modern-cta__text">
-                Our team of experts is ready to help you achieve your financial goals and navigate complex financial challenges with confidence.
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4} className="modern-cta__action">
-            <Button 
-  variant="contained" 
-  color="primary" 
-  size="large"
-  className="modern-cta__button"
-  onClick={handleScheduleClick}
->
-  Schedule a Consultation
-</Button>
-
-              <Button 
-                variant="outlined" 
-                color="primary" 
-                size="large"
-                className="modern-cta__button modern-cta__button--outline"
-                component="a"
-                href="/services"
-              >
-                Explore Our Services
-              </Button>
-            </Grid>
-          </Grid>
-        </Paper>
-      </Container>
-    </Box>
-  );
-};
-
 /**
  * Trust Indicators Component
  * Displays elements that build trust with potential clients
@@ -749,7 +625,7 @@ const Home = () => {
             id: 1,
             title: 'Tax Consultancy',
             description: 'Comprehensive tax planning and compliance services for businesses and individuals.',
-            image: 'public/Images/services/tax.jpg',
+            image: 'Images/img3.jpg',
             benefits: [
               'Strategic tax planning to minimize liabilities',
               'Compliance with all regulatory requirements',
@@ -762,7 +638,7 @@ const Home = () => {
             id: 2,
             title: 'Auditing & Assurance',
             description: 'Independent financial audit services that enhance credibility and identify potential issues.',
-            image: 'public/Images/services/audit.jpg',
+            image: 'Images/img1.jpg',
             benefits: [
               'Enhanced financial credibility',
               'Identification of control weaknesses',
@@ -775,7 +651,7 @@ const Home = () => {
             id: 3,
             title: 'Business Advisory',
             description: 'Strategic guidance to optimize operations, improve profitability, and drive business growth.',
-            image: 'public/Images/services/advisory.jpg',
+            image: 'Images/img2.jpg',
             benefits: [
               'Strategic business planning',
               'Performance improvement strategies',
@@ -788,7 +664,7 @@ const Home = () => {
             id: 4,
             title: 'Financial Planning',
             description: 'Personalized financial strategies tailored to achieve your short and long-term objectives.',
-            image: 'public/Images/services/planning.jpg',
+            image: 'img3.jpg',
             benefits: [
               'Comprehensive financial assessment',
               'Goal-oriented investment strategies',
@@ -801,7 +677,7 @@ const Home = () => {
             id: 5,
             title: 'Risk Management',
             description: 'Identify, assess, and mitigate financial risks that could impact your business objectives.',
-            image: 'public/Images/services/risk.jpg',
+            image: 'Images/img4.jpg',
             benefits: [
               'Comprehensive risk assessment',
               'Development of mitigation strategies',
@@ -814,40 +690,43 @@ const Home = () => {
         
         // Example testimonials data (would normally come from API)
         const testimonialsData = [
+
+
           {
             id: 1,
             name: 'Sarah Johnson',
             title: 'CEO, TechStart Inc.',
             testimonial: 'Working with their team transformed our financial operations. Their strategic tax planning saved us thousands while keeping us fully compliant.',
-            image: 'public/Images/testimonials/person1.jpg'
+            image: '/Images/img7.png'
+            
           },
           {
             id: 2,
             name: 'Michael Chen',
             title: 'CFO, Retail Solutions',
             testimonial: 'The audit services we received were comprehensive and insightful. They identified key areas for improvement that have significantly enhanced our financial reporting.',
-            image: 'public/Images/testimonials/person2.jpg'
+            image: '/Images/img3.jpg'
           },
           {
             id: 3,
             name: 'Jennifer Williams',
             title: 'Owner, Williams Consulting',
             testimonial: 'Their business advisory services provided exactly the guidance we needed during our expansion. The expertise and personalized approach made all the difference.',
-            image: 'public/Images/testimonials/person3.jpg'
+            image: '/Images/img4.jpg'
           },
           {
             id: 4,
             name: 'Robert Davis',
             title: 'Director, Davis Manufacturing',
             testimonial: 'The financial planning services have given us clarity and confidence. Their team takes the time to understand our goals and create strategies that work for our specific situation.',
-            image: 'public/Images/testimonials/person4.jpg'
+            image: '/Images/img4.jpg'
           },
           {
             id: 5,
             name: 'Elena Martinez',
             title: 'VP Finance, Global Logistics',
             testimonial: 'Their risk management approach helped us navigate a challenging market transition. The preventive measures they implemented saved us from potential significant losses.',
-            image: 'public/Images/testimonials/person5.jpg'
+            image: '/Images/img5.jpg'
           }
         ];
         
@@ -1023,18 +902,6 @@ const Home = () => {
           <Box sx={{ mt: 6 }}>
             <Testimonials testimonials={testimonials} />
           </Box>
-        </Container>
-      </Box>
-      
-      {/* CTA Section */}
-      <Box component="section" className="modern-section modern-section--cta">
-        <CTASection />
-      </Box>
-      
-      {/* Latest Insights */}
-      <Box component="section" className="modern-section modern-section--gray">
-        <Container maxWidth="lg">
-          <LatestInsights />
         </Container>
       </Box>
       {/* Service Modal */}

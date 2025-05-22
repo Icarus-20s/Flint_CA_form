@@ -1,0 +1,198 @@
+/* AccessResources.css */
+
+/* Main container styling */
+.notices-container {
+  background-color: #f9fafb;
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+
+/* Header styling */
+.notices-header {
+  position: relative;
+  background: linear-gradient(135deg, #1976d2, #0d47a1);
+  color: white;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.notices-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.notices-title {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.5rem !important;
+  letter-spacing: 0.5px !important;
+}
+
+.notices-subtitle {
+  font-weight: 400 !important;
+  opacity: 0.9;
+}
+
+/* Card styling enhancements */
+.notice-card {
+  height: 100%;
+  border-radius: 8px !important;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.notice-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+.notice-card-header {
+  padding-bottom: 0.5rem !important;
+}
+
+.notice-title {
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  color: #1d3557 !important;
+}
+
+/* Document section styling */
+.document-section {
+  background-color: #ebf3ff;
+  border: 1px solid #d0e1fd;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.document-section:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #1976d2;
+}
+
+/* PDF buttons styling */
+.pdf-view-button {
+  background-color: #1976d2 !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.pdf-view-button:hover {
+  background-color: #1565c0 !important;
+}
+
+.pdf-download-button {
+  border-color: #1976d2 !important;
+  color: #1976d2 !important;
+}
+
+.pdf-download-button:hover {
+  background-color: rgba(25, 118, 210, 0.08) !important;
+}
+
+/* Tags styling */
+.notice-tag {
+  font-weight: 500 !important;
+  border-radius: 4px !important;
+  text-transform: capitalize !important;
+}
+
+.tag-primary {
+  background-color: #e3f2fd !important;
+  color: #0d47a1 !important;
+}
+
+.tag-secondary {
+  background-color: #f3e5f5 !important;
+  color: #7b1fa2 !important;
+}
+
+/* Date display */
+.notice-date {
+  display: flex;
+  align-items: center;
+  color: #546e7a;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+/* Description text */
+.notice-description {
+  color: #37474f;
+  line-height: 1.6 !important;
+}
+
+/* Loading state */
+.loading-container {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner {
+  color: #1976d2 !important;
+}
+
+/* Empty state */
+.empty-notices {
+  text-align: center;
+  padding: 4rem 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.empty-notices-icon {
+  font-size: 4rem !important;
+  color: #90a4ae;
+  margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .notices-title {
+    font-size: 1.75rem !important;
+  }
+  
+  .document-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .document-actions {
+    margin-top: 0.75rem;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+/* Animation for card entrance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notice-card-animated {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* Staggered animation for cards */
+.grid-container > div:nth-child(1) .notice-card-animated { animation-delay: 0.1s; }
+.grid-container > div:nth-child(2) .notice-card-animated { animation-delay: 0.2s; }
+.grid-container > div:nth-child(3) .notice-card-animated { animation-delay: 0.3s; }
+.grid-container > div:nth-child(4) .notice-card-animated { animation-delay: 0.4s; }
+.grid-container > div:nth-child(5) .notice-card-animated { animation-delay: 0.5s; }
+/* Add more as needed for larger sets */

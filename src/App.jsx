@@ -16,6 +16,7 @@ import Logout from "./Pages/Logout/Logout.jsx";
 import ProtectedRoutes from "./Context/ProtectedRoutes.jsx";
 import Resources from "./Pages/Resources/Resources.jsx";
 import Appliedusers from "./Pages/Career/Appliedusers/Appliedusers.jsx";
+import AccessResources  from "./Pages/AccessResources/AccessResources.jsx";
 
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/appliedusers" element={<Appliedusers />} />
           <Route path="/resources" element={< Resources/>}/>
           <Route path="/login" element={<Login />} />
+          <Route path="/access-resources" element={<AccessResources />} />
           <Route path="*" element={<NoMatchRoute />} />
 
           <Route element={<ProtectedRoutes />}>

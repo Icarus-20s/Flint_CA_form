@@ -1,37 +1,41 @@
-/* === Services Page - Professional CA Firm === */
-/* Global Styles & Variables */
 :root {
-  --primary-color: #2c3e50;
-  --secondary-color: #3498db;
-  --accent-color: #e67e22;
-  --success-color: #27ae60;
+  --primary-color: #06D001;
+  --secondary-color: #059212;
+  --accent-color: #9BEC00;
+
+  --success-color: #06D001;
   --error-color: #e74c3c;
-  --text-color: #333;
-  --text-light: #777;
-  --bg-light: #f9f9f9;
-  --bg-dark: #2c3e50;
+
+  --text-color: #046B0D;
+  --text-light: #9BEC00;
+
+  --bg-light: #bcf4b1b3;
+  --bg-dark: #059212;
   --white: #ffffff;
-  --border-color: #e0e0e0;
-  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  --border-color: #9BEC00;
+
+  --box-shadow: 0 4px 6px rgba(6, 208, 1, 0.1);
   --transition-standard: all 0.3s ease;
   --border-radius: 6px;
+
   --font-family: 'Roboto', 'Open Sans', sans-serif;
 }
 
 /* Base Styles */
 .services-page {
   font-family: var(--font-family);
-  color: var(--text-color);
+  color: var(--secondary-color);
   line-height: 1.6;
   overflow-x: hidden;
 }
 
 /* Hero Section */
 .services-hero {
-  background: linear-gradient(135deg, #3498db, #2c3e50);
+  background: linear-gradient(135deg, #49c849, #7fa541);
   background-size: cover;
   background-position: center;
-  color: var(--white);
+  color: var(--secondary-color);
   padding: 100px 20px;
   text-align: center;
   position: relative;
