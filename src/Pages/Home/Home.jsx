@@ -44,9 +44,9 @@ const HeroSlider = () => {
   const autoplayRef = useRef(null);
   
   const images = [
-    'public/Images/homepageImg/slide1.jpg',
-    'public/Images/homepageImg/slide2.jpg',
-    'public/Images/homepageImg/slide3.jpg',
+    'images/homepage/slide1.jpg',
+    'images/homepage/slide2.jpg',
+    'images/homepage/slide3.jpg',
   ];
 
   const resetAutoplay = useCallback(() => {
@@ -625,7 +625,7 @@ const Home = () => {
             id: 1,
             title: 'Tax Consultancy',
             description: 'Comprehensive tax planning and compliance services for businesses and individuals.',
-            image: 'Images/img3.jpg',
+            image: 'images/img3.jpg',
             benefits: [
               'Strategic tax planning to minimize liabilities',
               'Compliance with all regulatory requirements',
@@ -638,7 +638,7 @@ const Home = () => {
             id: 2,
             title: 'Auditing & Assurance',
             description: 'Independent financial audit services that enhance credibility and identify potential issues.',
-            image: 'Images/img1.jpg',
+            image: 'images/img1.jpg',
             benefits: [
               'Enhanced financial credibility',
               'Identification of control weaknesses',
@@ -651,7 +651,7 @@ const Home = () => {
             id: 3,
             title: 'Business Advisory',
             description: 'Strategic guidance to optimize operations, improve profitability, and drive business growth.',
-            image: 'Images/img2.jpg',
+            image: 'images/img2.jpg',
             benefits: [
               'Strategic business planning',
               'Performance improvement strategies',
@@ -677,7 +677,7 @@ const Home = () => {
             id: 5,
             title: 'Risk Management',
             description: 'Identify, assess, and mitigate financial risks that could impact your business objectives.',
-            image: 'Images/img4.jpg',
+            image: 'images/img4.jpg',
             benefits: [
               'Comprehensive risk assessment',
               'Development of mitigation strategies',
@@ -697,7 +697,7 @@ const Home = () => {
             name: 'Sarah Johnson',
             title: 'CEO, TechStart Inc.',
             testimonial: 'Working with their team transformed our financial operations. Their strategic tax planning saved us thousands while keeping us fully compliant.',
-            image: '/Images/img7.png'
+            image: 'images/img7.png'
             
           },
           {
@@ -705,28 +705,28 @@ const Home = () => {
             name: 'Michael Chen',
             title: 'CFO, Retail Solutions',
             testimonial: 'The audit services we received were comprehensive and insightful. They identified key areas for improvement that have significantly enhanced our financial reporting.',
-            image: '/Images/img3.jpg'
+            image: 'images/img3.jpg'
           },
           {
             id: 3,
             name: 'Jennifer Williams',
             title: 'Owner, Williams Consulting',
             testimonial: 'Their business advisory services provided exactly the guidance we needed during our expansion. The expertise and personalized approach made all the difference.',
-            image: '/Images/img4.jpg'
+            image: 'images/img4.jpg'
           },
           {
             id: 4,
             name: 'Robert Davis',
             title: 'Director, Davis Manufacturing',
             testimonial: 'The financial planning services have given us clarity and confidence. Their team takes the time to understand our goals and create strategies that work for our specific situation.',
-            image: '/Images/img4.jpg'
+            image: 'images/img4.jpg'
           },
           {
             id: 5,
             name: 'Elena Martinez',
             title: 'VP Finance, Global Logistics',
             testimonial: 'Their risk management approach helped us navigate a challenging market transition. The preventive measures they implemented saved us from potential significant losses.',
-            image: '/Images/img5.jpg'
+            image: 'images/img5.jpg'
           }
         ];
         
