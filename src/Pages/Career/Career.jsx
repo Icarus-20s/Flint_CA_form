@@ -253,7 +253,7 @@ const Career = () => {
                 </div>
             ) : (
                 <>
-                    <section className="careers-hero">
+                    <section className="careers-hero" style={{ backgroundImage: `url('images/background.png')` }}>
                         <div className="careers-hero-content">
                             <h1>Shape the Future With Us</h1>
                             <p>Join our innovative team and build your career in a collaborative, growth-oriented environment</p>
