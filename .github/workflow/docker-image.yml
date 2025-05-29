@@ -1,0 +1,36 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set image names
+        run: |
+          REPO="${GITHUB_REPOSITORY,,}"  # convert to lowercase
+          echo "FRONTEND_IMAGE=ghcr.io/${REPO}" >> $GITHUB_ENV
+          
+      - name: Build Web Image
+        run: docker build -t $FRONTEND_IMAGE:latest -f Dockerfile.prod .
+
+      - name: Push Frontend Image
+        run: docker push $FRONTEND_IMAGE:latest
