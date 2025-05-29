@@ -45,7 +45,7 @@ const Aboutus = () => {
   return (
     <div className="kbps-about-page">
       {/* Hero Section */}
-      <section className="kbps-hero-section">
+      <section className="kbps-hero-section" style={{ backgroundImage: 'url(images/img15.jpg)' }}>
         <div className="kbps-hero-overlay"></div>
         <Container>
           <div className="kbps-hero-content">
