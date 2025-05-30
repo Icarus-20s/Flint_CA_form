@@ -30,7 +30,10 @@ jobs:
           echo "FRONTEND_IMAGE=ghcr.io/${REPO}" >> $GITHUB_ENV
           
       - name: Build Web Image
-        run: docker build -t $FRONTEND_IMAGE:latest -f Dockerfile.prod .
+        run: |
+          docker build \
+            --build-arg REACT_APP_API_URL=$REACT_APP_API_URL \
+            -t $FRONTEND_IMAGE:latest -f Dockerfile.prod .
 
       - name: Push Frontend Image
         run: docker push $FRONTEND_IMAGE:latest
