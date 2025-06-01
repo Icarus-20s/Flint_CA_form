@@ -54,7 +54,9 @@ const Services = () => {
     try {
       setLoading(true);
       const response = await api.get('services/');
-      
+    if (response.status !== 200) {
+        throw new Error('Failed to fetch services');  
+      }
       // Add artificial delay for initial load (more professional feeling)
       setTimeout(() => {
         setServices(response.data);
@@ -63,7 +65,9 @@ const Services = () => {
         setLoading(false);
       }, 800); // 800ms delay for initial load
     } catch (err) {
-      setTimeout(() => {
+        setTimeout(() => {
+        setServices([]);
+        setFilteredServices([]);
         setError('Failed to load services. Please try again later.');
         console.error('Error fetching services:', err);
         setLoading(false);
@@ -95,7 +99,9 @@ const Services = () => {
     try {
       setDetailLoading(true);
       const response = await api.get(`services/${service.slug}/`);
-      
+          if (response.status !== 200) {
+        throw new Error('Failed to fetch services');  
+      }
       // Add slight delay before showing service detail
       setTimeout(() => {
         setSelectedService(response.data);
@@ -192,16 +198,6 @@ const Services = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="services-error">
-        <h2>Oops!</h2>
-        <p>{error}</p>
-        <button onClick={fetchServices} className="retry-button">Try Again</button>
-      </div>
-    );
-  }
-
   return (
     <div className="services-page">
       <div className="services-hero">
@@ -217,6 +213,14 @@ const Services = () => {
           Our firm provides expert financial guidance to businesses of all sizes. Select a service to learn more.
         </p>
 
+         {
+  error ? (
+    <div className="services-error">
+      <h2>Oops!</h2>
+      <p>{error}</p>
+      <button onClick={fetchServices} className="retry-button">Try Again</button>
+    </div>
+  ) : (
         <div className="category-filter">
           <button 
             className={`category-button ${activeCategory === 'all' ? 'active' : ''}`}
@@ -225,8 +229,9 @@ const Services = () => {
           >
             All Services
           </button>
-          {categories.map((category, index) => (
+      {categories.map((category, index) => (
             <button 
+
               key={index}
               className={`category-button ${activeCategory === category ? 'active' : ''}`}
               onClick={() => handleCategoryChange(category)}
@@ -236,6 +241,8 @@ const Services = () => {
             </button>
           ))}
         </div>
+          )
+          }
 
         {/* Category transition loading state */}
         {transitionLoading ? (

@@ -69,6 +69,9 @@ const Career = () => {
         setLoading(true);
         try {
             const response = await api.get("/career/");
+                if (response.status !== 200) {
+        throw new Error('Failed to fetch services');  
+      }
             setCareers(response.data);
             setLoading(false);
         } catch (err) {

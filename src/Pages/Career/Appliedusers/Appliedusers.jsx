@@ -19,7 +19,10 @@ function AppliedUsers() {
     
     api.get('/jobapplications/')
       .then(response => {
-        if (response.data && Object.keys(response.data).length > 0) {
+            if (response.status !== 200) {
+        throw new Error('Failed to fetch services');  
+      }
+        else if (response.data && Object.keys(response.data).length > 0) {
           setApplications(response.data);
         } else {
           setApplications({});
