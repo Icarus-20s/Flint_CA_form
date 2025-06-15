@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useAuth } from "../Context/AuthContextProvider";
 
 const API_URL =  import.meta.env.VITE_API_URL;
 
@@ -30,9 +31,8 @@ api.interceptors.response.use(
             if (error.response.status === 401) {
                 console.log('Unauthorized request. Please login.');
                 if (error.response.data.code === 'token_not_valid') {
-                    Cookies.remove('token');
-                    localStorage.removeItem("user");
-                    localStorage.removeItem("role");
+                    auth = useAuth();
+                    auth.logout();
                     console.log('Your session has expired. Please login again.');
                 }
             } else if (error.response.status === 403) {
