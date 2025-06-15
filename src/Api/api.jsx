@@ -29,6 +29,11 @@ api.interceptors.response.use(
         if (error.response) {
             if (error.response.status === 401) {
                 console.log('Unauthorized request. Please login.');
+                if (error.response.data.code === 'token_not_valid') {
+                    Cookies.remove('token');
+                    window.location.href = '/';
+                    console.log('Your session has expired. Please login again.');
+                }
             } else if (error.response.status === 403) {
                 console.log('Requested resource is forbidden.');
             } else if (error.response.status === 404) {
