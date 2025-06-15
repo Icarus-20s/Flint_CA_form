@@ -8,11 +8,9 @@ import Services from "./Pages/Services/Services.jsx";
 import Navbar from "./Navbar/Navbar.jsx";
 import NoMatchRoute from "./Pages/NoRoute/NoRoute.jsx";
 import Footer from "./Footer/Footer.jsx";
-import TransitionWrapper from "./Transitionwrapper/TransitionWrapper.jsx";
 import Career from "./Pages/Career/Career.jsx";
 import Login from "./Pages/Login/Login.jsx"
 import AuthContextProvider from "./Context/AuthContextProvider.jsx";
-import Logout from "./Pages/Logout/Logout.jsx";
 import ProtectedRoutes from "./Context/ProtectedRoutes.jsx";
 import Resources from "./Pages/Resources/Resources.jsx";
 import Appliedusers from "./Pages/Career/Appliedusers/Appliedusers.jsx";
