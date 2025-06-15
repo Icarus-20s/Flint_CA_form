@@ -2,18 +2,31 @@
 
 /* Global Styles */
 :root {
-  --primary-color: #2c3e50;
-  --secondary-color: #3498db;
-  --accent-color: #e67e22;
+  --primary-color: #06D001;
+  --secondary-color: #059212;
+  --accent-color: #9BEC00;
+  --success-color: #06D001;
+  --error-color: #e74c3c;
+  --text-color: #046B0D;
+  --text-light: #9BEC00;
+  --bg-light: #bcf4b1b3;
+  --bg-dark: #059212;
+  --white: #ffffff;
+  --border-color: #9BEC00;
+  --box-shadow: 0 4px 6px rgba(6, 208, 1, 0.1);
+  --transition-standard: all 0.3s ease;
+  --border-radius: 6px;
+  --font-family: 'Roboto', 'Open Sans', sans-serif;
+  
+  /* Legacy variables mapped to new color scheme */
   --light-color: #f8f9fa;
   --dark-color: #343a40;
-  --text-color: #333;
   --background-light: #ffffff;
-  --background-alt: #f5f7fa;
-  --border-color: #e1e8ed;
-  --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.05);
-  --shadow-medium: 0 5px 15px rgba(0, 0, 0, 0.08);
-  --shadow-dark: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --background-alt: #bcf4b1b3;
+  --border-color-legacy: #9BEC00;
+  --shadow-light: 0 2px 10px rgba(6, 208, 1, 0.05);
+  --shadow-medium: 0 5px 15px rgba(6, 208, 1, 0.08);
+  --shadow-dark: 0 8px 30px rgba(6, 208, 1, 0.12);
   --transition-fast: 0.2s ease;
   --transition-medium: 0.3s ease;
   --transition-slow: 0.5s ease;
@@ -21,7 +34,7 @@
 
 .kbps-about-page {
   color: var(--text-color);
-  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-family: var(--font-family);
   line-height: 1.6;
   overflow-x: hidden;
 }
@@ -44,7 +57,7 @@
 }
 
 .kbps-section:nth-child(even) {
-  background-color: var(--background-alt);
+  background-color: var(--bg-light);
 }
 
 .kbps-section-header {
@@ -69,7 +82,7 @@
 
 /* Hero Section */
 .kbps-hero-section {
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+  background: linear-gradient(rgba(4, 107, 13, 0.8), rgba(5, 146, 18, 0.6));
   background-size: cover;
   background-position: center;
   color: white;
@@ -110,18 +123,19 @@
   background-color: var(--accent-color);
   border: none;
   border-radius: 30px;
-  color: white;
+  color: var(--text-color);
   font-size: 1.1rem;
   font-weight: 600;
   padding: 12px 30px;
-  transition: all var(--transition-fast);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: var(--transition-standard);
+  box-shadow: var(--box-shadow);
 }
 
 .kbps-cta-button:hover {
-  background-color: #d35400;
+  background-color: var(--primary-color);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(6, 208, 1, 0.25);
 }
 
 /* Our Story Section */
@@ -136,7 +150,7 @@
 
 .kbps-story-image {
   width: 100%;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow-medium);
   transition: transform var(--transition-medium);
 }
@@ -215,17 +229,19 @@
 }
 
 .kbps-fact-card {
-  background-color: var(--background-light);
-  border-radius: 8px;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow-light);
   padding: 30px;
   height: 100%;
   transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+  border: 2px solid transparent;
 }
 
 .kbps-fact-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-medium);
+  border-color: var(--border-color);
 }
 
 .kbps-fact-icon {
@@ -251,18 +267,20 @@
 }
 
 .kbps-service-card {
-  background-color: var(--background-light);
-  border-radius: 8px;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow-light);
   padding: 30px;
   height: 100%;
   position: relative;
   overflow: hidden;
   transition: transform var(--transition-medium);
+  border: 2px solid transparent;
 }
 
 .kbps-service-card:hover {
   transform: translateY(-5px);
+  border-color: var(--border-color);
 }
 
 .kbps-service-icon {
@@ -284,7 +302,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(44, 62, 80, 0.9);
+  background: linear-gradient(135deg, var(--bg-dark), var(--primary-color));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -303,7 +321,7 @@
   padding: 10px 20px;
   border-radius: 30px;
   font-weight: 600;
-  transition: all var(--transition-fast);
+  transition: var(--transition-standard);
 }
 
 .kbps-service-link:hover {
@@ -317,7 +335,7 @@
   border-radius: 30px;
   padding: 10px 30px;
   font-weight: 600;
-  transition: all var(--transition-fast);
+  transition: var(--transition-standard);
 }
 
 .kbps-view-all-btn:hover {
@@ -395,17 +413,19 @@
 }
 
 .kbps-value-card {
-  background-color: var(--background-light);
-  border-radius: 8px;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow-light);
   padding: 25px;
   height: 100%;
   transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+  border: 2px solid transparent;
 }
 
 .kbps-value-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-medium);
+  border-color: var(--border-color);
 }
 
 .kbps-value-icon {
@@ -426,10 +446,10 @@
 }
 
 .kbps-vision-statement {
-  background-color: var(--background-light);
+  background-color: var(--white);
   border-left: 5px solid var(--secondary-color);
   padding: 20px;
-  border-radius: 4px;
+  border-radius: var(--border-radius);
   margin-bottom: 30px;
   box-shadow: var(--shadow-light);
 }
@@ -454,17 +474,19 @@
 }
 
 .kbps-vision-pillar {
-  background-color: var(--background-light);
-  border-radius: 8px;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow-light);
   padding: 25px;
   height: 100%;
   transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+  border: 2px solid transparent;
 }
 
 .kbps-vision-pillar:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-medium);
+  border-color: var(--border-color);
 }
 
 .kbps-pillar-icon {
@@ -514,17 +536,18 @@
   height: 100%;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--shadow-medium);
 }
 
 .kbps-team-card-front {
-  background-color: var(--background-light);
+  background-color: var(--white);
+  border: 2px solid var(--border-color);
 }
 
 .kbps-team-card-back {
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, var(--bg-dark), var(--primary-color));
   color: white;
   transform: rotateY(180deg);
   display: flex;
@@ -598,11 +621,12 @@
   align-items: center;
   border-radius: 50%;
   margin: 0 5px;
-  transition: all var(--transition-fast);
+  transition: var(--transition-standard);
 }
 
 .kbps-social-link:hover {
   background-color: var(--accent-color);
+  color: var(--text-color);
   transform: translateY(-3px);
 }
 
@@ -613,16 +637,17 @@
 }
 
 .kbps-testimonial-card {
-  background-color: var(--background-light);
-  border-radius: 8px;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow-medium);
   padding: 40px;
   margin-bottom: 30px;
   position: relative;
+  border: 2px solid var(--border-color);
 }
 
 .kbps-quote-icon {
-  color: rgba(52, 152, 219, 0.1);
+  color: rgba(6, 208, 1, 0.1);
   font-size: 4rem;
   position: absolute;
   top: 20px;
@@ -636,6 +661,7 @@
   margin-bottom: 20px;
   position: relative;
   z-index: 1;
+  color: var(--text-color);
 }
 
 .kbps-testimonial-author h5 {
@@ -698,8 +724,8 @@
 }
 
 .kbps-contact-card {
-  background-color: var(--background-light);
-  border-radius: 8px;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow-light);
   padding: 30px;
   height: 100%;
@@ -708,11 +734,13 @@
   align-items: center;
   text-align: center;
   transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+  border: 2px solid transparent;
 }
 
 .kbps-contact-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-medium);
+  border-color: var(--border-color);
 }
 
 .kbps-contact-icon {
@@ -730,6 +758,7 @@
 
 .kbps-contact-info p {
   margin-bottom: 5px;
+  color: var(--text-color);
 }
 
 .kbps-cta-container {
@@ -744,14 +773,14 @@
   font-size: 1.1rem;
   font-weight: 600;
   padding: 12px 30px;
-  transition: all var(--transition-fast);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: var(--transition-standard);
+  box-shadow: var(--box-shadow);
 }
 
 .kbps-contact-cta:hover {
-  background-color: #2980b9;
+  background-color: var(--primary-color);
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(6, 208, 1, 0.25);
 }
 
 /* Responsive Design */

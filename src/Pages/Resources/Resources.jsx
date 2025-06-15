@@ -8,7 +8,8 @@ import {
   HelpCircle, 
   Bell, 
   Newspaper,
-  Loader
+  Loader,
+  AlertCircle
 } from "lucide-react";
 
 import api from "../../Api/api";
@@ -98,9 +99,23 @@ const FaqAccordion = ({ question, answer }) => {
   );
 };
 
-// Loading component
-const LoadingState = () => (
-  <LoadingSpinner />
+// Error state component for individual sections
+const SectionErrorState = ({ sectionName, onRetry }) => (
+  <div className="section-error">
+    <AlertCircle size={24} />
+    <p>Unable to load {sectionName}. Please try again.</p>
+    <button className="retry-button" onClick={onRetry}>
+      Retry
+    </button>
+  </div>
+);
+
+// Loading state for individual sections
+const SectionLoadingState = () => (
+  <div className="section-loading">
+    <Loader size={24} className="spinner" />
+    <p>Loading content...</p>
+  </div>
 );
 
 // Main component
@@ -115,49 +130,52 @@ const CAProfessionalResources = () => {
   const [learningResources, setLearningResources] = useState([]);
   const [links, setLinks] = useState([]);
   const [faqs, setFaqs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [fetchError, setFetchError] = useState(null);
-  const [isContentVisible, setIsContentVisible] = useState(false);
+  
+  // Loading states for individual sections
+  const [loadingStates, setLoadingStates] = useState({
+    notices: true,
+    news: true,
+    learning: true,
+    links: true,
+    faqs: true
+  });
+  
+  // Error states for individual sections
+  const [errorStates, setErrorStates] = useState({
+    notices: false,
+    news: false,
+    learning: false,
+    links: false,
+    faqs: false
+  });
+
+  const [isContentVisible, setIsContentVisible] = useState(true); // Always show content
+
+  // Fetch individual resource type
+  const fetchResource = async (endpoint, setter, resourceKey) => {
+    try {
+      setLoadingStates(prev => ({ ...prev, [resourceKey]: true }));
+      setErrorStates(prev => ({ ...prev, [resourceKey]: false }));
+      
+      const response = await api.get(endpoint);
+      setter(response.data);
+      
+      setLoadingStates(prev => ({ ...prev, [resourceKey]: false }));
+    } catch (err) {
+      console.error(`Error fetching ${resourceKey}:`, err);
+      setErrorStates(prev => ({ ...prev, [resourceKey]: true }));
+      setLoadingStates(prev => ({ ...prev, [resourceKey]: false }));
+    }
+  };
 
   // Fetch data from API
   useEffect(() => {
-    const fetchResources = async () => {
-      setIsLoading(true);
-      setIsContentVisible(false);
-      
-      try {
-        // Fetch all resources in parallel
-        const [noticesRes, newsRes, learningRes, linksRes, faqsRes] = await Promise.all([
-          api.get(`/notices/`),
-          api.get(`/news/`),
-          api.get(`/learning/`),
-          api.get(`/links/`),
-          api.get(`/faqs/`),
-        ]);
-        
-        setNotices(noticesRes.data);
-        setNews(newsRes.data);
-        setLearningResources(learningRes.data);
-        setLinks(linksRes.data);
-        setFaqs(faqsRes.data);
-        setFetchError(null);
-        
-        // Animation timing
-        setTimeout(() => {
-          setIsLoading(false);
-          setTimeout(() => {
-            setIsContentVisible(true);
-          }, 100);
-        }, 300);
-        
-      } catch (err) {
-        console.error("Error fetching resources:", err);
-        setFetchError("Unable to load resources. Please try again later.");
-        setIsLoading(false);
-      }
-    };
-
-    fetchResources();
+    // Fetch all resources independently
+    fetchResource('/notices/', setNotices, 'notices');
+    fetchResource('/news/', setNews, 'news');
+    fetchResource('/learning/', setLearningResources, 'learning');
+    fetchResource('/links/', setLinks, 'links');
+    fetchResource('/faqs/', setFaqs, 'faqs');
   }, []);
 
   // Handle tab transitions
@@ -171,6 +189,27 @@ const CAProfessionalResources = () => {
     }, 200);
   };
 
+  // Retry function for individual sections
+  const retrySection = (resourceKey) => {
+    switch(resourceKey) {
+      case 'notices':
+        fetchResource('/notices/', setNotices, 'notices');
+        break;
+      case 'news':
+        fetchResource('/news/', setNews, 'news');
+        break;
+      case 'learning':
+        fetchResource('/learning/', setLearningResources, 'learning');
+        break;
+      case 'links':
+        fetchResource('/links/', setLinks, 'links');
+        break;
+      case 'faqs':
+        fetchResource('/faqs/', setFaqs, 'faqs');
+        break;
+    }
+  };
+
   // Handle newsletter subscription
   const handleEmailSubscription = async (e) => {
     e.preventDefault();
@@ -181,9 +220,7 @@ const CAProfessionalResources = () => {
     }
 
     try {
-      // Replace with actual API endpoint
       const response = await api.post(`emailstorage/`, { email: emailInput });
-  
       setNewsletterStatus('Thank you for subscribing to our newsletter!');
       setEmailInput('');
     } catch (error) {
@@ -202,28 +239,6 @@ const CAProfessionalResources = () => {
     { id: "learning", label: "Learning Material" },
     { id: "links", label: "Professional Links" }
   ];
-
-  if (isLoading) {
-    return <LoadingState />;
-  }
-
-  if (fetchError) {
-    return (
-      <div className="error-wrapper">
-        <div className="error-container">
-          <HelpCircle size={32} />
-          <h2>Resource Loading Error</h2>
-          <p>{fetchError}</p>
-          <button 
-            className="refresh-button" 
-            onClick={() => window.location.reload()}
-          >
-            Refresh Page
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   const contentClassNames = isContentVisible ? 'content-visible' : '';
 
@@ -252,7 +267,7 @@ const CAProfessionalResources = () => {
         ))}
       </nav>
 
-      {/* Spotlight Feature */}
+      {/* Spotlight Feature - Always shown as it's static */}
       <div className={`spotlight-feature ${contentClassNames}`}>
         <div className="spotlight-content">
           <span className="spotlight-tag">Spotlight Resource</span>
@@ -268,7 +283,7 @@ const CAProfessionalResources = () => {
       </div>
 
       {/* News Section */}
-      {(currentTab === "all" || currentTab === "news") && news.length > 0 && (
+      {(currentTab === "all" || currentTab === "news") && (
         <section 
           className={`content-section animate-in ${contentClassNames}`}
           role="tabpanel"
@@ -279,21 +294,35 @@ const CAProfessionalResources = () => {
             <Newspaper size={22} aria-hidden="true" />
             <h2>Industry News & Updates</h2>
           </div>
-          <div className="card-grid">
-            {news.slice(0, 3).map((item, index) => (
-              <ResourceCard key={index} item={item} variant="article" />
-            ))}
-          </div>
-          {news.length > 3 && (
-            <NavLink to="/all-news" className="view-all-link">
-              View all news <ExternalLink size={16} aria-hidden="true" />
-            </NavLink>
+          
+          {loadingStates.news ? (
+            <SectionLoadingState />
+          ) : errorStates.news ? (
+            <SectionErrorState 
+              sectionName="industry news" 
+              onRetry={() => retrySection('news')} 
+            />
+          ) : news.length > 0 ? (
+            <>
+              <div className="card-grid">
+                {news.slice(0, 3).map((item, index) => (
+                  <ResourceCard key={index} item={item} variant="article" />
+                ))}
+              </div>
+              {news.length > 3 && (
+                <NavLink to="/all-news" className="view-all-link">
+                  View all news <ExternalLink size={16} aria-hidden="true" />
+                </NavLink>
+              )}
+            </>
+          ) : (
+            <p className="no-content">No news articles available at the moment.</p>
           )}
         </section>
       )}
 
       {/* Learning Section */}
-      {(currentTab === "all" || currentTab === "learning") && learningResources.length > 0 && (
+      {(currentTab === "all" || currentTab === "learning") && (
         <section 
           className={`content-section animate-in ${contentClassNames}`}
           role="tabpanel"
@@ -304,21 +333,35 @@ const CAProfessionalResources = () => {
             <BookOpen size={22} aria-hidden="true" />
             <h2>Learning Materials</h2>
           </div>
-          <div className="card-grid">
-            {learningResources.slice(0, 3).map((item, index) => (
-              <ResourceCard key={index} item={item} variant="educational" />
-            ))}
-          </div>
-          {learningResources.length > 3 && (
-            <NavLink to="/all-learning" className="view-all-link">
-              View all learning materials <ExternalLink size={16} aria-hidden="true" />
-            </NavLink>
+          
+          {loadingStates.learning ? (
+            <SectionLoadingState />
+          ) : errorStates.learning ? (
+            <SectionErrorState 
+              sectionName="learning materials" 
+              onRetry={() => retrySection('learning')} 
+            />
+          ) : learningResources.length > 0 ? (
+            <>
+              <div className="card-grid">
+                {learningResources.slice(0, 3).map((item, index) => (
+                  <ResourceCard key={index} item={item} variant="educational" />
+                ))}
+              </div>
+              {learningResources.length > 3 && (
+                <NavLink to="/all-learning" className="view-all-link">
+                  View all learning materials <ExternalLink size={16} aria-hidden="true" />
+                </NavLink>
+              )}
+            </>
+          ) : (
+            <p className="no-content">No learning materials available at the moment.</p>
           )}
         </section>
       )}
 
       {/* Links Section */}
-      {(currentTab === "all" || currentTab === "links") && links.length > 0 && (
+      {(currentTab === "all" || currentTab === "links") && (
         <section 
           className={`content-section animate-in ${contentClassNames}`}
           role="tabpanel"
@@ -329,35 +372,61 @@ const CAProfessionalResources = () => {
             <ExternalLink size={22} aria-hidden="true" />
             <h2>Professional Resources</h2>
           </div>
-          <div className="link-grid">
-            {links.map((item, index) => (
-              <ResourceCard key={index} item={item} variant="external" />
-            ))}
-          </div>
+          
+          {loadingStates.links ? (
+            <SectionLoadingState />
+          ) : errorStates.links ? (
+            <SectionErrorState 
+              sectionName="professional links" 
+              onRetry={() => retrySection('links')} 
+            />
+          ) : links.length > 0 ? (
+            <div className="link-grid">
+              {links.map((item, index) => (
+                <ResourceCard key={index} item={item} variant="external" />
+              ))}
+            </div>
+          ) : (
+            <p className="no-content">No professional links available at the moment.</p>
+          )}
         </section>
       )}
 
       {/* FAQs Section */}
-      {currentTab === "all" && faqs.length > 0 && (
+      {currentTab === "all" && (
         <section className={`content-section animate-in ${contentClassNames}`}>
           <div className="section-heading">
             <HelpCircle size={22} aria-hidden="true" />
             <h2>Frequently Asked Questions</h2>
           </div>
-          <div className="faq-container">
-            {faqs.slice(0, 3).map((faq, index) => (
-              <FaqAccordion key={index} question={faq.question} answer={faq.answer} />
-            ))}
-          </div>
-          {faqs.length > 3 && (
-            <NavLink to="/faqs" className="view-all-link">
-              View all FAQs <ExternalLink size={16} aria-hidden="true" />
-            </NavLink>
+          
+          {loadingStates.faqs ? (
+            <SectionLoadingState />
+          ) : errorStates.faqs ? (
+            <SectionErrorState 
+              sectionName="FAQs" 
+              onRetry={() => retrySection('faqs')} 
+            />
+          ) : faqs.length > 0 ? (
+            <>
+              <div className="faq-container">
+                {faqs.slice(0, 3).map((faq, index) => (
+                  <FaqAccordion key={index} question={faq.question} answer={faq.answer} />
+                ))}
+              </div>
+              {faqs.length > 3 && (
+                <NavLink to="/faqs" className="view-all-link">
+                  View all FAQs <ExternalLink size={16} aria-hidden="true" />
+                </NavLink>
+              )}
+            </>
+          ) : (
+            <p className="no-content">No FAQs available at the moment.</p>
           )}
         </section>
       )}
 
-      {/* Newsletter */}
+      {/* Newsletter - Always shown as it's functional */}
       <section className={`newsletter-container ${contentClassNames}`}>
         <div className="newsletter-wrapper">
           <h2>Stay Informed</h2>
