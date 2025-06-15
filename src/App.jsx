@@ -34,7 +34,6 @@ const App = () => {
           <Route path="*" element={<NoMatchRoute />} />
 
           <Route element={<ProtectedRoutes />}>
-          <Route path="/logout" element={<Logout />}/>
           </Route>
         </Routes>
       <Footer />
