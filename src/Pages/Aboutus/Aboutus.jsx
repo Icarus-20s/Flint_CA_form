@@ -45,7 +45,7 @@ const Aboutus = () => {
   return (
     <div className="kbps-about-page">
       {/* Hero Section */}
-      <section className="kbps-hero-section" style={{ backgroundImage: 'url(images/img15.jpg)' }}>
+      <section className="kbps-hero-section" style={{ backgroundImage: 'url(images/about-us/hero-bg.jpg)' }}>
         <div className="kbps-hero-overlay"></div>
         <Container>
           <div className="kbps-hero-content">
@@ -75,7 +75,7 @@ const Aboutus = () => {
             <Col lg={5} md={12} className="kbps-story-image-wrapper">
               <div className="kbps-story-image-container">
                 <img 
-                  src="images/story.jpg" 
+                  src="images/about-us/header.jpg" 
                   alt="Our Story" 
                   className="kbps-story-image" 
                 />
@@ -584,19 +584,19 @@ const teamMembers = [
   {
     name: 'CA. Prabhav Krishna Khand',
     title: 'Managing Partner',
-    img: 'images/Ca_pranav.jpg',
+    img: 'images/profiles/Ca_pranav.jpg',
     summary: 'Member of ICAI and ICAN with 5+ years of experience in assurance services and financial consulting.',
   },
   {
     name: 'CA. Sunil Budhathoki',
     title: 'Partner',
-    img: 'images/Ca_Sunil.jpg',
+    img: 'images/profiles/Ca_Sunil.jpg',
     summary: 'Member of ICAI and ICAN with extensive experience in auditing and business consulting.',
   },
   {
     name: 'CA. Diwakar Pandey',
     title: 'Manager, Tax Advisory',
-    img: 'images/Ca_diwakar.jpg',
+    img: 'images/profiles/Ca_diwakar.jpg',
     summary: 'Member of ICAI and ICAN with expertise in taxation and advisory services.',
   },
 ];

@@ -425,7 +425,7 @@ const Contactus = () => {
                   
                   <div className="office-image-container">
                     <img 
-                      src="/api/placeholder/500/300" 
+                      src="/images/contact-us/office.jpg" 
                       alt="KBPS Associates Office" 
                       className="office-image" 
                     />
