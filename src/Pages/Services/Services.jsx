@@ -3,17 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import api from "../../Api/api";
 import "./Services.css";
 import LoadingSpinner from "../../Loaders/LoadingSpinner";
+import { servicesData } from "../../Components/Constants";
+import { ServiceCard, ServiceModal } from "../../Components/ServicesComponents";
 
 const Services = () => {
-    const [services, setServices] = useState([]);
-    const [filteredServices, setFilteredServices] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [activeCategory, setActiveCategory] = useState("all");
-    const [loading, setLoading] = useState(true);
-    const [transitionLoading, setTransitionLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [selectedService, setSelectedService] = useState(null);
-    const [detailLoading, setDetailLoading] = useState(false);
+    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [formError, setFormError] = useState(null);
+    const [formSubmitting, setFormSubmitting] = useState(false);
     const [quoteForm, setQuoteForm] = useState({
         fullName: "",
         email: "",
@@ -21,119 +17,22 @@ const Services = () => {
         preferredContact: "email",
         companyName: "",
         businessType: "",
-        serviceId: "",
         serviceName: "",
-        serviceCategory: "",
         serviceNeedDate: "",
         message: "",
-        budget: "",
         agreesToTerms: false,
     });
-    const [formSubmitted, setFormSubmitted] = useState(false);
-    const [formError, setFormError] = useState(null);
-    const [formSubmitting, setFormSubmitting] = useState(false);
+    const [selectedService, setSelectedService] = useState(null);
 
-    useEffect(() => {
-        fetchServices();
-    }, []);
-
-    useEffect(() => {
-        if (services.length > 0) {
-            // Extract unique categories using category_name
-            const uniqueCategories = [
-                ...new Set(services.map((service) => service.category_name)),
-            ];
-            setCategories(uniqueCategories);
-
-            // Show transition when changing categories
-            if (!loading) {
-                handleCategoryTransition(activeCategory);
-            }
-        }
-    }, [services, activeCategory, loading]);
-
-    const fetchServices = async () => {
-        try {
-            setLoading(true);
-            const response = await api.get("services/");
-            if (response.status !== 200) {
-                throw new Error("Failed to fetch services");
-            }
-            // Add artificial delay for initial load (more professional feeling)
-            setTimeout(() => {
-                setServices(response.data);
-                setFilteredServices(response.data);
-                setError(null);
-                setLoading(false);
-            }, 800); // 800ms delay for initial load
-        } catch (err) {
-            setTimeout(() => {
-                setServices([]);
-                setFilteredServices([]);
-                setError("Failed to load services. Please try again later.");
-                console.error("Error fetching services:", err);
-                setLoading(false);
-            }, 600);
-        }
+    const handleServiceClick = (service) => {
+        setSelectedService(service);
     };
 
-    const handleCategoryTransition = (category) => {
-        setTransitionLoading(true);
-
-        // Artificial delay when switching categories
-        setTimeout(() => {
-            if (category === "all") {
-                setFilteredServices(services);
-            } else {
-                setFilteredServices(
-                    services.filter(
-                        (service) => service.category_name === category
-                    )
-                );
-            }
-            setTransitionLoading(false);
-        }, 600); // 600ms transition delay
-    };
-
-    const handleCategoryChange = (category) => {
-        if (category !== activeCategory) {
-            setActiveCategory(category);
-        }
-    };
-
-    const handleServiceSelect = async (service) => {
-        try {
-            setDetailLoading(true);
-            const response = await api.get(`services/${service.slug}/`);
-            if (response.status !== 200) {
-                throw new Error("Failed to fetch services");
-            }
-            // Add slight delay before showing service detail
-            setTimeout(() => {
-                setSelectedService(response.data);
-                setQuoteForm({
-                    ...quoteForm,
-                    serviceId: response.data.id,
-                    serviceName: response.data.title,
-                    serviceCategory: response.data.category_name || "General",
-                });
-                setDetailLoading(false);
-            }, 400);
-        } catch (err) {
-            console.error("Failed to fetch service detail:", err);
-            setDetailLoading(false);
-        }
-    };
-
-    const closeServiceDetail = () => {
-        // Add fade-out animation by setting state
+    const handleCloseModal = () => {
         setSelectedService(null);
     };
 
     const scrollToQuoteForm = () => {
-        // Close service detail with animation first
-        setSelectedService(null);
-
         // Then scroll to the quote form with delay
         setTimeout(() => {
             document
@@ -178,19 +77,12 @@ const Services = () => {
                     preferredContact: "email",
                     companyName: "",
                     businessType: "",
-                    serviceId: selectedService ? selectedService.id : "",
-                    serviceName: selectedService ? selectedService.title : "",
-                    serviceCategory: selectedService
-                        ? selectedService.category_name || "General"
-                        : "",
+                    serviceName: "",
                     serviceNeedDate: "",
                     message: "",
                     budget: "",
                     agreesToTerms: false,
                 });
-
-                // Clear selected service
-                setSelectedService(null);
             }, 800);
         } catch (err) {
             setTimeout(() => {
@@ -202,15 +94,6 @@ const Services = () => {
             }, 600);
         }
     };
-
-    if (loading) {
-        return (
-            <div className="services-loading">
-                <LoadingSpinner />
-                <p>Loading our professional services...</p>
-            </div>
-        );
-    }
 
     return (
         <div className="services-page">
@@ -230,204 +113,22 @@ const Services = () => {
                     Our firm provides expert financial guidance to businesses of
                     all sizes. Select a service to learn more.
                 </p>
-
-                {error ? (
-                    <div className="services-error">
-                        <h2>Oops!</h2>
-                        <p>{error}</p>
-                        <button
-                            onClick={fetchServices}
-                            className="retry-button"
-                        >
-                            Try Again
-                        </button>
-                    </div>
-                ) : (
-                    <div className="category-filter">
-                        <button
-                            className={`category-button ${
-                                activeCategory === "all" ? "active" : ""
-                            }`}
-                            onClick={() => handleCategoryChange("all")}
-                            disabled={transitionLoading}
-                        >
-                            All Services
-                        </button>
-                        {categories.map((category, index) => (
-                            <button
-                                key={index}
-                                className={`category-button ${
-                                    activeCategory === category ? "active" : ""
-                                }`}
-                                onClick={() => handleCategoryChange(category)}
-                                disabled={transitionLoading}
-                            >
-                                {category.charAt(0).toUpperCase() +
-                                    category.slice(1)}
-                            </button>
-                        ))}
-                    </div>
-                )}
-
-                {/* Category transition loading state */}
-                {transitionLoading ? (
-                    <motion.div
-                        className="category-transition-loading"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <LoadingSpinner />
-                        <p>Updating services...</p>
-                    </motion.div>
-                ) : (
-                    <motion.div className="services-grid" layout>
-                        <AnimatePresence>
-                            {filteredServices.map((service) => (
-                                <motion.div
-                                    key={service.id}
-                                    className="service-card"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    transition={{ duration: 0.4 }}
-                                    whileHover={{ scale: 1.03 }}
-                                    onClick={() => handleServiceSelect(service)}
-                                    layout
-                                >
-                                    <div className="service-image">
-                                        {service.image ? (
-                                            <img
-                                                src={service.image}
-                                                alt={service.title}
-                                            />
-                                        ) : (
-                                            <div className="service-image-placeholder">
-                                                <i className="fas fa-calculator"></i>
-                                            </div>
-                                        )}
-                                        {service.is_featured && (
-                                            <div className="featured-badge">
-                                                <i className="fas fa-star"></i>{" "}
-                                                Featured
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="service-content">
-                                        <div className="service-category">
-                                            {service.category_name}
-                                        </div>
-                                        <h3>{service.title}</h3>
-                                        <p className="service-description">
-                                            {service.short_description}
-                                        </p>
-                                        {service.pricing_starts_at && (
-                                            <div className="service-pricing">
-                                                Starts at ₹
-                                                {service.pricing_starts_at}
-                                            </div>
-                                        )}
-                                        <button className="service-button">
-                                            Learn More
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
-                    </motion.div>
+                <div className="services-grid">
+                    {servicesData.map((service) => (
+                        <ServiceCard
+                            key={service.id}
+                            service={service}
+                            onLearnMore={handleServiceClick}
+                        />
+                    ))}
+                </div>
+                {selectedService && (
+                    <ServiceModal
+                        service={selectedService}
+                        onClose={handleCloseModal}
+                    />
                 )}
             </div>
-
-            {/* Service detail loading overlay */}
-            <AnimatePresence>
-                {detailLoading && (
-                    <motion.div
-                        className="service-detail service-detail-loading"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <LoadingSpinner />
-                        <p>Loading service details...</p>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <AnimatePresence>
-                {selectedService && (
-                    <motion.div
-                        className="service-detail"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <motion.div
-                            className="service-detail-container"
-                            initial={{ scale: 0.9, y: 20 }}
-                            animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.9, y: 20 }}
-                            transition={{
-                                type: "spring",
-                                damping: 25,
-                                stiffness: 300,
-                            }}
-                        >
-                            <div className="service-detail-header">
-                                <h2>{selectedService.title}</h2>
-                                <button
-                                    className="close-button"
-                                    onClick={closeServiceDetail}
-                                >
-                                    ×
-                                </button>
-                            </div>
-                            <div className="service-detail-content">
-                                {selectedService.image && (
-                                    <div className="service-detail-image">
-                                        <img
-                                            src={selectedService.image}
-                                            alt={selectedService.title}
-                                        />
-                                    </div>
-                                )}
-                                <div className="service-detail-info">
-                                    <div className="service-detail-description">
-                                        <p>
-                                            {selectedService.short_description}
-                                        </p>
-                                    </div>
-
-                                    {selectedService.pricing_starts_at && (
-                                        <div className="service-pricing-detail">
-                                            <div className="pricing-label">
-                                                Starting at
-                                            </div>
-                                            <div className="pricing-amount">
-                                                ₹
-                                                {
-                                                    selectedService.pricing_starts_at
-                                                }
-                                            </div>
-                                            <div className="pricing-note">
-                                                * Final pricing depends on
-                                                specific requirements
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="service-detail-cta">
-                                <button
-                                    className="quote-button"
-                                    onClick={scrollToQuoteForm}
-                                >
-                                    Request a Quote
-                                </button>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
 
             <div id="quote-form" className="quote-request-section">
                 <div className="quote-request-container">
@@ -603,7 +304,6 @@ const Services = () => {
                                             name="serviceName"
                                             value={quoteForm.serviceName}
                                             onChange={handleInputChange}
-                                            readOnly={selectedService !== null}
                                             placeholder="Select a service from above or type here"
                                             disabled={formSubmitting}
                                         />
@@ -621,43 +321,6 @@ const Services = () => {
                                             placeholder="e.g., ASAP, Next Month, Q4 2025"
                                             disabled={formSubmitting}
                                         />
-                                    </div>
-                                </div>
-
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label htmlFor="budget">
-                                            Budget Range
-                                        </label>
-                                        <select
-                                            id="budget"
-                                            name="budget"
-                                            value={quoteForm.budget}
-                                            onChange={handleInputChange}
-                                            disabled={formSubmitting}
-                                        >
-                                            <option value="">
-                                                Select Budget Range
-                                            </option>
-                                            <option value="under-5000">
-                                                Under ₹5,000
-                                            </option>
-                                            <option value="5000-15000">
-                                                ₹5,000 - ₹15,000
-                                            </option>
-                                            <option value="15000-30000">
-                                                ₹15,000 - ₹30,000
-                                            </option>
-                                            <option value="30000-50000">
-                                                ₹30,000 - ₹50,000
-                                            </option>
-                                            <option value="over-50000">
-                                                Over ₹50,000
-                                            </option>
-                                            <option value="not-sure">
-                                                Not Sure / To Be Discussed
-                                            </option>
-                                        </select>
                                     </div>
                                 </div>
 

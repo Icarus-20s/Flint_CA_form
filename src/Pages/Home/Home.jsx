@@ -6,7 +6,6 @@ import React, {
     useMemo,
 } from "react";
 import { Link as ScrollLink } from "react-scroll";
-import { useNavigate } from "react-router-dom";
 import {
     Card,
     CardContent,
@@ -16,10 +15,9 @@ import {
     Box,
     Container,
     IconButton,
-    TextField,
     Paper,
     Chip,
-    Divider,
+    ButtonBase
 } from "@mui/material";
 
 // Icons
@@ -36,18 +34,11 @@ import EmailIcon from "@mui/icons-material/Email";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ArticleIcon from "@mui/icons-material/Article";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import StoreIcon from "@mui/icons-material/Store";
 import ApartmentIcon from "@mui/icons-material/Apartment";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
-// Components
-import LoadingSpinner from "../../Loaders/LoadingSpinner";
-
-// API
-import api from "../../Api/api";
-
-// CSS Import
+import {ServiceCard, ServiceModal} from "../../Components/ServicesComponents";
+import { servicesData, testimonialsData } from "../../Components/Constants";
 import "./Home.css";
 
 /**
@@ -151,166 +142,7 @@ const HeroSlider = () => {
     );
 };
 
-/**
- * Service Card Component
- * Displays a service with image, title, description, and action button
- */
-const ServiceCard = ({ service, onLearnMore }) => {
-    const icons = {
-        "Tax Consultancy": <BusinessCenterIcon fontSize="large" />,
-        "Auditing & Assurance": <AccountBalanceIcon fontSize="large" />,
-        "Business Advisory": <AssessmentIcon fontSize="large" />,
-        "Financial Planning": <SavingsIcon fontSize="large" />,
-        "Risk Management": <SecurityIcon fontSize="large" />,
-    };
 
-    return (
-        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-            <Card className="modern-service__card" elevation={3}>
-                <div className="modern-service__icon-wrapper">
-                    <div className="modern-service__icon">
-                        {icons[service.title]}
-                    </div>
-                </div>
-                <CardContent className="modern-service__content">
-                    <Typography
-                        variant="h5"
-                        component="h3"
-                        className="modern-service__title"
-                    >
-                        {service.title}
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        className="modern-service__description"
-                    >
-                        {service.description}
-                    </Typography>
-                </CardContent>
-                <div className="modern-service__hover-overlay">
-                    <Button
-                        className="modern-service__overlay-button"
-                        onClick={() => onLearnMore(service)}
-                    >
-                        View Details
-                    </Button>
-                </div>
-            </Card>
-        </Grid2>
-    );
-};
-
-/**
- * Service Modal Component
- * Displays detailed information about a selected service
- */
-const ServiceModal = ({ service, onClose }) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    useEffect(() => {
-        setIsOpen(true);
-        document.body.classList.add("modal-open");
-
-        return () => document.body.classList.remove("modal-open");
-    }, []);
-
-    const handleClose = () => {
-        setIsOpen(false);
-        setTimeout(onClose, 300);
-    };
-
-    return (
-        <div
-            className={`modern-modal__overlay ${
-                isOpen ? "modern-modal__overlay--open" : ""
-            }`}
-            onClick={handleClose}
-        >
-            <div
-                className={`modern-modal__content ${
-                    isOpen ? "modern-modal__content--open" : ""
-                }`}
-                onClick={(e) => e.stopPropagation()}
-            >
-                <div className="modern-modal__header">
-                    <Typography variant="h5">{service?.title}</Typography>
-                    <IconButton
-                        onClick={handleClose}
-                        aria-label="close"
-                        className="modern-modal__close"
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </div>
-                <div className="modern-modal__body">
-                    <div className="modern-modal__image-container">
-                        <img
-                            src={service?.image}
-                            alt={service?.title}
-                            className="modern-modal__image"
-                        />
-                    </div>
-                    <Typography
-                        variant="body1"
-                        className="modern-modal__description"
-                    >
-                        {service?.description}
-                    </Typography>
-                    <Typography
-                        variant="body1"
-                        className="modern-modal__extended-description"
-                    >
-                        {service?.extendedDescription ||
-                            `Our ${service?.title} service is designed to provide comprehensive solutions tailored to your specific needs. With our expert team and years of experience, we ensure optimal results and satisfaction.`}
-                    </Typography>
-
-                    <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
-                        Key Benefits
-                    </Typography>
-                    <ul className="modern-modal__benefits-list">
-                        {service?.benefits?.map((benefit, index) => (
-                            <li
-                                key={index}
-                                className="modern-modal__benefit-item"
-                            >
-                                <CheckCircleOutlineIcon className="modern-modal__benefit-icon" />{" "}
-                                {benefit}
-                            </li>
-                        )) || (
-                            <>
-                                <li className="modern-modal__benefit-item">
-                                    <CheckCircleOutlineIcon className="modern-modal__benefit-icon" />{" "}
-                                    Personalized approach tailored to your
-                                    specific needs
-                                </li>
-                                <li className="modern-modal__benefit-item">
-                                    <CheckCircleOutlineIcon className="modern-modal__benefit-icon" />{" "}
-                                    Expert team with specialized industry
-                                    knowledge
-                                </li>
-                                <li className="modern-modal__benefit-item">
-                                    <CheckCircleOutlineIcon className="modern-modal__benefit-icon" />{" "}
-                                    Regular updates and transparent
-                                    communication
-                                </li>
-                                <li className="modern-modal__benefit-item">
-                                    <CheckCircleOutlineIcon className="modern-modal__benefit-icon" />{" "}
-                                    Compliance with all regulatory requirements
-                                </li>
-                            </>
-                        )}
-                    </ul>
-                </div>
-                <div className="modern-modal__footer"></div>
-            </div>
-        </div>
-    );
-};
-
-/**
- * Testimonials Component
- * Displays client testimonials in a carousel
- */
 const Testimonials = ({ testimonials }) => {
     const [current, setCurrent] = useState(0);
     const [width, setWidth] = useState(window.innerWidth);
@@ -323,9 +155,9 @@ const Testimonials = ({ testimonials }) => {
     const getMaxIndex = useCallback(() => {
         return Math.max(
             0,
-            Math.ceil(testimonials.length / getTestimonialsPerView()) - 1
+            Math.ceil(testimonialsData.length / getTestimonialsPerView()) - 1
         );
-    }, [testimonials.length, getTestimonialsPerView]);
+    }, [testimonialsData.length, getTestimonialsPerView]);
 
     const next = useCallback(() => {
         setCurrent((current) => Math.min(current + 1, getMaxIndex()));
@@ -338,7 +170,7 @@ const Testimonials = ({ testimonials }) => {
     const startAutoplay = useCallback(() => {
         if (autoplayRef.current) clearInterval(autoplayRef.current);
 
-        if (testimonials.length > getTestimonialsPerView()) {
+        if (testimonialsData.length > getTestimonialsPerView()) {
             autoplayRef.current = setInterval(() => {
                 setCurrent((current) => {
                     const newCurrent = current + 1;
@@ -346,7 +178,7 @@ const Testimonials = ({ testimonials }) => {
                 });
             }, 5000);
         }
-    }, [testimonials.length, getTestimonialsPerView, getMaxIndex]);
+    }, [testimonialsData.length, getTestimonialsPerView, getMaxIndex]);
 
     useEffect(() => {
         const handleResize = () => setWidth(window.innerWidth);
@@ -376,7 +208,7 @@ const Testimonials = ({ testimonials }) => {
                     transition: "transform 0.5s ease",
                 }}
             >
-                {testimonials.map((testimonial) => (
+                {testimonialsData.map((testimonial) => (
                     <Box
                         key={testimonial.id}
                         className="modern-testimonials__card"
@@ -774,155 +606,8 @@ const TrustIndicators = () => {
  */
 const Home = () => {
     const [selectedService, setSelectedService] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [services, setServices] = useState([]);
-    const [testimonials, setTestimonials] = useState([]);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Simulate API delay
-                await new Promise((resolve) => setTimeout(resolve, 800));
-
-                // Example services data (would normally come from API)
-                const servicesData = [
-                    {
-                        id: 1,
-                        title: "Tax Consultancy",
-                        description:
-                            "Comprehensive tax planning and compliance services for businesses and individuals.",
-                        image: "images/homepage/services/service-1.jpg",
-                        benefits: [
-                            "Strategic tax planning to minimize liabilities",
-                            "Compliance with all regulatory requirements",
-                            "Representation during tax audits",
-                            "Regular updates on tax law changes",
-                        ],
-                        extendedDescription:
-                            "Our Tax Consultancy service provides strategic guidance to minimize tax liabilities while ensuring full compliance with current regulations. We help businesses and individuals navigate complex tax codes, prepare and file accurate returns, and represent clients during tax audits. Our proactive approach keeps you informed about tax law changes that could impact your financial situation.",
-                    },
-                    {
-                        id: 2,
-                        title: "Auditing & Assurance",
-                        description:
-                            "Independent financial audit services that enhance credibility and identify potential issues.",
-                        image: "images/homepage/services/service-2.jpg",
-                        benefits: [
-                            "Enhanced financial credibility",
-                            "Identification of control weaknesses",
-                            "Improved financial reporting",
-                            "Regulatory compliance assurance",
-                        ],
-                        extendedDescription:
-                            "Our Auditing & Assurance services provide independent verification of financial statements to enhance credibility with stakeholders. We conduct thorough examinations to identify control weaknesses, potential fraud risks, and opportunities for operational improvements. Our comprehensive approach ensures compliance with relevant standards while providing actionable insights for better financial management.",
-                    },
-                    {
-                        id: 3,
-                        title: "Business Advisory",
-                        description:
-                            "Strategic guidance to optimize operations, improve profitability, and drive business growth.",
-                        image: "images/homepage/services/service-3.jpg",
-                        benefits: [
-                            "Strategic business planning",
-                            "Performance improvement strategies",
-                            "Merger and acquisition support",
-                            "Succession planning assistance",
-                        ],
-                        extendedDescription:
-                            "Our Business Advisory services deliver strategic insights and practical solutions to help your organization thrive. We work closely with management teams to identify growth opportunities, streamline operations, and improve profitability. Our advisors bring industry-specific expertise to address your unique challenges and capitalize on emerging market trends.",
-                    },
-                    {
-                        id: 4,
-                        title: "Financial Planning",
-                        description:
-                            "Personalized financial strategies tailored to achieve your short and long-term objectives.",
-                        image: "images/homepage/services/service-4.jpg",
-                        benefits: [
-                            "Comprehensive financial assessment",
-                            "Goal-oriented investment strategies",
-                            "Retirement and estate planning",
-                            "Regular progress reviews and adjustments",
-                        ],
-                        extendedDescription:
-                            "Our Financial Planning service takes a holistic approach to your financial wellbeing. We create personalized strategies aligned with your goals, risk tolerance, and timeline. From retirement planning to education funding, our advisors consider all aspects of your financial life to develop a cohesive plan that evolves with your changing needs.",
-                    },
-                    {
-                        id: 5,
-                        title: "Risk Management",
-                        description:
-                            "Identify, assess, and mitigate financial risks that could impact your business objectives.",
-                        image: "images/homepage/services/service-5.jpg",
-                        benefits: [
-                            "Comprehensive risk assessment",
-                            "Development of mitigation strategies",
-                            "Implementation of control systems",
-                            "Ongoing monitoring and reporting",
-                        ],
-                        extendedDescription:
-                            "Our Risk Management services help organizations identify, assess, and mitigate financial and operational risks. We develop customized frameworks to protect your assets, reputation, and stakeholder interests. Our approach combines preventive measures with responsive strategies to ensure business continuity in challenging circumstances.",
-                    },
-                ];
-
-                // Example testimonials data (would normally come from API)
-                const testimonialsData = [
-                    {
-                        id: 1,
-                        name: "Sarah Johnson",
-                        title: "CEO, TechStart Inc.",
-                        testimonial:
-                            "Working with their team transformed our financial operations. Their strategic tax planning saved us thousands while keeping us fully compliant.",
-                        image: "images/homepage/testimonials/testi-1.jpg",
-                    },
-                    {
-                        id: 2,
-                        name: "Michael Chen",
-                        title: "CFO, Retail Solutions",
-                        testimonial:
-                            "The audit services we received were comprehensive and insightful. They identified key areas for improvement that have significantly enhanced our financial reporting.",
-                        image: "images//homepage/testimonials/testi-2.jpg",
-                    },
-                    {
-                        id: 3,
-                        name: "Jennifer Williams",
-                        title: "Owner, Williams Consulting",
-                        testimonial:
-                            "Their business advisory services provided exactly the guidance we needed during our expansion. The expertise and personalized approach made all the difference.",
-                        image: "images/homepage/testimonials/testi-3.jpg",
-                    },
-                    {
-                        id: 4,
-                        name: "Robert Davis",
-                        title: "Director, Davis Manufacturing",
-                        testimonial:
-                            "The financial planning services have given us clarity and confidence. Their team takes the time to understand our goals and create strategies that work for our specific situation.",
-                        image: "images/homepage/testimonials/testi-5.jpg",
-                    },
-                    {
-                        id: 5,
-                        name: "Elena Martinez",
-                        title: "VP Finance, Global Logistics",
-                        testimonial:
-                            "Their risk management approach helped us navigate a challenging market transition. The preventive measures they implemented saved us from potential significant losses.",
-                        image: "images/homepage/testimonials/testi-6.jpg",
-                    },
-                ];
-
-                setServices(servicesData);
-                setTestimonials(testimonialsData);
-            } catch (err) {
-                console.error("Error fetching homepage data:", err);
-                setError(
-                    "Failed to load content. Please refresh the page and try again."
-                );
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-
-        // Scroll to top on component mount
         window.scrollTo(0, 0);
 
         // Add smooth scrolling behavior
@@ -940,32 +625,6 @@ const Home = () => {
     const handleCloseModal = () => {
         setSelectedService(null);
     };
-
-    if (loading) {
-        return (
-            <div className="modern-page__loading">
-                <LoadingSpinner size="large" />
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="modern-page__error">
-                <Typography variant="h5" color="error">
-                    {error}
-                </Typography>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => window.location.reload()}
-                    sx={{ mt: 2 }}
-                >
-                    Refresh Page
-                </Button>
-            </div>
-        );
-    }
 
     return (
         <Box className="modern-home__container">
@@ -1072,19 +731,23 @@ const Home = () => {
                     <Typography variant="h2" className="modern-section__title">
                         Our Services
                     </Typography>
-                    {/* <Typography variant="subtitle1" className="modern-section__subtitle">
-            Comprehensive financial solutions for your business
-          </Typography> */}
-
-                    <Grid2 container spacing={4} sx={{ mt: 4 }}>
-                        {services.map((service) => (
-                            <ServiceCard
-                                key={service.id}
-                                service={service}
-                                onLearnMore={handleServiceClick}
-                            />
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            gap: 2,
+                            mt: 4,
+                        }}
+                    >
+                        {servicesData.slice(0, 4).map((service) => (
+                            <Box key={service.id} sx={{ flex: "1 1 0" }}>
+                                <ServiceCard
+                                    service={service}
+                                    onLearnMore={handleServiceClick}
+                                />
+                            </Box>
                         ))}
-                    </Grid2>
+                    </Box>
                 </Container>
             </Box>
 
@@ -1116,7 +779,7 @@ const Home = () => {
           </Typography> */}
 
                     <Box sx={{ mt: 6 }}>
-                        <Testimonials testimonials={testimonials} />
+                        <Testimonials testimonials={testimonialsData} />
                     </Box>
                 </Container>
             </Box>
