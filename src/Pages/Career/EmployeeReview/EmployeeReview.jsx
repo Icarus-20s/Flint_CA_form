@@ -1,23 +1,23 @@
-import React from 'react';
-import './EmployeeReviews.css';
+import React from "react";
+import "./EmployeeReviews.css";
 
 const EmployeeReviews = () => {
     const reviews = [
         {
-            name: 'John Doe',
-            photo: 'images/employee/emp-1.jpg', // Replace with actual image URL
-            review: 'Working here has been an amazing experience. I get to work on exciting projects with a great team. The environment is supportive, and I am always learning new things.'
+            name: "John Doe",
+            photo: "images/employee/emp-1.jpg", // Replace with actual image URL
+            review: "Working here has been an amazing experience. I get to work on exciting projects with a great team. The environment is supportive, and I am always learning new things.",
         },
         {
-            name: 'Jane Smith',
-            photo: 'images/employee/emp-2.jpg', // Replace with actual image URL
-            review: 'The company culture is fantastic! I appreciate the flexibility and the opportunity to grow in my career. My colleagues are great, and I love the challenges we tackle together.'
+            name: "Jane Smith",
+            photo: "images/employee/emp-2.jpg", // Replace with actual image URL
+            review: "The company culture is fantastic! I appreciate the flexibility and the opportunity to grow in my career. My colleagues are great, and I love the challenges we tackle together.",
         },
         {
-            name: 'Alex Johnson',
-            photo: 'images/employee/emp-3.jpg', // Replace with actual image URL
-            review: 'I’m proud to be part of this team. There’s a strong focus on innovation and continuous improvement. I’ve learned so much here and am excited for the future.'
-        }
+            name: "Alex Johnson",
+            photo: "images/employee/emp-3.jpg", // Replace with actual image URL
+            review: "I’m proud to be part of this team. There’s a strong focus on innovation and continuous improvement. I’ve learned so much here and am excited for the future.",
+        },
     ];
 
     return (

@@ -33,7 +33,7 @@ const Career = () => {
     const [activeFilter, setActiveFilter] = useState("All");
     const [searchTerm, setSearchTerm] = useState("");
     const [expandedCardId, setExpandedCardId] = useState(null);
-    
+
     // Animation states
     const [isLoading, setIsLoading] = useState(true);
     const [isContentVisible, setIsContentVisible] = useState(false);
@@ -43,20 +43,20 @@ const Career = () => {
     useEffect(() => {
         const loadTimer = setTimeout(() => {
             setIsLoading(false);
-            
+
             const visibilityTimer = setTimeout(() => {
                 setIsContentVisible(true);
-                
+
                 const completeTimer = setTimeout(() => {
                     setAnimationComplete(true);
                 }, 600);
-                
+
                 return () => clearTimeout(completeTimer);
             }, 100);
-            
+
             return () => clearTimeout(visibilityTimer);
         }, 800);
-        
+
         return () => clearTimeout(loadTimer);
     }, []);
 
@@ -69,14 +69,16 @@ const Career = () => {
         setLoading(true);
         try {
             const response = await api.get("/career/");
-                if (response.status !== 200) {
-        throw new Error('Failed to fetch services');  
-      }
+            if (response.status !== 200) {
+                throw new Error("Failed to fetch services");
+            }
             setCareers(response.data);
             setLoading(false);
         } catch (err) {
             setLoading(false);
-            setErrorMessage("Error fetching career opportunities. Please try again later.");
+            setErrorMessage(
+                "Error fetching career opportunities. Please try again later."
+            );
             console.error("Error fetching careers:", err);
         }
     };
@@ -113,7 +115,9 @@ const Career = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isAuthenticated) {
-            setErrorMessage("You must be logged in to add a career opportunity.");
+            setErrorMessage(
+                "You must be logged in to add a career opportunity."
+            );
             return;
         }
 
@@ -129,7 +133,9 @@ const Career = () => {
             });
             setSuccessMessage("Career opportunity added successfully!");
         } catch (err) {
-            setErrorMessage("Error adding career opportunity. Please try again later.");
+            setErrorMessage(
+                "Error adding career opportunity. Please try again later."
+            );
             console.error("Error adding career:", err);
         }
     };
@@ -141,7 +147,9 @@ const Career = () => {
     const handleUpdateCareer = async (e) => {
         e.preventDefault();
         if (!isAuthenticated) {
-            setErrorMessage("You must be logged in to update a career opportunity.");
+            setErrorMessage(
+                "You must be logged in to update a career opportunity."
+            );
             return;
         }
 
@@ -158,24 +166,34 @@ const Career = () => {
             setEditingCareer(null);
             setSuccessMessage("Career opportunity updated successfully!");
         } catch (err) {
-            setErrorMessage("Error updating career opportunity. Please try again later.");
+            setErrorMessage(
+                "Error updating career opportunity. Please try again later."
+            );
             console.error("Error updating career:", err);
         }
     };
 
     const handleDeleteCareer = async (id) => {
         if (!isAuthenticated) {
-            setErrorMessage("You must be logged in to delete a career opportunity.");
+            setErrorMessage(
+                "You must be logged in to delete a career opportunity."
+            );
             return;
         }
 
-        if (window.confirm("Are you sure you want to delete this career opportunity?")) {
+        if (
+            window.confirm(
+                "Are you sure you want to delete this career opportunity?"
+            )
+        ) {
             try {
                 await api.delete(`/career/${id}/delete/`);
                 setCareers((prev) => prev.filter((career) => career.id !== id));
                 setSuccessMessage("Career opportunity deleted successfully!");
             } catch (err) {
-                setErrorMessage("Error deleting career opportunity. Please try again later.");
+                setErrorMessage(
+                    "Error deleting career opportunity. Please try again later."
+                );
                 console.error("Error deleting career:", err);
             }
         }
@@ -192,7 +210,9 @@ const Career = () => {
             !applicantDetails.email ||
             !applicantDetails.resumes
         ) {
-            setErrorMessage("Please fill in all required fields and upload a resume.");
+            setErrorMessage(
+                "Please fill in all required fields and upload a resume."
+            );
             return;
         }
 
@@ -206,16 +226,14 @@ const Career = () => {
         }
 
         try {
-            await api.post(
-                "/jobapplication/",
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
+            await api.post("/jobapplication/", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            setSuccessMessage(
+                "Application submitted successfully! We'll be in touch soon."
             );
-            setSuccessMessage("Application submitted successfully! We'll be in touch soon.");
             setApplicantDetails({
                 full_name: "",
                 email: "",
@@ -237,16 +255,22 @@ const Career = () => {
     };
 
     // Filter careers by employment type
-    const filteredCareers = careers.filter(career => {
-        const matchesFilter = activeFilter === "All" || career.employment_type === activeFilter;
-        const matchesSearch = career.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                             career.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                             career.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const filteredCareers = careers.filter((career) => {
+        const matchesFilter =
+            activeFilter === "All" || career.employment_type === activeFilter;
+        const matchesSearch =
+            career.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            career.description
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase()) ||
+            career.location.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesFilter && matchesSearch;
     });
 
     // Apply animation classes based on state
-    const contentClasses = `careers-container ${isLoading ? 'loading' : ''} ${isContentVisible ? 'visible' : ''} ${animationComplete ? 'animation-complete' : ''}`;
+    const contentClasses = `careers-container ${isLoading ? "loading" : ""} ${
+        isContentVisible ? "visible" : ""
+    } ${animationComplete ? "animation-complete" : ""}`;
 
     return (
         <div className={contentClasses}>
@@ -256,26 +280,49 @@ const Career = () => {
                 </div>
             ) : (
                 <>
-                    <section className="careers-hero" style={{ backgroundImage: `url('images/careers/hero-bg.jpg')` }}>
+                    <section
+                        className="careers-hero"
+                        style={{
+                            backgroundImage: `url('images/careers/hero-bg.jpg')`,
+                        }}
+                    >
                         <div className="careers-hero-content">
                             <h1>Shape the Future With Us</h1>
-                            <p>Join our innovative team and build your career in a collaborative, growth-oriented environment</p>
-                            <a href="#current-opportunities" className="explore-btn">Explore Opportunities</a>
+                            <p>
+                                Join our innovative team and build your career
+                                in a collaborative, growth-oriented environment
+                            </p>
+                            <a
+                                href="#current-opportunities"
+                                className="explore-btn"
+                            >
+                                Explore Opportunities
+                            </a>
                         </div>
                     </section>
 
                     <WhyJoinUs />
                     <ExperienceBenefits />
 
-                    <section id="current-opportunities" className="careers-opportunities">
+                    <section
+                        id="current-opportunities"
+                        className="careers-opportunities"
+                    >
                         <div className="section-header">
                             <h2>Current Opportunities</h2>
-                            <p>Find your perfect role and take the next step in your career journey</p>
+                            <p>
+                                Find your perfect role and take the next step in
+                                your career journey
+                            </p>
                         </div>
-                        
+
                         {/* Notification Banner */}
                         {(errorMessage || successMessage) && (
-                            <div className={`notification-banner ${errorMessage ? 'error' : 'success'}`}>
+                            <div
+                                className={`notification-banner ${
+                                    errorMessage ? "error" : "success"
+                                }`}
+                            >
                                 <p>{errorMessage || successMessage}</p>
                             </div>
                         )}
@@ -283,7 +330,7 @@ const Career = () => {
                         {/* Admin View Applications Button */}
                         {isAuthenticated && (
                             <div className="admin-controls">
-                                <button 
+                                <button
                                     className="admin-btn applications-btn"
                                     onClick={() => navigate("/appliedusers")}
                                 >
@@ -296,11 +343,18 @@ const Career = () => {
                         {/* Admin Add New Position Form */}
                         {isAuthenticated && !editingCareer && (
                             <div className="admin-form-panel">
-                                <h3 className="panel-title">Add New Position</h3>
-                                <form onSubmit={handleSubmit} className="position-form">
+                                <h3 className="panel-title">
+                                    Add New Position
+                                </h3>
+                                <form
+                                    onSubmit={handleSubmit}
+                                    className="position-form"
+                                >
                                     <div className="form-row">
                                         <div className="form-group">
-                                            <label htmlFor="title">Job Title</label>
+                                            <label htmlFor="title">
+                                                Job Title
+                                            </label>
                                             <input
                                                 id="title"
                                                 type="text"
@@ -312,7 +366,9 @@ const Career = () => {
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="location">Location</label>
+                                            <label htmlFor="location">
+                                                Location
+                                            </label>
                                             <input
                                                 id="location"
                                                 type="text"
@@ -326,22 +382,38 @@ const Career = () => {
                                     </div>
                                     <div className="form-row">
                                         <div className="form-group">
-                                            <label htmlFor="employment_type">Employment Type</label>
+                                            <label htmlFor="employment_type">
+                                                Employment Type
+                                            </label>
                                             <select
                                                 id="employment_type"
                                                 name="employment_type"
-                                                value={newCareer.employment_type}
+                                                value={
+                                                    newCareer.employment_type
+                                                }
                                                 onChange={handleInputChange}
                                             >
-                                                <option value="Full-Time">Full-Time</option>
-                                                <option value="Part-Time">Part-Time</option>
-                                                <option value="Contract">Contract</option>
-                                                <option value="Internship">Internship</option>
-                                                <option value="Remote">Remote</option>
+                                                <option value="Full-Time">
+                                                    Full-Time
+                                                </option>
+                                                <option value="Part-Time">
+                                                    Part-Time
+                                                </option>
+                                                <option value="Contract">
+                                                    Contract
+                                                </option>
+                                                <option value="Internship">
+                                                    Internship
+                                                </option>
+                                                <option value="Remote">
+                                                    Remote
+                                                </option>
                                             </select>
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="deadline">Application Deadline</label>
+                                            <label htmlFor="deadline">
+                                                Application Deadline
+                                            </label>
                                             <input
                                                 id="deadline"
                                                 type="date"
@@ -353,7 +425,9 @@ const Career = () => {
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="description">Job Description</label>
+                                        <label htmlFor="description">
+                                            Job Description
+                                        </label>
                                         <textarea
                                             id="description"
                                             name="description"
@@ -364,45 +438,63 @@ const Career = () => {
                                             required
                                         />
                                     </div>
-                                    <button type="submit" className="submit-btn">Publish Position</button>
+                                    <button
+                                        type="submit"
+                                        className="submit-btn"
+                                    >
+                                        Publish Position
+                                    </button>
                                 </form>
                             </div>
                         )}
-                        
+
                         {/* Admin Edit Position Form */}
                         {editingCareer && (
                             <div className="admin-form-panel editing">
                                 <h3 className="panel-title">Edit Position</h3>
-                                <form onSubmit={handleUpdateCareer} className="position-form">
+                                <form
+                                    onSubmit={handleUpdateCareer}
+                                    className="position-form"
+                                >
                                     <div className="form-row">
                                         <div className="form-group">
-                                            <label htmlFor="edit-title">Job Title</label>
+                                            <label htmlFor="edit-title">
+                                                Job Title
+                                            </label>
                                             <input
                                                 id="edit-title"
                                                 type="text"
                                                 name="title"
                                                 value={editingCareer.title}
                                                 onChange={(e) =>
-                                                    setEditingCareer((prev) => ({
-                                                        ...prev,
-                                                        title: e.target.value,
-                                                    }))
+                                                    setEditingCareer(
+                                                        (prev) => ({
+                                                            ...prev,
+                                                            title: e.target
+                                                                .value,
+                                                        })
+                                                    )
                                                 }
                                                 required
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="edit-location">Location</label>
+                                            <label htmlFor="edit-location">
+                                                Location
+                                            </label>
                                             <input
                                                 id="edit-location"
                                                 type="text"
                                                 name="location"
                                                 value={editingCareer.location}
                                                 onChange={(e) =>
-                                                    setEditingCareer((prev) => ({
-                                                        ...prev,
-                                                        location: e.target.value,
-                                                    }))
+                                                    setEditingCareer(
+                                                        (prev) => ({
+                                                            ...prev,
+                                                            location:
+                                                                e.target.value,
+                                                        })
+                                                    )
                                                 }
                                                 required
                                             />
@@ -410,44 +502,68 @@ const Career = () => {
                                     </div>
                                     <div className="form-row">
                                         <div className="form-group">
-                                            <label htmlFor="edit-type">Employment Type</label>
+                                            <label htmlFor="edit-type">
+                                                Employment Type
+                                            </label>
                                             <select
                                                 id="edit-type"
                                                 name="employment_type"
-                                                value={editingCareer.employment_type}
+                                                value={
+                                                    editingCareer.employment_type
+                                                }
                                                 onChange={(e) =>
-                                                    setEditingCareer((prev) => ({
-                                                        ...prev,
-                                                        employment_type: e.target.value,
-                                                    }))
+                                                    setEditingCareer(
+                                                        (prev) => ({
+                                                            ...prev,
+                                                            employment_type:
+                                                                e.target.value,
+                                                        })
+                                                    )
                                                 }
                                             >
-                                                <option value="Full-Time">Full-Time</option>
-                                                <option value="Part-Time">Part-Time</option>
-                                                <option value="Contract">Contract</option>
-                                                <option value="Internship">Internship</option>
-                                                <option value="Remote">Remote</option>
+                                                <option value="Full-Time">
+                                                    Full-Time
+                                                </option>
+                                                <option value="Part-Time">
+                                                    Part-Time
+                                                </option>
+                                                <option value="Contract">
+                                                    Contract
+                                                </option>
+                                                <option value="Internship">
+                                                    Internship
+                                                </option>
+                                                <option value="Remote">
+                                                    Remote
+                                                </option>
                                             </select>
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="edit-deadline">Application Deadline</label>
+                                            <label htmlFor="edit-deadline">
+                                                Application Deadline
+                                            </label>
                                             <input
                                                 id="edit-deadline"
                                                 type="date"
                                                 name="deadline"
                                                 value={editingCareer.deadline}
                                                 onChange={(e) =>
-                                                    setEditingCareer((prev) => ({
-                                                        ...prev,
-                                                        deadline: e.target.value,
-                                                    }))
+                                                    setEditingCareer(
+                                                        (prev) => ({
+                                                            ...prev,
+                                                            deadline:
+                                                                e.target.value,
+                                                        })
+                                                    )
                                                 }
                                                 required
                                             />
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="edit-description">Job Description</label>
+                                        <label htmlFor="edit-description">
+                                            Job Description
+                                        </label>
                                         <textarea
                                             id="edit-description"
                                             name="description"
@@ -463,11 +579,18 @@ const Career = () => {
                                         />
                                     </div>
                                     <div className="form-actions">
-                                        <button type="submit" className="submit-btn">Save Changes</button>
+                                        <button
+                                            type="submit"
+                                            className="submit-btn"
+                                        >
+                                            Save Changes
+                                        </button>
                                         <button
                                             type="button"
                                             className="cancel-btn"
-                                            onClick={() => setEditingCareer(null)}
+                                            onClick={() =>
+                                                setEditingCareer(null)
+                                            }
                                         >
                                             Cancel
                                         </button>
@@ -480,41 +603,61 @@ const Career = () => {
                         <div className="careers-search-filter">
                             <div className="search-wrapper">
                                 <span className="search-icon">🔍</span>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     placeholder="Search by keyword, location, or title..."
                                     value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    onChange={(e) =>
+                                        setSearchTerm(e.target.value)
+                                    }
                                     className="search-input"
                                 />
                             </div>
                             <div className="filter-tabs">
-                                <button 
-                                    className={`filter-tab ${activeFilter === "All" ? "active" : ""}`} 
+                                <button
+                                    className={`filter-tab ${
+                                        activeFilter === "All" ? "active" : ""
+                                    }`}
                                     onClick={() => setActiveFilter("All")}
                                 >
                                     All Positions
                                 </button>
-                                <button 
-                                    className={`filter-tab ${activeFilter === "Full-Time" ? "active" : ""}`} 
+                                <button
+                                    className={`filter-tab ${
+                                        activeFilter === "Full-Time"
+                                            ? "active"
+                                            : ""
+                                    }`}
                                     onClick={() => setActiveFilter("Full-Time")}
                                 >
                                     Full-Time
                                 </button>
-                                <button 
-                                    className={`filter-tab ${activeFilter === "Part-Time" ? "active" : ""}`} 
+                                <button
+                                    className={`filter-tab ${
+                                        activeFilter === "Part-Time"
+                                            ? "active"
+                                            : ""
+                                    }`}
                                     onClick={() => setActiveFilter("Part-Time")}
                                 >
                                     Part-Time
                                 </button>
-                                <button 
-                                    className={`filter-tab ${activeFilter === "Contract" ? "active" : ""}`} 
+                                <button
+                                    className={`filter-tab ${
+                                        activeFilter === "Contract"
+                                            ? "active"
+                                            : ""
+                                    }`}
                                     onClick={() => setActiveFilter("Contract")}
                                 >
                                     Contract
                                 </button>
-                                <button 
-                                    className={`filter-tab ${activeFilter === "Remote" ? "active" : ""}`} 
+                                <button
+                                    className={`filter-tab ${
+                                        activeFilter === "Remote"
+                                            ? "active"
+                                            : ""
+                                    }`}
                                     onClick={() => setActiveFilter("Remote")}
                                 >
                                     Remote
@@ -531,59 +674,107 @@ const Career = () => {
                             <div className="careers-listing">
                                 {filteredCareers.length > 0 ? (
                                     filteredCareers.map((career) => (
-                                        <div 
-                                            className={`career-item ${expandedCardId === career.id ? 'expanded' : ''}`} 
+                                        <div
+                                            className={`career-item ${
+                                                expandedCardId === career.id
+                                                    ? "expanded"
+                                                    : ""
+                                            }`}
                                             key={career.id}
                                         >
-                                            <div className="career-item-header" onClick={() => toggleExpandCard(career.id)}>
+                                            <div
+                                                className="career-item-header"
+                                                onClick={() =>
+                                                    toggleExpandCard(career.id)
+                                                }
+                                            >
                                                 <div className="career-item-title">
                                                     <h3>{career.title}</h3>
                                                     <div className="career-meta-brief">
-                                                        <span className="career-badge">{career.employment_type}</span>
-                                                        <span className="career-location-icon">{career.location}</span>
+                                                        <span className="career-badge">
+                                                            {
+                                                                career.employment_type
+                                                            }
+                                                        </span>
+                                                        <span className="career-location-icon">
+                                                            {career.location}
+                                                        </span>
                                                     </div>
                                                 </div>
-                                                <span className="expand-icon">{expandedCardId === career.id ? '−' : '+'}</span>
+                                                <span className="expand-icon">
+                                                    {expandedCardId ===
+                                                    career.id
+                                                        ? "−"
+                                                        : "+"}
+                                                </span>
                                             </div>
-                                            
+
                                             {expandedCardId === career.id && (
                                                 <div className="career-item-details">
                                                     <div className="career-description">
-                                                        <p>{career.description}</p>
+                                                        <p>
+                                                            {career.description}
+                                                        </p>
                                                     </div>
                                                     <div className="career-item-footer">
                                                         <div className="career-meta">
                                                             <div className="meta-item">
-                                                                <span className="meta-label">Location:</span>
-                                                                <span className="meta-value">{career.location}</span>
+                                                                <span className="meta-label">
+                                                                    Location:
+                                                                </span>
+                                                                <span className="meta-value">
+                                                                    {
+                                                                        career.location
+                                                                    }
+                                                                </span>
                                                             </div>
                                                             <div className="meta-item">
-                                                                <span className="meta-label">Type:</span>
-                                                                <span className="meta-value">{career.employment_type}</span>
+                                                                <span className="meta-label">
+                                                                    Type:
+                                                                </span>
+                                                                <span className="meta-value">
+                                                                    {
+                                                                        career.employment_type
+                                                                    }
+                                                                </span>
                                                             </div>
                                                             <div className="meta-item">
-                                                                <span className="meta-label">Apply by:</span>
-                                                                <span className="meta-value">{new Date(career.deadline).toLocaleDateString()}</span>
+                                                                <span className="meta-label">
+                                                                    Apply by:
+                                                                </span>
+                                                                <span className="meta-value">
+                                                                    {new Date(
+                                                                        career.deadline
+                                                                    ).toLocaleDateString()}
+                                                                </span>
                                                             </div>
                                                         </div>
-                                                        
+
                                                         <div className="career-actions">
                                                             {isAuthenticated && (
                                                                 <div className="admin-actions">
                                                                     <button
                                                                         className="edit-btn"
-                                                                        onClick={(e) => {
+                                                                        onClick={(
+                                                                            e
+                                                                        ) => {
                                                                             e.stopPropagation();
-                                                                            handleEditCareer(career);
+                                                                            handleEditCareer(
+                                                                                career
+                                                                            );
                                                                         }}
                                                                     >
                                                                         Edit
                                                                     </button>
                                                                     <button
                                                                         className="delete-btn"
-                                                                        onClick={(e) => {
+                                                                        onClick={(
+                                                                            e
+                                                                        ) => {
                                                                             e.stopPropagation();
-                                                                            handleDeleteCareer(career.id);
+                                                                            handleDeleteCareer(
+                                                                                career.id
+                                                                            );
                                                                         }}
                                                                     >
                                                                         Delete
@@ -592,9 +783,13 @@ const Career = () => {
                                                             )}
                                                             <button
                                                                 className="apply-btn"
-                                                                onClick={(e) => {
+                                                                onClick={(
+                                                                    e
+                                                                ) => {
                                                                     e.stopPropagation();
-                                                                    handleApplyNow(career.id);
+                                                                    handleApplyNow(
+                                                                        career.id
+                                                                    );
                                                                 }}
                                                             >
                                                                 Apply Now
@@ -607,9 +802,16 @@ const Career = () => {
                                     ))
                                 ) : (
                                     <div className="no-results">
-                                        <div className="no-results-icon">🔍</div>
+                                        <div className="no-results-icon">
+                                            🔍
+                                        </div>
                                         <h3>No Positions Found</h3>
-                                        <p>We couldn't find any positions matching your search criteria. Try adjusting your filters or check back later.</p>
+                                        <p>
+                                            We couldn't find any positions
+                                            matching your search criteria. Try
+                                            adjusting your filters or check back
+                                            later.
+                                        </p>
                                     </div>
                                 )}
                             </div>
@@ -622,8 +824,8 @@ const Career = () => {
                     {applyingForCareerId && (
                         <div className="application-overlay">
                             <div className="application-modal">
-                                <button 
-                                    className="close-modal-btn" 
+                                <button
+                                    className="close-modal-btn"
                                     onClick={() => setApplyingForCareerId(null)}
                                 >
                                     &times;
@@ -634,10 +836,20 @@ const Career = () => {
                                 >
                                     {careers.map((career) =>
                                         career.id === applyingForCareerId ? (
-                                            <div key={career.id} className="application-header">
-                                                <h2>Apply for {career.title}</h2>
+                                            <div
+                                                key={career.id}
+                                                className="application-header"
+                                            >
+                                                <h2>
+                                                    Apply for {career.title}
+                                                </h2>
                                                 <p className="application-meta">
-                                                    {career.location} • {career.employment_type} • Application deadline: {new Date(career.deadline).toLocaleDateString()}
+                                                    {career.location} •{" "}
+                                                    {career.employment_type} •
+                                                    Application deadline:{" "}
+                                                    {new Date(
+                                                        career.deadline
+                                                    ).toLocaleDateString()}
                                                 </p>
                                             </div>
                                         ) : null
@@ -645,33 +857,48 @@ const Career = () => {
                                     <div className="application-form-body">
                                         <div className="form-row">
                                             <div className="form-group">
-                                                <label htmlFor="full_name">Full Name</label>
+                                                <label htmlFor="full_name">
+                                                    Full Name
+                                                </label>
                                                 <input
                                                     id="full_name"
                                                     type="text"
                                                     name="full_name"
                                                     placeholder="Enter your full name"
-                                                    value={applicantDetails.full_name}
-                                                    onChange={handleApplicantChange}
+                                                    value={
+                                                        applicantDetails.full_name
+                                                    }
+                                                    onChange={
+                                                        handleApplicantChange
+                                                    }
                                                     required
                                                 />
                                             </div>
                                             <div className="form-group">
-                                                <label htmlFor="email">Email Address</label>
+                                                <label htmlFor="email">
+                                                    Email Address
+                                                </label>
                                                 <input
                                                     id="email"
                                                     type="email"
                                                     name="email"
                                                     placeholder="Enter your email address"
-                                                    value={applicantDetails.email}
-                                                    onChange={handleApplicantChange}
+                                                    value={
+                                                        applicantDetails.email
+                                                    }
+                                                    onChange={
+                                                        handleApplicantChange
+                                                    }
                                                     required
                                                 />
                                             </div>
                                         </div>
                                         <div className="form-group file-upload">
                                             <label htmlFor="resumes">
-                                                Resume <span className="required-tag">Required</span>
+                                                Resume{" "}
+                                                <span className="required-tag">
+                                                    Required
+                                                </span>
                                             </label>
                                             <input
                                                 id="resumes"
@@ -680,11 +907,17 @@ const Career = () => {
                                                 onChange={handleFileChange}
                                                 required
                                             />
-                                            <p className="file-instructions">Accepted formats: PDF, DOC, DOCX (Max 5MB)</p>
+                                            <p className="file-instructions">
+                                                Accepted formats: PDF, DOC, DOCX
+                                                (Max 5MB)
+                                            </p>
                                         </div>
                                         <div className="form-group file-upload">
                                             <label htmlFor="cover_letter">
-                                                Cover Letter <span className="optional-tag">Optional</span>
+                                                Cover Letter{" "}
+                                                <span className="optional-tag">
+                                                    Optional
+                                                </span>
                                             </label>
                                             <input
                                                 id="cover_letter"
@@ -692,15 +925,25 @@ const Career = () => {
                                                 name="cover_letter"
                                                 onChange={handleFileChange}
                                             />
-                                            <p className="file-instructions">Accepted formats: PDF, DOC, DOCX (Max 2MB)</p>
+                                            <p className="file-instructions">
+                                                Accepted formats: PDF, DOC, DOCX
+                                                (Max 2MB)
+                                            </p>
                                         </div>
                                     </div>
                                     <div className="application-footer">
-                                        <button type="submit" className="submit-application-btn">Submit Application</button>
+                                        <button
+                                            type="submit"
+                                            className="submit-application-btn"
+                                        >
+                                            Submit Application
+                                        </button>
                                         <button
                                             type="button"
                                             className="cancel-application-btn"
-                                            onClick={() => setApplyingForCareerId(null)}
+                                            onClick={() =>
+                                                setApplyingForCareerId(null)
+                                            }
                                         >
                                             Cancel
                                         </button>

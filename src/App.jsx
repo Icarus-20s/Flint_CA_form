@@ -9,37 +9,37 @@ import Navbar from "./Navbar/Navbar.jsx";
 import NoMatchRoute from "./Pages/NoRoute/NoRoute.jsx";
 import Footer from "./Footer/Footer.jsx";
 import Career from "./Pages/Career/Career.jsx";
-import Login from "./Pages/Login/Login.jsx"
+import Login from "./Pages/Login/Login.jsx";
 import AuthContextProvider from "./Context/AuthContextProvider.jsx";
 import ProtectedRoutes from "./Context/ProtectedRoutes.jsx";
 import Resources from "./Pages/Resources/Resources.jsx";
 import Appliedusers from "./Pages/Career/Appliedusers/Appliedusers.jsx";
-import AccessResources  from "./Pages/AccessResources/AccessResources.jsx";
-import ScrollToTop from './Components/ScrollTop.jsx';
+import AccessResources from "./Pages/AccessResources/AccessResources.jsx";
+import ScrollToTop from "./Components/ScrollTop.jsx";
 
 const App = () => {
-  return (
-    <AuthContextProvider>
-        <Navbar />
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<Aboutus />} />
-          <Route path="/contact" element={<Contactus />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/careers" element={<Career />} />
-          <Route path="/resources" element={< Resources/>}/>
-          <Route path="/login" element={<Login />} />
-          <Route path="/access-resources" element={<AccessResources />} />
-          <Route path="*" element={<NoMatchRoute />} />
+    return (
+        <AuthContextProvider>
+            <Navbar />
+            <ScrollToTop />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<Aboutus />} />
+                <Route path="/contact" element={<Contactus />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/careers" element={<Career />} />
+                <Route path="/resources" element={<Resources />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/access-resources" element={<AccessResources />} />
+                <Route path="*" element={<NoMatchRoute />} />
 
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/applied-users" element={<Appliedusers />} />
-          </Route>
-        </Routes>
-      <Footer />
-    </AuthContextProvider>
-  );
+                <Route element={<ProtectedRoutes />}>
+                    <Route path="/applied-users" element={<Appliedusers />} />
+                </Route>
+            </Routes>
+            <Footer />
+        </AuthContextProvider>
+    );
 };
 
 export default App;
