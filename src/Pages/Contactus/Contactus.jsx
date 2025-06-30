@@ -8,7 +8,7 @@ import {
   Container, 
   Paper, 
   Box, 
-  Grid, 
+  Grid2, 
   Divider,
   Card,
   CardContent,
@@ -223,8 +223,8 @@ const Contactus = () => {
           animate={isVisible.cards ? "visible" : "hidden"}
           variants={staggerCards}
         >
-          <Grid container spacing={3} className="contact-info-cards">
-            <Grid item xs={12} sm={6} md={3}>
+          <Grid2 container spacing={3} className="contact-info-cards">
+            <Grid2 size={{ xs: 12, sm: 6, md: 3}}>
               <motion.div variants={cardVariant}>
                 <Card className="contact-info-card" elevation={2}>
                   <CardContent className="contact-card-content">
@@ -237,9 +237,9 @@ const Contactus = () => {
                   </CardContent>
                 </Card>
               </motion.div>
-            </Grid>
+            </Grid2>
             
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid2 size={{ xs: 12, sm: 6, md: 3}}>
               <motion.div variants={cardVariant}>
                 <Card className="contact-info-card" elevation={2}>
                   <CardContent className="contact-card-content">
@@ -252,9 +252,9 @@ const Contactus = () => {
                   </CardContent>
                 </Card>
               </motion.div>
-            </Grid>
+            </Grid2>
             
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid2 size={{ xs: 12, sm: 6, md: 3}}>
               <motion.div variants={cardVariant}>
                 <Card className="contact-info-card" elevation={2}>
                   <CardContent className="contact-card-content">
@@ -267,9 +267,9 @@ const Contactus = () => {
                   </CardContent>
                 </Card>
               </motion.div>
-            </Grid>
+            </Grid2>
             
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid2 size={{ xs: 12, sm: 6, md: 3}}>
               <motion.div variants={cardVariant}>
                 <Card className="contact-info-card" elevation={2}>
                   <CardContent className="contact-card-content">
@@ -282,8 +282,8 @@ const Contactus = () => {
                   </CardContent>
                 </Card>
               </motion.div>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </motion.div>
         
         {/* Main Contact Section */}
@@ -294,9 +294,9 @@ const Contactus = () => {
           className="contact-form-container"
         >
           <Paper elevation={3} className="contact-paper">
-            <Grid container spacing={isMobile ? 2 : 4}>
+            <Grid2 container spacing={isMobile ? 2 : 4}>
               {/* Left Side - Form */}
-              <Grid item xs={12} md={7}>
+              <Grid2 size={{ xs: 12 }} md={7}>
                 <Box className="form-section">
                   <Typography variant="h4" className="form-title">
                     Schedule an Appointment
@@ -315,8 +315,8 @@ const Contactus = () => {
                   )}
                   
                   <form onSubmit={handleSubmit} className="contact-form">
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6}>
+                    <Grid2 container spacing={2}>
+                      <Grid2 size={{ xs: 12, sm: 6 }}>
                         <TextField
                           label="Full Name"
                           name="name"
@@ -331,8 +331,8 @@ const Contactus = () => {
                           helperText={getValidationError('name')}
                           className={`contact-input ${formFocused === 'name' ? 'input-focused' : ''}`}
                         />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
+                      </Grid2>
+                      <Grid2 size={{ xs: 12, sm: 6 }}>
                         <TextField
                           label="Email Address"
                           name="email"
@@ -348,8 +348,8 @@ const Contactus = () => {
                           helperText={getValidationError('email')}
                           className={`contact-input ${formFocused === 'email' ? 'input-focused' : ''}`}
                         />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
+                      </Grid2>
+                      <Grid2 size={{ xs: 12, sm: 6 }}>
                         <TextField
                           label="Phone Number (Optional)"
                           name="phone"
@@ -363,8 +363,8 @@ const Contactus = () => {
                           helperText={getValidationError('phone')}
                           className={`contact-input ${formFocused === 'phone' ? 'input-focused' : ''}`}
                         />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
+                      </Grid2>
+                      <Grid2 size={{ xs: 12, sm: 6 }}>
                         <TextField
                           label="Subject"
                           name="subject"
@@ -379,8 +379,8 @@ const Contactus = () => {
                           helperText={getValidationError('subject')}
                           className={`contact-input ${formFocused === 'subject' ? 'input-focused' : ''}`}
                         />
-                      </Grid>
-                      <Grid item xs={12}>
+                      </Grid2>
+                      <Grid2 size={{ xs: 12 }}>
                         <TextField
                           label="Your Message"
                           name="message"
@@ -397,8 +397,8 @@ const Contactus = () => {
                           helperText={getValidationError('message')}
                           className={`contact-input ${formFocused === 'message' ? 'input-focused' : ''}`}
                         />
-                      </Grid>
-                      <Grid item xs={12}>
+                      </Grid2>
+                      <Grid2 size={{ xs: 12 }}>
                         <Button
                           variant="contained"
                           color="primary"
@@ -410,14 +410,14 @@ const Contactus = () => {
                         >
                           {loading ? 'Sending...' : 'Send Message'}
                         </Button>
-                      </Grid>
-                    </Grid>
+                      </Grid2>
+                    </Grid2>
                   </form>
                 </Box>
-              </Grid>
+              </Grid2>
               
               {/* Right Side - Office Info */}
-              <Grid item xs={12} md={5}>
+              <Grid2 size={{ xs: 12 }} md={5}>
                 <Box className="office-info-section">
                   <Typography variant="h4" className="office-info-title">
                     Our Office
@@ -475,8 +475,8 @@ const Contactus = () => {
                     </motion.div>
                   </Box>
                 </Box>
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           </Paper>
         </motion.div>
       </Container>
@@ -522,8 +522,8 @@ const Contactus = () => {
           
           <Divider className="faq-divider" />
           
-          <Grid container spacing={3} className="faq-container">
-            <Grid item xs={12} md={6}>
+          <Grid2 container spacing={3} className="faq-container">
+            <Grid2 size={{ xs: 12 }} md={6}>
               <motion.div 
                 className="faq-item"
                 whileHover={{ scale: 1.02 }}
@@ -536,9 +536,9 @@ const Contactus = () => {
                   We offer a comprehensive range of services including accounting, auditing, taxation, financial advisory, company incorporation, and business consulting.
                 </Typography>
               </motion.div>
-            </Grid>
+            </Grid2>
             
-            <Grid item xs={12} md={6}>
+            <Grid2 size={{ xs: 12 }} md={6}>
               <motion.div 
                 className="faq-item"
                 whileHover={{ scale: 1.02 }}
@@ -551,9 +551,9 @@ const Contactus = () => {
                   We aim to respond to all inquiries within 24 business hours. For urgent matters, please contact us directly by phone.
                 </Typography>
               </motion.div>
-            </Grid>
+            </Grid2>
             
-            <Grid item xs={12} md={6}>
+            <Grid2 size={{ xs: 12 }} md={6}>
               <motion.div 
                 className="faq-item"
                 whileHover={{ scale: 1.02 }}
@@ -566,9 +566,9 @@ const Contactus = () => {
                   Yes, we offer virtual consultations via video conferencing platforms for clients who cannot visit our office in person.
                 </Typography>
               </motion.div>
-            </Grid>
+            </Grid2>
             
-            <Grid item xs={12} md={6}>
+            <Grid2 size={{ xs: 12 }} md={6}>
               <motion.div 
                 className="faq-item"
                 whileHover={{ scale: 1.02 }}
@@ -581,8 +581,8 @@ const Contactus = () => {
                   For the initial consultation, please bring your business registration documents, recent financial statements, tax filings from the previous year, and any specific questions or concerns you'd like to discuss.
                 </Typography>
               </motion.div>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </Container>
       </motion.div>
       
