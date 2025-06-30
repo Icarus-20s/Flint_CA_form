@@ -163,7 +163,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <KeyboardDoubleArrowRightIcon className="link-arrow" />
-                  <Link to="/career">Careers</Link>
+                  <Link to="/careers">Careers</Link>
                 </li>
                 <li>
                   <KeyboardDoubleArrowRightIcon className="link-arrow" />

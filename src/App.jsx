@@ -15,25 +15,26 @@ import ProtectedRoutes from "./Context/ProtectedRoutes.jsx";
 import Resources from "./Pages/Resources/Resources.jsx";
 import Appliedusers from "./Pages/Career/Appliedusers/Appliedusers.jsx";
 import AccessResources  from "./Pages/AccessResources/AccessResources.jsx";
-
+import ScrollToTop from './Components/ScrollTop.jsx';
 
 const App = () => {
   return (
     <AuthContextProvider>
-           <Navbar />
+        <Navbar />
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<Aboutus />} />
           <Route path="/contact" element={<Contactus />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/career" element={<Career />} />
-          <Route path="/appliedusers" element={<Appliedusers />} />
+          <Route path="/careers" element={<Career />} />
           <Route path="/resources" element={< Resources/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/access-resources" element={<AccessResources />} />
           <Route path="*" element={<NoMatchRoute />} />
 
           <Route element={<ProtectedRoutes />}>
+            <Route path="/applied-users" element={<Appliedusers />} />
           </Route>
         </Routes>
       <Footer />
