@@ -72,6 +72,7 @@ const Career = () => {
             if (response.status !== 200) {
                 throw new Error("Failed to fetch services");
             }
+            console.log("Fetched careers:", response.data);
             setCareers(response.data);
             setLoading(false);
         } catch (err) {
@@ -332,7 +333,7 @@ const Career = () => {
                             <div className="admin-controls">
                                 <button
                                     className="admin-btn applications-btn"
-                                    onClick={() => navigate("/appliedusers")}
+                                    onClick={() => navigate("/applied-users")}
                                 >
                                     <span className="icon">📋</span>
                                     View All Applications
