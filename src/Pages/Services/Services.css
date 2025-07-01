@@ -61,6 +61,7 @@
   margin: 0 auto;
   animation: fadeInUp 0.8s ease-out 0.3s;
   animation-fill-mode: both;
+  color: #ffffff;
 }
 
 /* Services Container */
