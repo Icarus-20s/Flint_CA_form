@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import {
-    Calendar,
     FileText,
-    BookOpen,
     ExternalLink,
     HelpCircle,
     Bell,
     Newspaper,
     Loader,
     AlertCircle,
+    Plus,
+    X,
+    Upload,
+    Link2,
+    Calendar,
 } from "lucide-react";
-
 import api from "../../Api/api";
 import "./Resources.css";
 import LoadingSpinner from "../../Loaders/LoadingSpinner";
+import { useAuth } from "../../Context/AuthContextProvider.jsx";
 
 // Resource card component with different variations
 const ResourceCard = ({ item, variant }) => {
@@ -30,43 +33,6 @@ const ResourceCard = ({ item, variant }) => {
                             {item.tag}
                         </span>
                     </a>
-                </div>
-            );
-        case "article":
-            return (
-                <div className="article-card">
-                    <img
-                        src={item.image}
-                        alt={item.imageAlt}
-                        className="article-image"
-                    />
-                    <div className="article-body">
-                        <span className="card-date">{item.date}</span>
-                        <NavLink to={item.url} className="card-anchor">
-                            <h3 className="card-title">{item.title}</h3>
-                            <p className="card-summary">{item.description}</p>
-                        </NavLink>
-                        <span className="card-badge">{item.tag}</span>
-                    </div>
-                </div>
-            );
-        case "educational":
-            return (
-                <div className="educational-card">
-                    <div className="card-icon">
-                        <FileText size={28} />
-                    </div>
-                    <NavLink to={item.url} className="card-anchor">
-                        <h3 className="card-title">{item.title}</h3>
-                        <p className="card-summary">{item.description}</p>
-                        <div className="card-metadata">
-                            {item.meta.map((meta, index) => (
-                                <span key={index} className="metadata-item">
-                                    {meta}
-                                </span>
-                            ))}
-                        </div>
-                    </NavLink>
                 </div>
             );
         case "external":
@@ -131,24 +97,265 @@ const SectionLoadingState = () => (
     </div>
 );
 
+// Add Notice Modal Component
+const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        date: '',
+        pdf: null
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleFileChange = (e) => {
+        setFormData(prev => ({
+            ...prev,
+            pdf: e.target.files[0]
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        
+        const submitData = new FormData();
+        submitData.append('title', formData.title);
+        submitData.append('description', formData.description);
+        submitData.append('date', formData.date);
+        if (formData.pdf) {
+            submitData.append('pdf', formData.pdf);
+        }
+
+        try {
+            await onSubmit(submitData);
+            setFormData({
+                title: '',
+                description: '',
+                date: '',
+                pdf: null
+            });
+            onClose();
+        } catch (error) {
+            console.error('Error submitting notice:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
+                <div className="modal-header">
+                    <h2>Add New Notice</h2>
+                    <button className="modal-close" onClick={onClose}>
+                        <X size={24} />
+                    </button>
+                </div>
+                
+                <form onSubmit={handleSubmit} className="modal-form">
+                    <div className="form-group">
+                        <label htmlFor="title">Title *</label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter notice title"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="description">Description *</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleInputChange}
+                            required
+                            rows={4}
+                            placeholder="Enter notice description"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="date">Date *</label>
+                        <input
+                            type="date"
+                            id="date"
+                            name="date"
+                            value={formData.date}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="pdf">PDF Document</label>
+                        <div className="file-input-wrapper">
+                            <input
+                                type="file"
+                                id="pdf"
+                                name="pdf"
+                                onChange={handleFileChange}
+                                accept=".pdf"
+                                className="file-input"
+                            />
+                            <div className="file-input-display">
+                                <Upload size={20} />
+                                <span>
+                                    {formData.pdf ? formData.pdf.name : 'Choose PDF file'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal-actions">
+                        <button type="button" onClick={onClose} className="btn-cancel">
+                            Cancel
+                        </button>
+                        <button type="submit" disabled={isSubmitting} className="btn-submit">
+                            {isSubmitting ? 'Adding...' : 'Add Notice'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+// Add Link Modal Component
+const AddLinkModal = ({ isOpen, onClose, onSubmit }) => {
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        url: '',
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        
+        try {
+            await onSubmit(formData);
+            setFormData({
+                title: '',
+                description: '',
+                url: '',
+            });
+            onClose();
+        } catch (error) {
+            console.error('Error submitting link:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
+                <div className="modal-header">
+                    <h2>Add New Link</h2>
+                    <button className="modal-close" onClick={onClose}>
+                        <X size={24} />
+                    </button>
+                </div>
+                
+                <form onSubmit={handleSubmit} className="modal-form">
+                    <div className="form-group">
+                        <label htmlFor="title">Title *</label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter link title"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="description">Description *</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleInputChange}
+                            required
+                            rows={3}
+                            placeholder="Enter link description"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="url">URL *</label>
+                        <input
+                            type="url"
+                            id="url"
+                            name="url"
+                            value={formData.url}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="https://example.com"
+                        />
+                    </div>
+
+                    <div className="modal-actions">
+                        <button type="button" onClick={onClose} className="btn-cancel">
+                            Cancel
+                        </button>
+                        <button type="submit" disabled={isSubmitting} className="btn-submit">
+                            {isSubmitting ? 'Adding...' : 'Add Link'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
 // Main component
 const CAProfessionalResources = () => {
+    const { isAuthenticated } = useAuth();
     const [currentTab, setCurrentTab] = useState("all");
     const [newsletterStatus, setNewsletterStatus] = useState("");
     const [emailInput, setEmailInput] = useState("");
+    
+    // Modal states
+    const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
+    const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
 
     // State for API data
     const [notices, setNotices] = useState([]);
-    const [news, setNews] = useState([]);
-    const [learningResources, setLearningResources] = useState([]);
     const [links, setLinks] = useState([]);
     const [faqs, setFaqs] = useState([]);
 
     // Loading states for individual sections
     const [loadingStates, setLoadingStates] = useState({
         notices: true,
-        news: true,
-        learning: true,
         links: true,
         faqs: true,
     });
@@ -156,13 +363,11 @@ const CAProfessionalResources = () => {
     // Error states for individual sections
     const [errorStates, setErrorStates] = useState({
         notices: false,
-        news: false,
-        learning: false,
         links: false,
         faqs: false,
     });
 
-    const [isContentVisible, setIsContentVisible] = useState(true); // Always show content
+    const [isContentVisible, setIsContentVisible] = useState(true);
 
     // Fetch individual resource type
     const fetchResource = async (endpoint, setter, resourceKey) => {
@@ -183,10 +388,7 @@ const CAProfessionalResources = () => {
 
     // Fetch data from API
     useEffect(() => {
-        // Fetch all resources independently
         fetchResource("/notices/", setNotices, "notices");
-        fetchResource("/news/", setNews, "news");
-        fetchResource("/learning/", setLearningResources, "learning");
         fetchResource("/links/", setLinks, "links");
         fetchResource("/faqs/", setFaqs, "faqs");
     }, []);
@@ -208,18 +410,45 @@ const CAProfessionalResources = () => {
             case "notices":
                 fetchResource("/notices/", setNotices, "notices");
                 break;
-            case "news":
-                fetchResource("/news/", setNews, "news");
-                break;
-            case "learning":
-                fetchResource("/learning/", setLearningResources, "learning");
-                break;
             case "links":
                 fetchResource("/links/", setLinks, "links");
                 break;
             case "faqs":
                 fetchResource("/faqs/", setFaqs, "faqs");
                 break;
+        }
+    };
+
+    // Handle notice submission
+    const handleNoticeSubmit = async (formData) => {
+        try {
+        const res = await api.post("/notices/create/", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        });
+            
+            fetchResource("/notices/", setNotices, "notices");
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error adding notice:', error);
+            throw error;
+        }
+    };
+
+    // Handle link submission
+    const handleLinkSubmit = async (formData) => {
+        try {
+            const response = await api.post("/links/create/", formData);
+            
+            // Refresh links after successful submission
+            fetchResource("/links/", setLinks, "links");
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error adding link:', error);
+            throw error;
         }
     };
 
@@ -243,16 +472,14 @@ const CAProfessionalResources = () => {
             setNewsletterStatus("Subscription failed. Please try again.");
         }
 
-        // Clear message after delay
         setTimeout(() => setNewsletterStatus(""), 3000);
     };
 
     // Navigation tabs
     const tabOptions = [
         { id: "all", label: "All Resources" },
-        { id: "news", label: "Industry News" },
-        { id: "learning", label: "Learning Material" },
-        { id: "links", label: "Professional Links" },
+        { id: "notices", label: "Notices" },
+        { id: "links", label: "Useful Links" },
     ];
 
     const contentClassNames = isContentVisible ? "content-visible" : "";
@@ -262,8 +489,7 @@ const CAProfessionalResources = () => {
             <header className="page-header">
                 <h1 className="page-title">CA Professionals Resources</h1>
                 <p className="page-subtitle">
-                    Access the latest updates, educational resources, and
-                    professional tools for Chartered Accountants
+                    Access the latest updates, professional tools, and useful links for Chartered Accountants
                 </p>
             </header>
 
@@ -285,7 +511,7 @@ const CAProfessionalResources = () => {
                 ))}
             </nav>
 
-            {/* Spotlight Feature - Always shown as it's static */}
+            {/* Spotlight Feature */}
             <div className={`spotlight-feature ${contentClassNames}`}>
                 <div className="spotlight-content">
                     <span className="spotlight-tag">Spotlight Resource</span>
@@ -304,108 +530,55 @@ const CAProfessionalResources = () => {
                 </div>
             </div>
 
-            {/* News Section */}
-            {(currentTab === "all" || currentTab === "news") && (
+            {/* Notices Section */}
+            {(currentTab === "all" || currentTab === "notices") && (
                 <section
                     className={`content-section animate-in ${contentClassNames}`}
                     role="tabpanel"
-                    id="news-panel"
-                    aria-labelledby="news-tab"
+                    id="notice-panel"
+                    aria-labelledby="notices-tab"
                 >
-                    <div className="section-heading">
-                        <Newspaper size={22} aria-hidden="true" />
-                        <h2>Industry News & Updates</h2>
+                    <div className="section-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <Newspaper size={22} aria-hidden="true" />
+                            <h2>Notices and Updates</h2>
+                        </div>
+                        
+                        {isAuthenticated && (
+                            <button
+                                className="btn-add-resource"
+                                onClick={() => setIsNoticeModalOpen(true)}
+                                aria-label="Add new notice"
+                                type="button"
+                            >
+                                <Plus size={16} />
+                                Add Notice
+                            </button>
+                        )}
                     </div>
 
-                    {loadingStates.news ? (
+                    {loadingStates.notices ? (
                         <SectionLoadingState />
-                    ) : errorStates.news ? (
+                    ) : errorStates.notices ? (
                         <SectionErrorState
-                            sectionName="industry news"
-                            onRetry={() => retrySection("news")}
+                            sectionName="Notices and Updates"
+                            onRetry={() => retrySection("notices")}
                         />
-                    ) : news.length > 0 ? (
+                    ) : notices.length > 0 ? (
                         <>
                             <div className="card-grid">
-                                {news.slice(0, 3).map((item, index) => (
-                                    <ResourceCard
-                                        key={index}
-                                        item={item}
-                                        variant="article"
-                                    />
+                                {notices.slice(0, 6).map((item, index) => (
+                                    <ResourceCard key={index} item={item} variant="notification" />
                                 ))}
                             </div>
-                            {news.length > 3 && (
-                                <NavLink
-                                    to="/all-news"
-                                    className="view-all-link"
-                                >
-                                    View all news{" "}
-                                    <ExternalLink
-                                        size={16}
-                                        aria-hidden="true"
-                                    />
+                            {notices.length > 6 && (
+                                <NavLink to="/all-notices" className="view-all-link">
+                                    View all notices <ExternalLink size={16} aria-hidden="true" />
                                 </NavLink>
                             )}
                         </>
                     ) : (
-                        <p className="no-content">
-                            No news articles available at the moment.
-                        </p>
-                    )}
-                </section>
-            )}
-
-            {/* Learning Section */}
-            {(currentTab === "all" || currentTab === "learning") && (
-                <section
-                    className={`content-section animate-in ${contentClassNames}`}
-                    role="tabpanel"
-                    id="learning-panel"
-                    aria-labelledby="learning-tab"
-                >
-                    <div className="section-heading">
-                        <BookOpen size={22} aria-hidden="true" />
-                        <h2>Learning Materials</h2>
-                    </div>
-
-                    {loadingStates.learning ? (
-                        <SectionLoadingState />
-                    ) : errorStates.learning ? (
-                        <SectionErrorState
-                            sectionName="learning materials"
-                            onRetry={() => retrySection("learning")}
-                        />
-                    ) : learningResources.length > 0 ? (
-                        <>
-                            <div className="card-grid">
-                                {learningResources
-                                    .slice(0, 3)
-                                    .map((item, index) => (
-                                        <ResourceCard
-                                            key={index}
-                                            item={item}
-                                            variant="educational"
-                                        />
-                                    ))}
-                            </div>
-                            {learningResources.length > 3 && (
-                                <NavLink
-                                    to="/all-learning"
-                                    className="view-all-link"
-                                >
-                                    View all learning materials{" "}
-                                    <ExternalLink
-                                        size={16}
-                                        aria-hidden="true"
-                                    />
-                                </NavLink>
-                            )}
-                        </>
-                    ) : (
-                        <p className="no-content">
-                            No learning materials available at the moment.
-                        </p>
+                        <p className="no-content">No notices available at the moment.</p>
                     )}
                 </section>
             )}
@@ -418,9 +591,23 @@ const CAProfessionalResources = () => {
                     id="links-panel"
                     aria-labelledby="links-tab"
                 >
-                    <div className="section-heading">
-                        <ExternalLink size={22} aria-hidden="true" />
-                        <h2>Professional Resources</h2>
+                    <div className="section-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <ExternalLink size={22} aria-hidden="true" />
+                            <h2>Useful Links</h2>
+                        </div>
+                        
+                        {isAuthenticated && (
+                            <button
+                                className="btn-add-resource"
+                                onClick={() => setIsLinkModalOpen(true)}
+                                aria-label="Add new link"
+                                type="button"
+                            >
+                                <Plus size={16} />
+                                Add Link
+                            </button>
+                        )}
                     </div>
 
                     {loadingStates.links ? (
@@ -494,7 +681,7 @@ const CAProfessionalResources = () => {
                 </section>
             )}
 
-            {/* Newsletter - Always shown as it's functional */}
+            {/* Newsletter */}
             <section className={`newsletter-container ${contentClassNames}`}>
                 <div className="newsletter-wrapper">
                     <h2>Stay Informed</h2>
@@ -526,6 +713,19 @@ const CAProfessionalResources = () => {
                     </p>
                 </div>
             </section>
+
+            {/* Modals */}
+            <AddNoticeModal
+                isOpen={isNoticeModalOpen}
+                onClose={() => setIsNoticeModalOpen(false)}
+                onSubmit={handleNoticeSubmit}
+            />
+
+            <AddLinkModal
+                isOpen={isLinkModalOpen}
+                onClose={() => setIsLinkModalOpen(false)}
+                onSubmit={handleLinkSubmit}
+            />
         </div>
     );
 };
