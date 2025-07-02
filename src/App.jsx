@@ -15,6 +15,7 @@ import ProtectedRoutes from "./Context/ProtectedRoutes.jsx";
 import Resources from "./Pages/Resources/Resources.jsx";
 import Appliedusers from "./Pages/Career/Appliedusers/Appliedusers.jsx";
 import AccessResources from "./Pages/AccessResources/AccessResources.jsx";
+import AccessNotices from "./Pages/AccessNotices/AccessNotices.jsx";
 import ScrollToTop from "./Components/ScrollTop.jsx";
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
                 <Route path="/resources" element={<Resources />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/access-resources" element={<AccessResources />} />
+                <Route path="/access-notices" element={<AccessNotices />} />
                 <Route path="*" element={<NoMatchRoute />} />
 
                 <Route element={<ProtectedRoutes />}>
