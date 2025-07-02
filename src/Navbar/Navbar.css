@@ -3,6 +3,10 @@ html, body {
   margin: 0;
   padding: 0;
 }
+.btn-primary{
+  --bs-btn-bg: #06D001;
+  --bs-btn-border-color:#06D001;;
+}
 
 /* General Navbar Styling */
 .nav-bar {

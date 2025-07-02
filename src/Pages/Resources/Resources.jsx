@@ -13,6 +13,7 @@ import {
     Plus,
     X,
     Upload,
+    ArrowRight,
 } from "lucide-react";
 import api from "../../Api/api";
 import "./Resources.css";
@@ -84,6 +85,39 @@ const ResourceCard = ({ item, variant }) => {
                             <ExternalLink size={16} />
                         </div>
                     </a>
+                </div>
+            );
+
+        case "resource":
+            return (
+                <div className="resource-card">
+                    <div className="card-anchor">
+                        <h3 className="card-title">{item.title}</h3>
+                        <p className="card-summary">{item.description}</p>
+                        {item.category && (
+                            <span className="resource-category">{item.category}</span>
+                        )}
+                        {item.pdf && (
+                            <a
+                                href={item.pdf}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="notice-pdf-link"
+                                style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "6px",
+                                    marginTop: "8px",
+                                    fontSize: "0.9rem",
+                                    fontWeight: 500,
+                                    color: "#27667B",
+                                }}
+                            >
+                                <FileText size={16} />
+                                View PDF
+                            </a>
+                        )}
+                    </div>
                 </div>
             );
 
@@ -269,6 +303,7 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
         </div>
     );
 };
+
 const AddFaqModal = ({ isOpen, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     question: "",
@@ -289,7 +324,6 @@ const AddFaqModal = ({ isOpen, onClose, onSubmit }) => {
     setIsSubmitting(true);
 
     try {
-      // Submit expects a normal JS object (or FormData if you want, but not needed here)
       await onSubmit(formData);
       setFormData({ question: "", answer: "" });
       onClose();
@@ -599,13 +633,39 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
     );
 };
 
+// Section Header Component
+const SectionHeader = ({ icon: Icon, title, onAdd, addLabel, showAddButton }) => (
+    <div className="section-header">
+        <div className="section-title">
+            <Icon size={24} />
+            <h2>{title}</h2>
+        </div>
+        {showAddButton && (
+            <button className="btn-add-resource" onClick={onAdd} type="button">
+                <Plus size={16} />
+                {addLabel}
+            </button>
+        )}
+    </div>
+);
 
+// View All Link Component
+const ViewAllLink = ({ to, children, count }) => (
+    <div className="view-all-container">
+        <NavLink to={to} className="view-all-link">
+            <span>{children}</span>
+            <ArrowRight size={16} />
+        </NavLink>
+        {count > 0 && (
+            <span className="item-count">+{count} more</span>
+        )}
+    </div>
+);
 
 // Main component
 const CAProfessionalResources = () => {
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
-    const [currentTab, setCurrentTab] = useState("all");
     const [newsletterStatus, setNewsletterStatus] = useState("");
     const [emailInput, setEmailInput] = useState("");
     
@@ -623,7 +683,7 @@ const CAProfessionalResources = () => {
 
     // Loading states for individual sections
     const [loadingStates, setLoadingStates] = useState({
-        resources:false,
+        resources: true,
         notices: true,
         links: true,
         faqs: true,
@@ -631,13 +691,11 @@ const CAProfessionalResources = () => {
 
     // Error states for individual sections
     const [errorStates, setErrorStates] = useState({
-        resources:false,
+        resources: false,
         notices: false,
         links: false,
         faqs: false,
     });
-
-    const [isContentVisible, setIsContentVisible] = useState(true);
 
     // Fetch individual resource type
     const fetchResource = async (endpoint, setter, resourceKey) => {
@@ -659,21 +717,10 @@ const CAProfessionalResources = () => {
     // Fetch data from API
     useEffect(() => {
         fetchResource("/notices/", setNotices, "notices");
-        fetchResource("/resources/",setResources, "resources");
+        fetchResource("/resources/", setResources, "resources");
         fetchResource("/links/", setLinks, "links");
         fetchResource("/faqs/", setFaqs, "faqs");
     }, []);
-
-    // Handle tab transitions
-    const switchTab = (tabId) => {
-        setIsContentVisible(false);
-        setTimeout(() => {
-            setCurrentTab(tabId);
-            setTimeout(() => {
-                setIsContentVisible(true);
-            }, 50);
-        }, 200);
-    };
 
     // Retry function for individual sections
     const retrySection = (resourceKey) => {
@@ -694,30 +741,30 @@ const CAProfessionalResources = () => {
     };
 
     const handleResourceSubmit = async (formData) => {
-    try {
-        const response = await api.post("/resources/create/", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        });
+        try {
+            const response = await api.post("/resources/create/", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
 
-        fetchResource("/resources/", setResources, "resources");
+            fetchResource("/resources/", setResources, "resources");
 
-        return response.data;
-    } catch (error) {
-        console.error("Error adding resource:", error);
-        throw error;
-    }
-};
+            return response.data;
+        } catch (error) {
+            console.error("Error adding resource:", error);
+            throw error;
+        }
+    };
 
     // Handle notice submission
     const handleNoticeSubmit = async (formData) => {
         try {
-        const res = await api.post("/notices/create", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        });
+            const response = await api.post("/notices/create/", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
             
             fetchResource("/notices/", setNotices, "notices");
             
@@ -733,7 +780,6 @@ const CAProfessionalResources = () => {
         try {
             const response = await api.post("/links/create/", formData);
             
-            // Refresh links after successful submission
             fetchResource("/links/", setLinks, "links");
             
             return response.data;
@@ -742,20 +788,20 @@ const CAProfessionalResources = () => {
             throw error;
         }
     };
- // Handle FAQ submission
-const handleFaqSubmit = async (formData) => {
-    try {
-        const response = await api.post("/faqs/create/", formData);
 
-        // Refresh FAQs after successful submission
-        fetchResource("/faqs/", setFaqs, "faqs");
+    // Handle FAQ submission
+    const handleFaqSubmit = async (formData) => {
+        try {
+            const response = await api.post("/faqs/create/", formData);
 
-        return response.data;
-    } catch (error) {
-        console.error("Error adding FAQ:", error);
-        throw error;
-    }
-};
+            fetchResource("/faqs/", setFaqs, "faqs");
+
+            return response.data;
+        } catch (error) {
+            console.error("Error adding FAQ:", error);
+            throw error;
+        }
+    };
 
     // Handle newsletter subscription
     const handleEmailSubscription = async (e) => {
@@ -780,18 +826,8 @@ const handleFaqSubmit = async (formData) => {
         setTimeout(() => setNewsletterStatus(""), 3000);
     };
 
-    // Navigation tabs
-    const tabOptions = [
-        { id: "all", label: "All Resources" },
-        { id: "resources", label: "Resources" },
-        { id: "notices", label: "Notices" },
-        { id: "links", label: "Useful Links" },
-    ];
-
-    const contentClassNames = isContentVisible ? "content-visible" : "";
-
     return (
-        <div className={`ca-resources-wrapper ${contentClassNames}`}>
+        <div className="ca-resources-wrapper">
             <header className="page-header">
                 <h1 className="page-title">CA Professionals Resources</h1>
                 <p className="page-subtitle">
@@ -799,244 +835,154 @@ const handleFaqSubmit = async (formData) => {
                 </p>
             </header>
 
-            {/* Tab Navigation */}
-            <nav className="tab-navigation" role="tablist">
-                {tabOptions.map((tab) => (
-                    <button
-                        key={tab.id}
-                        className={`tab-button ${
-                            currentTab === tab.id ? "active" : ""
-                        }`}
-                        onClick={() => switchTab(tab.id)}
-                        role="tab"
-                        aria-selected={currentTab === tab.id}
-                        aria-controls={`${tab.id}-panel`}
-                    >
-                        {tab.label}
-                    </button>
-                ))}
-            </nav>
+            {/* Professional Resources Section */}
+            <section className="content-section">
+                <SectionHeader 
+                    icon={BookOpen}
+                    title="Professional Resources"
+                    onAdd={() => setIsResourceModalOpen(true)}
+                    addLabel="Add Resource"
+                    showAddButton={isAuthenticated}
+                />
 
-            {/* Resources Section */}
-{(currentTab === "all" || currentTab === "resources") && (
-    <section
-        className={`content-section animate-in ${contentClassNames}`}
-        role="tabpanel"
-        id="resources-panel"
-        aria-labelledby="resources-tab"
-    >
-        <div className="section-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <BookOpen size={22} aria-hidden="true" />
-                <h2>Professional Resources</h2>
-            </div>
-
-            {isAuthenticated && (
-                <button
-                    className="btn-add-resource"
-                    onClick={() => setIsResourceModalOpen(true)}
-                    aria-label="Add new resource"
-                    type="button"
-                >
-                    <Plus size={16} />
-                    Add Resource
-                </button>
-            )}
-        </div>
-
-        {loadingStates.resources ? (
-            <SectionLoadingState />
-        ) : errorStates.resources ? (
-            <SectionErrorState
-                sectionName="Professional Resources"
-                onRetry={() => retrySection("resources")}
-            />
-        ) : resources.length > 0 ? (
-            <>
-                <ul className="notice-list">
-                    {resources.slice(0, 6).map((item, index) => (
-                        <li key={index} className="notice-item">
-                            <div className="notice-title">{item.title}</div>
-                            <div className="notice-description">{item.description}</div>
-                            <a
-                                href={item.pdf}
-                                className="notice-pdf-link"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <FileText size={16} />
-                                View PDF
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-                {resources.length > 6 && (
-                    <NavLink to="/all-resources" className="view-all-link">
-                        View all resources <ExternalLink size={16} aria-hidden="true" />
-                    </NavLink>
-                )}
-            </>
-        ) : (
-            <p className="no-content">No resources available at the moment.</p>
-        )}
-    </section>
-)}
-
-            {/* Notices Section */}
-            {(currentTab === "all" || currentTab === "notices") && (
-                <section
-                    className={`content-section animate-in ${contentClassNames}`}
-                    role="tabpanel"
-                    id="notice-panel"
-                    aria-labelledby="notices-tab"
-                >
-                    <div className="section-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <Newspaper size={22} aria-hidden="true" />
-                            <h2>Notices and Updates</h2>
-                        </div>
-                        
-                        {isAuthenticated && (
-                            <button
-                                className="btn-add-resource"
-                                onClick={() => setIsNoticeModalOpen(true)}
-                                aria-label="Add new notice"
-                                type="button"
-                            >
-                                <Plus size={16} />
-                                Add Notice
-                            </button>
-                        )}
-                    </div>
-
-                    {loadingStates.notices ? (
-                        <SectionLoadingState />
-                    ) : errorStates.notices ? (
-                        <SectionErrorState
-                            sectionName="Notices and Updates"
-                            onRetry={() => retrySection("notices")}
-                        />
-                    ) : notices.length > 0 ? (
-                        <>
-                            <div className="card-grid">
-                                {notices.slice(0, 6).map((item, index) => (
-                                    <ResourceCard key={index} item={item} variant="notification" />
-                                ))}
-                            </div>
-                            {notices.length > 6 && (
-                                <NavLink to="/all-notices" className="view-all-link">
-                                    View all notices <ExternalLink size={16} aria-hidden="true" />
-                                </NavLink>
-                            )}
-                        </>
-                    ) : (
-                        <p className="no-content">No notices available at the moment.</p>
-                    )}
-                </section>
-            )}
-
-            {/* Links Section */}
-            {(currentTab === "all" || currentTab === "links") && (
-                <section
-                    className={`content-section animate-in ${contentClassNames}`}
-                    role="tabpanel"
-                    id="links-panel"
-                    aria-labelledby="links-tab"
-                >
-                    <div className="section-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <ExternalLink size={22} aria-hidden="true" />
-                            <h2>Useful Links</h2>
-                        </div>
-                        
-                        {isAuthenticated && (
-                            <button
-                                className="btn-add-resource"
-                                onClick={() => setIsLinkModalOpen(true)}
-                                aria-label="Add new link"
-                                type="button"
-                            >
-                                <Plus size={16} />
-                                Add Link
-                            </button>
-                        )}
-                    </div>
-
-                    {loadingStates.links ? (
-                        <SectionLoadingState />
-                    ) : errorStates.links ? (
-                        <SectionErrorState
-                            sectionName="professional links"
-                            onRetry={() => retrySection("links")}
-                        />
-                    ) : links.length > 0 ? (
-                        <div className="link-grid">
-                            {links.map((item, index) => (
-                                <ResourceCard
-                                    key={index}
-                                    item={item}
-                                    variant="external"
-                                />
+                {loadingStates.resources ? (
+                    <SectionLoadingState />
+                ) : errorStates.resources ? (
+                    <SectionErrorState
+                        sectionName="Professional Resources"
+                        onRetry={() => retrySection("resources")}
+                    />
+                ) : resources.length > 0 ? (
+                    <>
+                        <div className="resource-preview-grid">
+                            {resources.slice(0, 4).map((item, index) => (
+                                <ResourceCard key={index} item={item} variant="resource" />
                             ))}
                         </div>
-                    ) : (
-                        <p className="no-content">
-                            No professional links available at the moment.
-                        </p>
-                    )}
-                </section>
-            )}
+                        {resources.length > 4 && (
+                            <ViewAllLink 
+                                to="/access-resources" 
+                                count={resources.length - 4}
+                            >
+                                View All Resources
+                            </ViewAllLink>
+                        )}
+                    </>
+                ) : (
+                    <p className="no-content">No resources available at the moment.</p>
+                )}
+            </section>
 
-       {/* FAQs Section */}
-{currentTab === "all" && (
-  <section className={`content-section animate-in ${contentClassNames}`}>
-    <div
-      className="section-heading"
-      style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <HelpCircle size={22} aria-hidden="true" />
-        <h2>Frequently Asked Questions</h2>
-      </div>
-      {isAuthenticated && (
-        <button
-          className="btn-add-resource"
-          onClick={() => setIsFaqModalOpen(true)}
-          aria-label="Add new FAQ"
-          type="button"
-        >
-          <Plus size={16} />
-          Add FAQ
-        </button>
-      )}
-    </div>
+            {/* Notices Section */}
+            <section className="content-section">
+                <SectionHeader 
+                    icon={Newspaper}
+                    title="Latest Notices & Updates"
+                    onAdd={() => setIsNoticeModalOpen(true)}
+                    addLabel="Add Notice"
+                    showAddButton={isAuthenticated}
+                />
 
-    {loadingStates.faqs ? (
-      <SectionLoadingState />
-    ) : errorStates.faqs ? (
-      <SectionErrorState sectionName="FAQs" onRetry={() => retrySection("faqs")} />
-    ) : faqs.length > 0 ? (
-      <>
-        <div className="faq-container">
-          {faqs.slice(0, 3).map((faq, index) => (
-            <FaqAccordion key={index} question={faq.question} answer={faq.answer} />
-          ))}
-        </div>
+                {loadingStates.notices ? (
+                    <SectionLoadingState />
+                ) : errorStates.notices ? (
+                    <SectionErrorState
+                        sectionName="Notices and Updates"
+                        onRetry={() => retrySection("notices")}
+                    />
+                ) : notices.length > 0 ? (
+                    <>
+                        <div className="notice-preview-grid">
+                            {notices.slice(0, 3).map((item, index) => (
+                                <ResourceCard key={index} item={item} variant="notification" />
+                            ))}
+                        </div>
+                        {notices.length > 3 && (
+                            <ViewAllLink 
+                                to="/access-notices" 
+                                count={notices.length - 3}
+                            >
+                                View All Notices
+                            </ViewAllLink>
+                        )}
+                    </>
+                ) : (
+                    <p className="no-content">No notices available at the moment.</p>
+                )}
+            </section>
 
-        {faqs.length > 3 && (
-          <NavLink to="/faqs" className="view-all-link">
-            View all FAQs <ExternalLink size={16} aria-hidden="true" />
-          </NavLink>
-        )}
-      </>
-    ) : (
-      <p className="no-content">No FAQs available at the moment.</p>
-    )}
-  </section> 
-)}
+            {/* Links Section */}
+            <section className="content-section">
+                <SectionHeader 
+                    icon={ExternalLink}
+                    title="Useful Links"
+                    onAdd={() => setIsLinkModalOpen(true)}
+                    addLabel="Add Link"
+                    showAddButton={isAuthenticated}
+                />
+
+                {loadingStates.links ? (
+                    <SectionLoadingState />
+                ) : errorStates.links ? (
+                    <SectionErrorState
+                        sectionName="professional links"
+                        onRetry={() => retrySection("links")}
+                    />
+                ) : links.length > 0 ? (
+                    <div className="link-grid">
+                        {links.map((item, index) => (
+                            <ResourceCard
+                                key={index}
+                                item={item}
+                                variant="external"
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <p className="no-content">
+                        No professional links available at the moment.
+                    </p>
+                )}
+            </section>
+
+            {/* FAQs Section */}
+            <section className="content-section">
+                <SectionHeader 
+                    icon={HelpCircle}
+                    title="Frequently Asked Questions"
+                    onAdd={() => setIsFaqModalOpen(true)}
+                    addLabel="Add FAQ"
+                    showAddButton={isAuthenticated}
+                />
+
+                {loadingStates.faqs ? (
+                    <SectionLoadingState />
+                ) : errorStates.faqs ? (
+                    <SectionErrorState sectionName="FAQs" onRetry={() => retrySection("faqs")} />
+                ) : faqs.length > 0 ? (
+                    <>
+                        <div className="faq-container">
+                            {faqs.slice(0, 3).map((faq, index) => (
+                                <FaqAccordion key={index} question={faq.question} answer={faq.answer} />
+                            ))}
+                        </div>
+
+                        {faqs.length > 3 && (
+                            <ViewAllLink 
+                                to="/faqs" 
+                                count={faqs.length - 3}
+                            >
+                                View All FAQs
+                            </ViewAllLink>
+                        )}
+                    </>
+                ) : (
+                    <p className="no-content">No FAQs available at the moment.</p>
+                )}
+            </section>
 
             {/* Newsletter */}
-            {<section className={`newsletter-container ${contentClassNames}`}>
+            <section className="newsletter-container">
                 <div className="newsletter-wrapper">
                     <h2>Stay Informed</h2>
                     <p>
@@ -1052,22 +998,25 @@ const handleFaqSubmit = async (formData) => {
                             placeholder="Your email address"
                             value={emailInput}
                             onChange={(e) => setEmailInput(e.target.value)}
-                            aria-label="Email address"
-                            required
+                            className="email-input"
                         />
-                        <button type="submit">Subscribe</button>
+                        <button type="submit" className="subscribe-btn">
+                            Subscribe
+                        </button>
                     </form>
                     {newsletterStatus && (
-                        <p className="subscription-message">
+                        <div
+                            className={`newsletter-message ${
+                                newsletterStatus.includes("Thank you")
+                                    ? "success"
+                                    : "error"
+                            }`}
+                        >
                             {newsletterStatus}
-                        </p>
+                        </div>
                     )}
-                    <p className="privacy-note">
-                        We respect your privacy. Unsubscribe anytime.
-                    </p>
                 </div>
-            </section>}
-            
+            </section>
 
             {/* Modals */}
             <AddNoticeModal
@@ -1081,18 +1030,19 @@ const handleFaqSubmit = async (formData) => {
                 onClose={() => setIsLinkModalOpen(false)}
                 onSubmit={handleLinkSubmit}
             />
-<AddResourceModal
-    isOpen={isResourceModalOpen}
-    onClose={() => setIsResourceModalOpen(false)}
-    onSubmit={handleResourceSubmit}
-/>
-    <AddFaqModal
-      isOpen={isFaqModalOpen}
-      onClose={() => setIsFaqModalOpen(false)}
-      onSubmit={handleFaqSubmit}
-    />
-        </div>
 
+            <AddResourceModal
+                isOpen={isResourceModalOpen}
+                onClose={() => setIsResourceModalOpen(false)}
+                onSubmit={handleResourceSubmit}
+            />
+
+            <AddFaqModal
+                isOpen={isFaqModalOpen}
+                onClose={() => setIsFaqModalOpen(false)}
+                onSubmit={handleFaqSubmit}
+            />
+        </div>
     );
 };
 
