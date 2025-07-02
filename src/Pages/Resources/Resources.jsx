@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import { BookOpen } from "lucide-react";
 
 import {
     FileText,
@@ -22,22 +23,56 @@ import "./Resources.css";
 import LoadingSpinner from "../../Loaders/LoadingSpinner";
 import { useAuth } from "../../Context/AuthContextProvider.jsx";
 
-// Resource card component with different variations
 const ResourceCard = ({ item, variant }) => {
     switch (variant) {
         case "notification":
             return (
                 <div className="notification-card">
-                    <span className="card-date">{item.date}</span>
-                    <a href={item.url} className="card-anchor">
+                    {/* Date */}
+                    {item.date && (
+                        <span className="card-date">{item.date}</span>
+                    )}
+
+                    {/* Title + Description */}
+                    <div className="card-anchor">
                         <h3 className="card-title">{item.title}</h3>
                         <p className="card-summary">{item.description}</p>
-                        <span className={`card-badge ${item.tagType || ""}`}>
-                            {item.tag}
-                        </span>
-                    </a>
+
+                        {/* PDF Link */}
+                        {item.pdf && (
+                            <a
+                                href={item.pdf}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="notice-pdf-link"
+                                style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "6px",
+                                    marginTop: "8px",
+                                    fontSize: "0.9rem",
+                                    fontWeight: 500,
+                                    color: "#27667B",
+                                }}
+                            >
+                                <FileText size={16} />
+                                View PDF
+                            </a>
+                        )}
+
+                        {/* Optional Tag */}
+                        {item.tag && (
+                            <span
+                                className={`card-badge ${item.tagType || ""}`}
+                                style={{ marginTop: "8px" }}
+                            >
+                                {item.tag}
+                            </span>
+                        )}
+                    </div>
                 </div>
             );
+
         case "external":
             return (
                 <div className="external-card">
@@ -55,6 +90,7 @@ const ResourceCard = ({ item, variant }) => {
                     </a>
                 </div>
             );
+
         default:
             return null;
     }
@@ -340,6 +376,147 @@ const AddLinkModal = ({ isOpen, onClose, onSubmit }) => {
     );
 };
 
+// Add Resource Modal Component
+const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        category: '',
+        pdf: null,
+    });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setFormData((prev) => ({
+            ...prev,
+            pdf: file,
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            const payload = new FormData();
+            payload.append('title', formData.title);
+            payload.append('description', formData.description);
+            payload.append('category', formData.category);
+            if (formData.pdf) payload.append('pdf', formData.pdf);
+
+            await onSubmit(payload);
+
+            setFormData({
+                title: '',
+                description: '',
+                category: '',
+                pdf: null,
+            });
+            onClose();
+        } catch (error) {
+            console.error('Error submitting resource:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-header">
+                    <h2>Add New Resource</h2>
+                    <button className="modal-close" onClick={onClose}>
+                        <X size={24} />
+                    </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="modal-form">
+                    <div className="form-group">
+                        <label htmlFor="title">Title *</label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter resource title"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="description">Description *</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleInputChange}
+                            required
+                            rows={3}
+                            placeholder="Enter resource description"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="category">Category *</label>
+                        <input
+                            type="text"
+                            id="category"
+                            name="category"
+                            value={formData.category}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter resource category"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="pdf">PDF Document *</label>
+                        <div className="file-input-wrapper">
+                            <input
+                                type="file"
+                                id="pdf"
+                                name="pdf"
+                                onChange={handleFileChange}
+                                accept=".pdf"
+                                className="file-input"
+                                required
+                            />
+                            <div className="file-input-display">
+                                <Upload size={20} />
+                                <span>{formData.pdf ? formData.pdf.name : 'Choose a PDF file'}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal-actions">
+                        <button type="button" onClick={onClose} className="btn-cancel">
+                            Cancel
+                        </button>
+                        <button type="submit" disabled={isSubmitting} className="btn-submit">
+                            {isSubmitting ? 'Adding...' : 'Add Resource'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+
+
 // Main component
 const CAProfessionalResources = () => {
     const navigate = useNavigate();
@@ -351,14 +528,17 @@ const CAProfessionalResources = () => {
     // Modal states
     const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
     const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+    const [isResourceModalOpen, setIsResourceModalOpen] = useState(false);
 
     // State for API data
     const [notices, setNotices] = useState([]);
     const [links, setLinks] = useState([]);
     const [faqs, setFaqs] = useState([]);
+    const [resources, setResources] = useState([]);
 
     // Loading states for individual sections
     const [loadingStates, setLoadingStates] = useState({
+        resources:false,
         notices: true,
         links: true,
         faqs: true,
@@ -366,6 +546,7 @@ const CAProfessionalResources = () => {
 
     // Error states for individual sections
     const [errorStates, setErrorStates] = useState({
+        resources:false,
         notices: false,
         links: false,
         faqs: false,
@@ -393,6 +574,7 @@ const CAProfessionalResources = () => {
     // Fetch data from API
     useEffect(() => {
         fetchResource("/notices/", setNotices, "notices");
+        fetchResource("/resources/",setResources, "resources");
         fetchResource("/links/", setLinks, "links");
         fetchResource("/faqs/", setFaqs, "faqs");
     }, []);
@@ -414,6 +596,9 @@ const CAProfessionalResources = () => {
             case "notices":
                 fetchResource("/notices/", setNotices, "notices");
                 break;
+            case "resources":
+                fetchResource("/resources/", setResources, "resources");
+                break;
             case "links":
                 fetchResource("/links/", setLinks, "links");
                 break;
@@ -422,6 +607,23 @@ const CAProfessionalResources = () => {
                 break;
         }
     };
+
+    const handleResourceSubmit = async (formData) => {
+    try {
+        const response = await api.post("/resources/create", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        });
+
+        fetchResource("/resources/", setResources, "resources");
+
+        return response.data;
+    } catch (error) {
+        console.error("Error adding resource:", error);
+        throw error;
+    }
+};
 
     // Handle notice submission
     const handleNoticeSubmit = async (formData) => {
@@ -482,6 +684,7 @@ const CAProfessionalResources = () => {
     // Navigation tabs
     const tabOptions = [
         { id: "all", label: "All Resources" },
+        { id: "resources", label: "Resources" },
         { id: "notices", label: "Notices" },
         { id: "links", label: "Useful Links" },
     ];
@@ -514,25 +717,72 @@ const CAProfessionalResources = () => {
                     </button>
                 ))}
             </nav>
-
-            {/* Spotlight Feature */}
-            <div className={`spotlight-feature ${contentClassNames}`}>
-                <div className="spotlight-content">
-                    <span className="spotlight-tag">Spotlight Resource</span>
-                    <h2>Updated GST Compliance Framework 2025</h2>
-                    <p>
-                        New GST compliance framework effective April 1, 2025.
-                        Access comprehensive guide, compliance checklists, and
-                        implementation strategies for seamless transition.
-                    </p>
-                        <Button
-                            variant="outline-primary"
-                            onClick={() => navigate("/access-resources")}
-                        >
-                            Access Resources
-                        </Button>
-                </div>
+            {/* Resources Section */}
+{(currentTab === "all" || currentTab === "resources") && (
+    <section
+        className={`content-section animate-in ${contentClassNames}`}
+        role="tabpanel"
+        id="resources-panel"
+        aria-labelledby="resources-tab"
+    >
+        <div className="section-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <BookOpen size={22} aria-hidden="true" />
+                <h2>Professional Resources</h2>
             </div>
+
+            {isAuthenticated && (
+                <button
+                    className="btn-add-resource"
+                    onClick={() => setIsResourceModalOpen(true)}
+                    aria-label="Add new resource"
+                    type="button"
+                >
+                    <Plus size={16} />
+                    Add Resource
+                </button>
+            )}
+        </div>
+
+        {loadingStates.resources ? (
+            <SectionLoadingState />
+        ) : errorStates.resources ? (
+            <SectionErrorState
+                sectionName="Professional Resources"
+                onRetry={() => retrySection("resources")}
+            />
+        ) : resources.length > 0 ? (
+            <>
+                <ul className="notice-list">
+                    {resources.slice(0, 6).map((item, index) => (
+                        <li key={index} className="notice-item">
+                            <div className="notice-title">{item.title}</div>
+                            <div className="notice-description">{item.description}</div>
+                            <a
+                                href={item.pdf}
+                                className="notice-pdf-link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <FileText size={16} />
+                                View PDF
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+                {resources.length > 6 && (
+                    <NavLink to="/all-resources" className="view-all-link">
+                        View all resources <ExternalLink size={16} aria-hidden="true" />
+                    </NavLink>
+                )}
+            </>
+        ) : (
+            <p className="no-content">No resources available at the moment.</p>
+        )}
+    </section>
+)}
+
+            
 
             {/* Notices Section */}
             {(currentTab === "all" || currentTab === "notices") && (
@@ -730,6 +980,12 @@ const CAProfessionalResources = () => {
                 onClose={() => setIsLinkModalOpen(false)}
                 onSubmit={handleLinkSubmit}
             />
+<AddResourceModal
+    isOpen={isResourceModalOpen}
+    onClose={() => setIsResourceModalOpen(false)}
+    onSubmit={handleResourceSubmit}
+/>
+
         </div>
     );
 };
