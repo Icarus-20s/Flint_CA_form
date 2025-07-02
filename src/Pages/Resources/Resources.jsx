@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
+
 import {
     FileText,
     ExternalLink,
@@ -339,6 +342,7 @@ const AddLinkModal = ({ isOpen, onClose, onSubmit }) => {
 
 // Main component
 const CAProfessionalResources = () => {
+    const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
     const [currentTab, setCurrentTab] = useState("all");
     const [newsletterStatus, setNewsletterStatus] = useState("");
@@ -422,7 +426,7 @@ const CAProfessionalResources = () => {
     // Handle notice submission
     const handleNoticeSubmit = async (formData) => {
         try {
-        const res = await api.post("/notices/create/", formData, {
+        const res = await api.post("/notices/create", formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -521,12 +525,12 @@ const CAProfessionalResources = () => {
                         Access comprehensive guide, compliance checklists, and
                         implementation strategies for seamless transition.
                     </p>
-                    <NavLink
-                        to="/access-resources"
-                        className="spotlight-button"
-                    >
-                        Access Resource
-                    </NavLink>
+                        <Button
+                            variant="outline-primary"
+                            onClick={() => navigate("/access-resources")}
+                        >
+                            Access Resources
+                        </Button>
                 </div>
             </div>
 
