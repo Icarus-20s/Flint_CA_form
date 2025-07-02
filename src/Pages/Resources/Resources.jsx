@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Button } from "react-bootstrap";
 import { BookOpen } from "lucide-react";
 
 import {
     FileText,
     ExternalLink,
     HelpCircle,
-    Bell,
     Newspaper,
     Loader,
     AlertCircle,
     Plus,
     X,
     Upload,
-    Link2,
-    Calendar,
 } from "lucide-react";
 import api from "../../Api/api";
 import "./Resources.css";
@@ -272,6 +268,94 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
             </div>
         </div>
     );
+};
+const AddFaqModal = ({ isOpen, onClose, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    question: "",
+    answer: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Submit expects a normal JS object (or FormData if you want, but not needed here)
+      await onSubmit(formData);
+      setFormData({ question: "", answer: "" });
+      onClose();
+    } catch (error) {
+      console.error("Error submitting FAQ:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Add New FAQ</h2>
+          <button className="modal-close" onClick={onClose}>
+            <X size={24} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="modal-form">
+          <div className="form-group">
+            <label htmlFor="question">Question *</label>
+            <input
+              type="text"
+              id="question"
+              name="question"
+              value={formData.question}
+              onChange={handleInputChange}
+              required
+              placeholder="Enter the question"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="answer">Answer *</label>
+            <textarea
+              id="answer"
+              name="answer"
+              value={formData.answer}
+              onChange={handleInputChange}
+              required
+              rows={4}
+              placeholder="Enter the answer"
+            />
+          </div>
+
+          <div className="modal-actions">
+            <button
+              type="button"
+              onClick={onClose}
+              className="btn-cancel"
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+            <button type="submit" disabled={isSubmitting} className="btn-submit">
+              {isSubmitting ? "Adding..." : "Add FAQ"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 // Add Link Modal Component
@@ -529,6 +613,7 @@ const CAProfessionalResources = () => {
     const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
     const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
     const [isResourceModalOpen, setIsResourceModalOpen] = useState(false);
+    const [isFaqModalOpen, setIsFaqModalOpen] = useState(false);
 
     // State for API data
     const [notices, setNotices] = useState([]);
@@ -610,7 +695,7 @@ const CAProfessionalResources = () => {
 
     const handleResourceSubmit = async (formData) => {
     try {
-        const response = await api.post("/resources/create", formData, {
+        const response = await api.post("/resources/create/", formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -657,6 +742,20 @@ const CAProfessionalResources = () => {
             throw error;
         }
     };
+ // Handle FAQ submission
+const handleFaqSubmit = async (formData) => {
+    try {
+        const response = await api.post("/faqs/create/", formData);
+
+        // Refresh FAQs after successful submission
+        fetchResource("/faqs/", setFaqs, "faqs");
+
+        return response.data;
+    } catch (error) {
+        console.error("Error adding FAQ:", error);
+        throw error;
+    }
+};
 
     // Handle newsletter subscription
     const handleEmailSubscription = async (e) => {
@@ -717,6 +816,7 @@ const CAProfessionalResources = () => {
                     </button>
                 ))}
             </nav>
+
             {/* Resources Section */}
 {(currentTab === "all" || currentTab === "resources") && (
     <section
@@ -781,8 +881,6 @@ const CAProfessionalResources = () => {
         )}
     </section>
 )}
-
-            
 
             {/* Notices Section */}
             {(currentTab === "all" || currentTab === "notices") && (
@@ -889,54 +987,56 @@ const CAProfessionalResources = () => {
                 </section>
             )}
 
-            {/* FAQs Section */}
-            {currentTab === "all" && (
-                <section
-                    className={`content-section animate-in ${contentClassNames}`}
-                >
-                    <div className="section-heading">
-                        <HelpCircle size={22} aria-hidden="true" />
-                        <h2>Frequently Asked Questions</h2>
-                    </div>
+       {/* FAQs Section */}
+{currentTab === "all" && (
+  <section className={`content-section animate-in ${contentClassNames}`}>
+    <div
+      className="section-heading"
+      style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <HelpCircle size={22} aria-hidden="true" />
+        <h2>Frequently Asked Questions</h2>
+      </div>
+      {isAuthenticated && (
+        <button
+          className="btn-add-resource"
+          onClick={() => setIsFaqModalOpen(true)}
+          aria-label="Add new FAQ"
+          type="button"
+        >
+          <Plus size={16} />
+          Add FAQ
+        </button>
+      )}
+    </div>
 
-                    {loadingStates.faqs ? (
-                        <SectionLoadingState />
-                    ) : errorStates.faqs ? (
-                        <SectionErrorState
-                            sectionName="FAQs"
-                            onRetry={() => retrySection("faqs")}
-                        />
-                    ) : faqs.length > 0 ? (
-                        <>
-                            <div className="faq-container">
-                                {faqs.slice(0, 3).map((faq, index) => (
-                                    <FaqAccordion
-                                        key={index}
-                                        question={faq.question}
-                                        answer={faq.answer}
-                                    />
-                                ))}
-                            </div>
-                            {faqs.length > 3 && (
-                                <NavLink to="/faqs" className="view-all-link">
-                                    View all FAQs{" "}
-                                    <ExternalLink
-                                        size={16}
-                                        aria-hidden="true"
-                                    />
-                                </NavLink>
-                            )}
-                        </>
-                    ) : (
-                        <p className="no-content">
-                            No FAQs available at the moment.
-                        </p>
-                    )}
-                </section>
-            )}
+    {loadingStates.faqs ? (
+      <SectionLoadingState />
+    ) : errorStates.faqs ? (
+      <SectionErrorState sectionName="FAQs" onRetry={() => retrySection("faqs")} />
+    ) : faqs.length > 0 ? (
+      <>
+        <div className="faq-container">
+          {faqs.slice(0, 3).map((faq, index) => (
+            <FaqAccordion key={index} question={faq.question} answer={faq.answer} />
+          ))}
+        </div>
+
+        {faqs.length > 3 && (
+          <NavLink to="/faqs" className="view-all-link">
+            View all FAQs <ExternalLink size={16} aria-hidden="true" />
+          </NavLink>
+        )}
+      </>
+    ) : (
+      <p className="no-content">No FAQs available at the moment.</p>
+    )}
+  </section> 
+)}
 
             {/* Newsletter */}
-            <section className={`newsletter-container ${contentClassNames}`}>
+            {<section className={`newsletter-container ${contentClassNames}`}>
                 <div className="newsletter-wrapper">
                     <h2>Stay Informed</h2>
                     <p>
@@ -966,7 +1066,8 @@ const CAProfessionalResources = () => {
                         We respect your privacy. Unsubscribe anytime.
                     </p>
                 </div>
-            </section>
+            </section>}
+            
 
             {/* Modals */}
             <AddNoticeModal
@@ -985,8 +1086,13 @@ const CAProfessionalResources = () => {
     onClose={() => setIsResourceModalOpen(false)}
     onSubmit={handleResourceSubmit}
 />
-
+    <AddFaqModal
+      isOpen={isFaqModalOpen}
+      onClose={() => setIsFaqModalOpen(false)}
+      onSubmit={handleFaqSubmit}
+    />
         </div>
+
     );
 };
 
