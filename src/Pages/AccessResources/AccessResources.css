@@ -162,23 +162,26 @@
 }
 
 .resource-category-icon {
-  color: var(--primary-color);
+  color: var(--text-color);
   font-size: 12px;
 }
 
 .resource-chip {
-  height: 20px;
-  font-size: 0.65rem;
-  font-weight: 500;
-  text-transform: capitalize;
-  background-color: var(--accent-color);
-  color: var(--text-primary);
-  border: none;
-  border-radius: 10px;
-  padding: 0 8px;
-  display: inline-flex;
-  align-items: center;
+    background-color: transparent !important;
+    height: 20px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    border: none;
+    border-radius: 10px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
 }
+.resource-chip span{
+    color: var(--text-color);
+}
+
 
 /* Action buttons */
 .resource-actions {

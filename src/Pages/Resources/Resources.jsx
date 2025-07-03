@@ -90,7 +90,7 @@ const ResourceCard = ({ item, variant }) => {
 
         case "resource":
             return (
-                <div className="resource-card">
+                <div className="resource-card resource-list">
                     <div className="card-anchor">
                         <h3 className="card-title">{item.title}</h3>
                         <p className="card-summary">{item.description}</p>
@@ -635,7 +635,7 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
 
 // Section Header Component
 const SectionHeader = ({ icon: Icon, title, onAdd, addLabel, showAddButton }) => (
-    <div className="section-header">
+    <div className="resource-section-header">
         <div className="section-title">
             <Icon size={24} />
             <h2>{title}</h2>
@@ -940,7 +940,7 @@ const CAProfessionalResources = () => {
                     </div>
                 ) : (
                     <p className="no-content">
-                        No professional links available at the moment.
+                        No links available at the moment.
                     </p>
                 )}
             </section>

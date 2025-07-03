@@ -70,17 +70,21 @@
   padding: 2rem;
   box-shadow: var(--shadow-subtle);
   border: 1px solid var(--border-light);
+  /* display: flex;
+  flex-direction: column;
+  align-items: flex-start; */
 }
 
 /* Section Headers */
-.section-header {
+.resource-section-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; /* left-align content */
+  width: 100%; /* take full width of parent */
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 2px solid var(--bg-card);
 }
+
 
 .section-title {
   display: flex;
@@ -146,6 +150,9 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  width: 350px;
+  gap: 1rem;          /* space between cards */
+  justify-content: flex-start;  /* align cards to left */
 }
 
 .notification-card:hover,
