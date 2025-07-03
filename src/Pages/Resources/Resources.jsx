@@ -34,7 +34,7 @@ const ResourceCard = ({ item, variant }) => {
                     <div className="card-anchor">
                         <h3 className="card-title">{item.title}</h3>
                        <p className="card-summary">
-                            {item.description?.slice(0, 120)}{item.description?.length > 120 && '...'}
+                            {item.description?.slice(0, 180)}{item.description?.length > 180 && '...'}
                         </p>
 
 
@@ -97,7 +97,7 @@ const ResourceCard = ({ item, variant }) => {
                     <div className="card-anchor">
                         <h3 className="card-title">{item.title}</h3>
                         <p className="card-summary">
-                            {item.description?.slice(0, 120)}{item.description?.length > 120 && '...'}
+                            {item.description?.slice(0, 180)}{item.description?.length > 180 && '...'}
                         </p>
                         {item.category && (
                             <span className="resource-category">{item.category}</span>
