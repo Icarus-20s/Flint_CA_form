@@ -54,22 +54,22 @@ const Navbar = () => {
         <div className={`collapse navbar-collapse ${menuOpen ? "show" : ""}`} id="navbarResponsive">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <NavLink className="nav-link" to="/" onClick={closeMenu} activeClassName="active">Home</NavLink>
+              <NavLink className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} to="/" onClick={closeMenu} >Home</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/services" onClick={closeMenu} activeClassName="active">Services</NavLink>
+              <NavLink className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} to="/services" onClick={closeMenu} >Services</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/careers" onClick={closeMenu} activeClassName="active">Career</NavLink>
+              <NavLink className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} to="/careers" onClick={closeMenu} >Career</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/resources" onClick={closeMenu} activeClassName="active">Resources</NavLink>
+              <NavLink className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} to="/resources" onClick={closeMenu} >Resources</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/about" onClick={closeMenu} activeClassName="active">About Us</NavLink>
+              <NavLink className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} to="/about" onClick={closeMenu} >About Us</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/contact" onClick={closeMenu} activeClassName="active">Contact Us</NavLink>
+              <NavLink className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} to="/contact" onClick={closeMenu} >Contact Us</NavLink>
             </li>
           </ul>
           <div className="ms-3">

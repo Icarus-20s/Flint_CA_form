@@ -19,40 +19,19 @@
   --font-family: 'Roboto', 'Open Sans', sans-serif;
 }
 
-/* Base container and animation states */
 .careers-container {
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.6s ease-in-out;
   font-family: var(--font-family);
 }
 
-.careers-container.loading {
-  opacity: 0;
-}
-
-.careers-container.visible {
-  opacity: 1;
-}
-
-.careers-container.animation-complete {
-  opacity: 1;
-}
-
-/* Loading state */
-.page-loader {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 70vh;
-}
-
 /* Hero section */
 .careers-hero {
-  background: linear-gradient(rgba(4, 107, 13, 0.8), rgba(5, 146, 18, 0.8));
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
   background-size: cover;
   background-position: center;
   color: var(--white);
-  padding: 8rem 2rem;
+  padding: 48px 20px;
   text-align: center;
   position: relative;
 }
@@ -66,7 +45,7 @@
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  animation: fadeInUp 0.7s ease-out;
+  animation: fadeInDown 0.8s ease-out;
   color: var(--white);
 }
 
@@ -74,7 +53,7 @@
   font-size: 1.25rem;
   margin-bottom: 2rem;
   line-height: 1.6;
-  animation: fadeInUp 0.9s ease-out;
+  animation: fadeInUp 0.8s ease-out;
   color: var(--white);
 }
 
@@ -531,7 +510,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
+  border-radius: 10px;
   cursor: pointer;
   transition: var(--transition-standard);
 }

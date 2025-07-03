@@ -34,32 +34,6 @@ const Career = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [expandedCardId, setExpandedCardId] = useState(null);
 
-    // Animation states
-    const [isLoading, setIsLoading] = useState(true);
-    const [isContentVisible, setIsContentVisible] = useState(false);
-    const [animationComplete, setAnimationComplete] = useState(false);
-
-    // Improved animation sequence
-    useEffect(() => {
-        const loadTimer = setTimeout(() => {
-            setIsLoading(false);
-
-            const visibilityTimer = setTimeout(() => {
-                setIsContentVisible(true);
-
-                const completeTimer = setTimeout(() => {
-                    setAnimationComplete(true);
-                }, 600);
-
-                return () => clearTimeout(completeTimer);
-            }, 100);
-
-            return () => clearTimeout(visibilityTimer);
-        }, 800);
-
-        return () => clearTimeout(loadTimer);
-    }, []);
-
     // Fetch careers on component mount
     useEffect(() => {
         fetchCareers();
@@ -83,17 +57,6 @@ const Career = () => {
             console.error("Error fetching careers:", err);
         }
     };
-
-    // Clear messages after 5 seconds
-    useEffect(() => {
-        if (errorMessage || successMessage) {
-            const timer = setTimeout(() => {
-                setErrorMessage("");
-                setSuccessMessage("");
-            }, 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [errorMessage, successMessage]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -268,24 +231,10 @@ const Career = () => {
         return matchesFilter && matchesSearch;
     });
 
-    // Apply animation classes based on state
-    const contentClasses = `careers-container ${isLoading ? "loading" : ""} ${
-        isContentVisible ? "visible" : ""
-    } ${animationComplete ? "animation-complete" : ""}`;
-
     return (
-        <div className={contentClasses}>
-            {isLoading ? (
-                <div className="page-loader">
-                    <LoadingSpinner />
-                </div>
-            ) : (
-                <>
-                    <section
+        <div className="careers-container">
+            <section
                         className="careers-hero"
-                        style={{
-                            backgroundImage: `url('images/careers/hero-bg.jpg')`,
-                        }}
                     >
                         <div className="careers-hero-content">
                             <h1>Shape the Future With Us</h1>
@@ -819,7 +768,7 @@ const Career = () => {
                         )}
                     </section>
 
-                    <EmployeeReviews />
+                    {/* <EmployeeReviews /> */}
 
                     {/* Application Modal */}
                     {applyingForCareerId && (
@@ -953,8 +902,6 @@ const Career = () => {
                             </div>
                         </div>
                     )}
-                </>
-            )}
         </div>
     );
 };

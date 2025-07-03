@@ -3,6 +3,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import "./Aboutus.css"; // Use a unique CSS filename
+import { Linkedin } from 'lucide-react';
 
 const Aboutus = () => {
     const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -766,14 +767,8 @@ const KbpsTeamCard = ({ member }) => {
                         <p className="kbps-member-title">{member.title}</p>
                         <p className="kbps-member-bio">{member.summary}</p>
                         <div className="kbps-member-social">
-                            <a href="#" className="kbps-social-link">
-                                <i className="fab fa-linkedin-in"></i>
-                            </a>
-                            <a href="#" className="kbps-social-link">
-                                <i className="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" className="kbps-social-link">
-                                <i className="fas fa-envelope"></i>
+                            <a href={member.url} className="kbps-social-link">
+                                <Linkedin />
                             </a>
                         </div>
                     </div>
@@ -791,13 +786,15 @@ const teamMembers = [
         img: "images/profiles/Ca_pranav.jpg",
         summary:
             "Member of ICAI and ICAN with 5+ years of experience in assurance services and financial consulting.",
+        url: "https://www.linkedin.com/in/ca-prabhav-krishna-khand-71788bb0"
     },
     {
         name: "CA. Sunil Budhathoki",
         title: "Partner",
         img: "images/profiles/Ca_Sunil.jpg",
         summary:
-            "Member of ICAI and ICAN with extensive experience in auditing and business consulting.",
+        "Member of ICAI and ICAN with extensive experience in auditing and business consulting.",
+        url: "https://www.linkedin.com/in/sunil-budhathoki-chartered-accountant-4597a7109"
     },
     {
         name: "CA. Diwakar Pandey",
@@ -805,6 +802,7 @@ const teamMembers = [
         img: "images/profiles/Ca_diwakar.jpg",
         summary:
             "Member of ICAI and ICAN with expertise in taxation and advisory services.",
+        url: "https://www.linkedin.com/in/ca-diwakar-pandey-61783574"
     },
 ];
 

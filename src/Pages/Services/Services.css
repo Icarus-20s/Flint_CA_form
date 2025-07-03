@@ -32,7 +32,7 @@
 
 /* Hero Section */
 .services-hero {
-  background: linear-gradient(135deg, #49c849, #7fa541);
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
   background-size: cover;
   background-position: center;
   color: var(--secondary-color);

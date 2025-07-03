@@ -155,14 +155,23 @@
   gap: 0.5rem;
 }
 
-.view-btn, .delete-btn {
+.view-btn{
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
+  border-radius: 10px;
   transition: all 0.2s ease;
+}
+.delete-btn {
+  background-color: transparent;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition-standard);
 }
 
 .view-btn:hover {
