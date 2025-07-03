@@ -64,13 +64,6 @@ const Aboutus = () => {
                             A trusted partner for your financial success since
                             2017
                         </p>
-                        <Button
-                            variant="primary"
-                            className="kbps-cta-button"
-                            onClick={() => navigate("/services")}
-                        >
-                            Explore Our Services
-                        </Button>
                     </div>
                 </Container>
             </section>
@@ -228,7 +221,7 @@ const Aboutus = () => {
                 </Container>
             </section>
 
-            {/* Services Grid Section */}
+            {/* Services Grid Section
             <section className="kbps-section kbps-services-section">
                 <Container>
                     <div className="kbps-section-header text-center">
@@ -327,7 +320,7 @@ const Aboutus = () => {
                         </Button>
                     </div>
                 </Container>
-            </section>
+            </section> */}
 
             {/* Values & Vision Section */}
             <section className="kbps-section kbps-values-section">
@@ -704,8 +697,8 @@ const Aboutus = () => {
                                 </div>
                                 <div className="kbps-contact-info">
                                     <h4>Email Us</h4>
-                                    <p>info@kbpsassociates.com.np</p>
-                                    <p>contact@kbpsassociates.com.np</p>
+                                    <p>info@kbps.com.np</p>
+                                    <p>contact@kbps.com.np</p>
                                 </div>
                             </div>
                         </Col>

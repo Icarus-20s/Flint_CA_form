@@ -155,7 +155,7 @@ const Footer = () => {
                                     <Box className="contact-item">
                                         <EmailIcon className="contact-icon" />
                                         <Typography variant="body2">
-                                            info@kbpsassociates.com
+                                            info@kbps.com.np
                                         </Typography>
                                     </Box>
 

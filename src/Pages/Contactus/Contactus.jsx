@@ -262,7 +262,7 @@ const Contactus = () => {
                       <Email fontSize="large" />
                     </div>
                     <Typography variant="h6" className="contact-card-title">Email Address</Typography>
-                    <Typography variant="body1">kbpsassociates@gmail.com</Typography>
+                    <Typography variant="body1">contact@kbps.com.np</Typography>
                     <Typography variant="body2">We respond within 24 hours</Typography>
                   </CardContent>
                 </Card>
@@ -462,7 +462,7 @@ const Contactus = () => {
                       <Box className="contact-detail-item">
                         <Email className="contact-detail-icon" />
                         <Typography>
-                          kbpsassociates@gmail.com
+                          contact@kbps.com.np
                         </Typography>
                       </Box>
                       
