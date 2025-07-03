@@ -33,7 +33,10 @@ const ResourceCard = ({ item, variant }) => {
                     {/* Title + Description */}
                     <div className="card-anchor">
                         <h3 className="card-title">{item.title}</h3>
-                        <p className="card-summary">{item.description}</p>
+                       <p className="card-summary">
+                            {item.description?.slice(0, 120)}{item.description?.length > 120 && '...'}
+                        </p>
+
 
                         {/* PDF Link */}
                         {item.pdf && (
@@ -93,7 +96,9 @@ const ResourceCard = ({ item, variant }) => {
                 <div className="resource-card resource-list">
                     <div className="card-anchor">
                         <h3 className="card-title">{item.title}</h3>
-                        <p className="card-summary">{item.description}</p>
+                        <p className="card-summary">
+                            {item.description?.slice(0, 120)}{item.description?.length > 120 && '...'}
+                        </p>
                         {item.category && (
                             <span className="resource-category">{item.category}</span>
                         )}

@@ -26,19 +26,41 @@ const ServiceCard = ({ service, onLearnMore }) => {
         "Consultancy Services": <SavingsIcon fontSize="large" />,
     };
 
-    return (
-        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+     return (
+        <Grid2 size={{ xs: 12, sm: 6, md: 3 }} sx={{ display: "flex" }}>
             <ButtonBase
                 onClick={() => onLearnMore(service)}
-                sx={{ width: "100%", textAlign: "left", borderRadius: 2 }}
+                sx={{ 
+                    width: "100%", 
+                    height: "100%",
+                    textAlign: "left", 
+                    borderRadius: 2 
+                }}
             >
-                <Card className="modern-service__card" elevation={3}>
+                <Card 
+                    className="modern-service__card" 
+                    elevation={3}
+                    sx={{ 
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        position: "relative"
+                    }}
+                >
                     <div className="modern-service__icon-wrapper">
                         <div className="modern-service__icon">
                             {icons[service.title]}
                         </div>
                     </div>
-                    <CardContent className="modern-service__content">
+                    <CardContent 
+                        className="modern-service__content"
+                        sx={{ 
+                            flexGrow: 1,
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "space-between"
+                        }}
+                    >
                         <Typography
                             variant="h5"
                             component="h3"
@@ -49,9 +71,18 @@ const ServiceCard = ({ service, onLearnMore }) => {
                         <Typography
                             variant="body2"
                             className="modern-service__description"
+                            sx={{
+                                display: "-webkit-box",
+                                WebkitLineClamp: 3,
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                minHeight: "3.6em", // Ensures consistent height for 3 lines
+                                lineHeight: 1.2,
+                                textAlign: "left"
+                            }}
                         >
-                            {service.description.slice(0, 120)}
-                            {service.description.length > 120 ? "..." : ""}
+                            {service.description}
                         </Typography>
                     </CardContent>
                     <div className="modern-service__hover-overlay">

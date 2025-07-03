@@ -722,7 +722,7 @@ const Home = () => {
             </Box>
 
             {/* Services Section */}
-            <Box
+         <Box
                 component="section"
                 id="services-section"
                 className="modern-section modern-section--gray"
@@ -731,23 +731,15 @@ const Home = () => {
                     <Typography variant="h2" className="modern-section__title">
                         Our Services
                     </Typography>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            gap: 2,
-                            mt: 4,
-                        }}
-                    >
+                    <Grid2 container spacing={4} sx={{ mt: 4 }}>
                         {servicesData.slice(0, 4).map((service) => (
-                            <Box key={service.id} sx={{ flex: "1 1 0" }}>
-                                <ServiceCard
-                                    service={service}
-                                    onLearnMore={handleServiceClick}
-                                />
-                            </Box>
+                            <ServiceCard
+                                key={service.id}
+                                service={service}
+                                onLearnMore={handleServiceClick}
+                            />
                         ))}
-                    </Box>
+                    </Grid2>
                 </Container>
             </Box>
 
