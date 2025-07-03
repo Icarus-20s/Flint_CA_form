@@ -3,10 +3,17 @@ html, body {
   margin: 0;
   padding: 0;
 }
-.btn-primary{
-  --bs-btn-bg: #06D001;
-  --bs-btn-border-color:#06D001;;
+.btn-primary {
+  --bs-btn-bg: #FF5E00;
+  --bs-btn-border-color: #FF5E00;
+  --bs-btn-hover-bg: #e45500;
+  --bs-btn-hover-border-color: #e45500;
+  --bs-btn-active-bg: #cc4c00;
+  --bs-btn-active-border-color: #cc4c00;
+  --bs-btn-disabled-bg: #FF5E00;
+  --bs-btn-disabled-border-color: #FF5E00;
 }
+
 
 /* General Navbar Styling */
 .nav-bar {

@@ -7,7 +7,7 @@
   --error-color: #e74c3c;
 
   --text-color: #046B0D;
-  --text-light: #9BEC00;
+  --text-light: #059212;
 
   --bg-light: #bcf4b1b3;
   --bg-dark: #059212;
@@ -96,7 +96,7 @@
   color: var(--text-light);
   max-width: 700px;
   margin: 0 auto 40px;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 /* Category Filter */
@@ -763,10 +763,6 @@
   
   .services-section-title {
     font-size: 1.5rem;
-  }
-  
-  .services-section-subtitle {
-    font-size: 1rem;
   }
   
   .category-button {

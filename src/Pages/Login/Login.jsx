@@ -40,8 +40,8 @@ const Login = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     boxShadow: 3,
-                    padding: 3,
-                    borderRadius: 2,
+                    padding: 8,
+                    borderRadius: 6,
                     backgroundColor: "white",
                     transition: "box-shadow 0.3s, transform 0.3s",
                     "&:hover": {
@@ -51,8 +51,7 @@ const Login = () => {
                 }}
             >
                 <Typography
-                    variant="h5"
-                    component="h2"
+                    variant="h6"
                     className="custom-login-heading"
                 >
                     Login
@@ -88,16 +87,20 @@ const Login = () => {
                             {error}
                         </Typography>
                     )}
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        className="custom-login-button"
-                        sx={{ marginTop: 2 }}
+                <Button
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                        marginTop: 2,
+                        backgroundColor: '#FF5E00',
+                        '&:hover': {
+                        backgroundColor: '#e45500',
+                        },
+                    }}
                     >
-                        Login
-                    </Button>
+                    Login
+                </Button>
                 </form>
                 <Button
                     variant="text"

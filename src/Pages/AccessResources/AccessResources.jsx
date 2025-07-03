@@ -300,7 +300,7 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
                         verticalAlign: "middle",
                         color: "#06D001" // --primary-color to match the border
                     }} />
-                    Official Notices
+                    Professional Resources
                 </Box>
                 {isAuthenticated && (
                     <button

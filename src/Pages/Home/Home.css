@@ -11,7 +11,7 @@
 
   --text-dark: #046B0D;
   --text-medium: #059212;
-  --text-light: #9BEC00;
+  --text-light: #059212;
 
   --background: #F3FF90;
   --background-alt: #9BEC00;
@@ -260,11 +260,14 @@ img {
   font-size: 1rem !important;
   border-radius: 8px !important;
   box-shadow: var(--box-shadow) !important;
+  background: #FF5E00 !important;
   transition: var(--transition) !important;
+  color: white !important;
 }
 
 .modern-hero__button:hover {
   transform: translateY(-2px);
+  color: white !important;
   box-shadow: var(--box-shadow-hover) !important;
 }
 
