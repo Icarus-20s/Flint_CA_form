@@ -15,6 +15,7 @@ import {
     Paper
 } from "@mui/material";
 import {
+    TrashIcon,
     FileText,
     ExternalLink,
     HelpCircle,
@@ -100,6 +101,21 @@ const AccessResources = () => {
         }
 
     };
+    const handleResourceDelete = async (id) => {
+        const confirmed = window.confirm("Are you sure you want to delete this resource?");
+        if (!confirmed) return;
+        try {
+        const res = await api.delete(`/resources/${id}/delete`);
+            
+            fetchResource("/resources/", setResources, "resources");
+        } catch (error) {
+            console.error('Error deleting resource:', error);
+            throw error;
+        } finally{
+            setIsResourceModalOpen(false);
+        }
+
+    };
     
     if (loading) {
         return (
@@ -132,14 +148,6 @@ const AccessResources = () => {
             </Box>
         );
     }
-
-  if (resources.length === 0) {
-    return (
-      <Typography className="resources-empty">
-        No resources available at this time.
-      </Typography>
-    );
-  }
 
 const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
@@ -314,82 +322,99 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
                     </button>
                 )}
             </Typography>
-    <Paper className="resources-container" elevation={0}>
-      <List className="resources-list">
-        {resources.map((resource, index) => (
-          <React.Fragment key={resource.id}>
-            <ListItem className="resource-item">
-              {/* <ListItemIcon className="resource-icon-wrapper">
-                <DescriptionIcon className="resource-icon" />
-              </ListItemIcon> */}
-              
-              <ListItemText
-                className="resource-content"
-                primary={
-                  <Typography className="resource-title">
-                    {resource.title}
-                  </Typography>
-                }
-                secondary={
-                  <Box className="resource-secondary">
-                    <Typography className="resource-description">
-                      {resource.description}
-                    </Typography>
+    {resources.length === 0 ? (
+            <Typography className="resources-empty">
+                No resources available at this time.
+            </Typography>
+        ) : (
+            <Paper className="resources-container" elevation={0}>
+            <List className="resources-list">
+                {resources.map((resource, index) => (
+                <React.Fragment key={resource.id}>
+                    <ListItem className="resource-item">
+                    {/* <ListItemIcon className="resource-icon-wrapper">
+                        <DescriptionIcon className="resource-icon" />
+                    </ListItemIcon> */}
                     
-                    <Box className="resource-meta">
-                      <Box className="resource-date">
-                        <CalendarTodayIcon className="resource-date-icon" />
-                        <Typography className="resource-date-text">
-                          {formatDate(resource.created_at)}
+                    <ListItemText
+                        className="resource-content"
+                        primary={
+                        <Typography className="resource-title">
+                            {resource.title}
                         </Typography>
-                      </Box>
-                      
-                      <Box className="resource-category">
-                        <LocalOfferIcon className="resource-category-icon" />
-                        <Chip
-                          label={resource.category}
-                          className="resource-chip"
-                          size="small"
-                        />
-                      </Box>
+                        }
+                        secondary={
+                        <Box className="resource-secondary">
+                            <Typography className="resource-description">
+                            {resource.description}
+                            </Typography>
+                            
+                            <Box className="resource-meta">
+                            <Box className="resource-date">
+                                <CalendarTodayIcon className="resource-date-icon" />
+                                <Typography className="resource-date-text">
+                                {formatDate(resource.created_at)}
+                                </Typography>
+                            </Box>
+                            
+                            <Box className="resource-category">
+                                <LocalOfferIcon className="resource-category-icon" />
+                                <Chip
+                                label={resource.category}
+                                className="resource-chip"
+                                size="small"
+                                />
+                            </Box>
+                            </Box>
+                        </Box>
+                        }
+                    />
+                    
+                    <Box className="resource-actions">
+                        <Tooltip title="View Document">
+                        <IconButton
+                            href={resource.pdf}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="resource-action-btn resource-action-btn--view"
+                            size="small"
+                        >
+                            <VisibilityIcon className="resource-action-icon" />
+                        </IconButton>
+                        </Tooltip>
+                        
+                        <Tooltip title="Download Document">
+                        <IconButton
+                            href={resource.pdf}
+                            download
+                            className="resource-action-btn resource-action-btn--download"
+                            size="small"
+                        >
+                            <GetAppIcon className="resource-action-icon" />
+                        </IconButton>
+                        </Tooltip>
+                        {isAuthenticated && (
+                            <Tooltip title="Delete Resource">
+                            <IconButton
+                                onClick={() => handleResourceDelete(resource.id)}
+                                className="resource-action-btn resource-action-btn--delete"
+                                size="small"
+                            >
+                                <TrashIcon className="resource-action-icon" />
+                            </IconButton>
+                            </Tooltip>
+                        )}
                     </Box>
-                  </Box>
-                }
-              />
-              
-              <Box className="resource-actions">
-                <Tooltip title="View Document">
-                  <IconButton
-                    href={resource.pdf}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="resource-action-btn resource-action-btn--view"
-                    size="small"
-                  >
-                    <VisibilityIcon className="resource-action-icon" />
-                  </IconButton>
-                </Tooltip>
-                
-                <Tooltip title="Download Document">
-                  <IconButton
-                    href={resource.pdf}
-                    download
-                    className="resource-action-btn resource-action-btn--download"
-                    size="small"
-                  >
-                    <GetAppIcon className="resource-action-icon" />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </ListItem>
-            
-            {index < resources.length - 1 && (
-              <Divider className="resource-divider" />
-            )}
-          </React.Fragment>
-        ))}
-      </List>
-    </Paper>
+                    </ListItem>
+                    
+                    {index < resources.length - 1 && (
+                    <Divider className="resource-divider" />
+                    )}
+                </React.Fragment>
+                ))}
+            </List>
+            </Paper>
+        )}
     <AddResourceModal
         isOpen={isResourceModalOpen}
         onClose={() => setIsResourceModalOpen(false)}

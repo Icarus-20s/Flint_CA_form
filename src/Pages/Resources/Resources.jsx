@@ -632,22 +632,30 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
         </div>
     );
 };
-
 // Section Header Component
-const SectionHeader = ({ icon: Icon, title, onAdd, addLabel, showAddButton }) => (
+const SectionHeader = ({ icon: Icon, title, onAdd, addLabel, showAddButton, to }) => {
+  const navigate = useNavigate();
+
+  return (
     <div className="resource-section-header">
-        <div className="section-title">
-            <Icon size={24} />
-            <h2>{title}</h2>
-        </div>
-        {showAddButton && (
-            <button className="btn-add-resource" onClick={onAdd} type="button">
-                <Plus size={16} />
-                {addLabel}
-            </button>
-        )}
+      <div
+        className="section-title"
+        onClick={() => navigate(`/${to}`)}
+        style={{ cursor: "pointer" }}
+      >
+        <Icon size={24} />
+        <h2>{title}</h2>
+      </div>
+
+      {showAddButton && (
+        <button className="btn-add-resource" onClick={onAdd} type="button">
+          <Plus size={16} />
+          {addLabel}
+        </button>
+      )}
     </div>
-);
+  );
+};
 
 // View All Link Component
 const ViewAllLink = ({ to, children, count }) => (
@@ -843,6 +851,7 @@ const CAProfessionalResources = () => {
                     onAdd={() => setIsResourceModalOpen(true)}
                     addLabel="Add Resource"
                     showAddButton={isAuthenticated}
+                    to="access-resources"
                 />
 
                 {loadingStates.resources ? (
@@ -881,6 +890,7 @@ const CAProfessionalResources = () => {
                     onAdd={() => setIsNoticeModalOpen(true)}
                     addLabel="Add Notice"
                     showAddButton={isAuthenticated}
+                    to="access-notices"
                 />
 
                 {loadingStates.notices ? (
@@ -919,6 +929,7 @@ const CAProfessionalResources = () => {
                     onAdd={() => setIsLinkModalOpen(true)}
                     addLabel="Add Link"
                     showAddButton={isAuthenticated}
+                    to="resources"
                 />
 
                 {loadingStates.links ? (
@@ -953,6 +964,7 @@ const CAProfessionalResources = () => {
                     onAdd={() => setIsFaqModalOpen(true)}
                     addLabel="Add FAQ"
                     showAddButton={isAuthenticated}
+                    to="resources"
                 />
 
                 {loadingStates.faqs ? (
@@ -981,7 +993,7 @@ const CAProfessionalResources = () => {
                 )}
             </section>
 
-            {/* Newsletter */}
+            {/* Newsletter
             <section className="newsletter-container">
                 <div className="newsletter-wrapper">
                     <h2>Stay Informed</h2>
@@ -1016,7 +1028,7 @@ const CAProfessionalResources = () => {
                         </div>
                     )}
                 </div>
-            </section>
+            </section> */}
 
             {/* Modals */}
             <AddNoticeModal

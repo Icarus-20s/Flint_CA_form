@@ -15,6 +15,7 @@ import {
     Paper
 } from "@mui/material";
 import {
+    TrashIcon,
     FileText,
     ExternalLink,
     HelpCircle,
@@ -100,6 +101,21 @@ const AccessNotices = () => {
         }
 
     };
+    const handleNoticeDelete = async (id) => {
+        const confirmed = window.confirm("Are you sure you want to delete this notice?");
+        if (!confirmed) return;
+        try {
+        const res = await api.delete(`/notices/${id}/delete`);
+            
+            fetchNotice("/notices/", setNotices, "notices");
+        } catch (error) {
+            console.error('Error deleting notices:', error);
+            throw error;
+        } finally{
+            setIsNoticeModalOpen(false);
+        }
+
+    };
     
     if (loading) {
         return (
@@ -133,13 +149,6 @@ const AccessNotices = () => {
         );
     }
 
-  if (notices.length === 0) {
-    return (
-      <Typography className="notices-empty">
-        No notices available at this time.
-      </Typography>
-    );
-  }
 
 const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
@@ -314,74 +323,91 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
                     </button>
                 )}
             </Typography>
-    <Paper className="notices-container" elevation={0}>
-      <List className="notices-list">
-        {notices.map((notice, index) => (
-          <React.Fragment key={notice.id}>
-            <ListItem className="notice-item">
-              {/* <ListItemIcon className="notice-icon-wrapper">
-                <DescriptionIcon className="notice-icon" />
-              </ListItemIcon> */}
-              
-              <ListItemText
-                className="notice-content"
-                primary={
-                  <Typography className="notice-title">
-                    {notice.title}
-                  </Typography>
-                }
-                secondary={
-                  <Box className="notice-secondary">
-                    <Typography className="notice-description">
-                      {notice.description}
-                    </Typography>
+        {notices.length === 0 ? (
+            <Typography className="notices-empty">
+                No notices available at this time.
+            </Typography>
+      ) : (
+        <Paper className="notices-container" elevation={0}>
+            <List className="notices-list">
+                {notices.map((notice, index) => (
+                <React.Fragment key={notice.id}>
+                    <ListItem className="notice-item">
+                    {/* <ListItemIcon className="notice-icon-wrapper">
+                        <DescriptionIcon className="notice-icon" />
+                    </ListItemIcon> */}
                     
-                    <Box className="notice-meta">
-                      <Box className="notice-date">
-                        <CalendarTodayIcon className="notice-date-icon" />
-                        <Typography className="notice-date-text">
-                          {formatDate(notice.date)}
+                    <ListItemText
+                        className="notice-content"
+                        primary={
+                        <Typography className="notice-title">
+                            {notice.title}
                         </Typography>
-                      </Box>
-                      
+                        }
+                        secondary={
+                        <Box className="notice-secondary">
+                            <Typography className="notice-description">
+                            {notice.description}
+                            </Typography>
+                            
+                            <Box className="notice-meta">
+                            <Box className="notice-date">
+                                <CalendarTodayIcon className="notice-date-icon" />
+                                <Typography className="notice-date-text">
+                                {formatDate(notice.date)}
+                                </Typography>
+                            </Box>
+                            
+                            </Box>
+                        </Box>
+                        }
+                    />
+                    
+                    <Box className="notice-actions">
+                        <Tooltip title="View Document">
+                        <IconButton
+                            href={notice.pdf}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="notice-action-btn notice-action-btn--view"
+                            size="small"
+                        >
+                            <VisibilityIcon className="notice-action-icon" />
+                        </IconButton>
+                        </Tooltip>
+                        
+                        <Tooltip title="Download Document">
+                        <IconButton
+                            href={notice.pdf}
+                            download
+                            className="notice-action-btn notice-action-btn--download"
+                            size="small"
+                        >
+                            <GetAppIcon className="notice-action-icon" />
+                        </IconButton>
+                        </Tooltip>
+                        {isAuthenticated && (
+                            <Tooltip title="Delete Resource">
+                            <IconButton
+                                onClick={() => handleNoticeDelete(notice.id)}
+                                className="resource-action-btn resource-action-btn--delete"
+                                size="small"
+                            >
+                                <TrashIcon className="resource-action-icon" />
+                            </IconButton>
+                            </Tooltip>
+                        )}
                     </Box>
-                  </Box>
-                }
-              />
-              
-              <Box className="notice-actions">
-                <Tooltip title="View Document">
-                  <IconButton
-                    href={notice.pdf}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="notice-action-btn notice-action-btn--view"
-                    size="small"
-                  >
-                    <VisibilityIcon className="notice-action-icon" />
-                  </IconButton>
-                </Tooltip>
-                
-                <Tooltip title="Download Document">
-                  <IconButton
-                    href={notice.pdf}
-                    download
-                    className="notice-action-btn notice-action-btn--download"
-                    size="small"
-                  >
-                    <GetAppIcon className="notice-action-icon" />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </ListItem>
-            
-            {index < notices.length - 1 && (
-              <Divider className="notice-divider" />
-            )}
-          </React.Fragment>
-        ))}
-      </List>
-    </Paper>
+                    </ListItem>
+                    
+                    {index < notices.length - 1 && (
+                    <Divider className="notice-divider" />
+                    )}
+                </React.Fragment>
+                ))}
+            </List>
+        </Paper>
+    )}
     <AddNoticeModal
         isOpen={isNoticeModalOpen}
         onClose={() => setIsNoticeModalOpen(false)}
