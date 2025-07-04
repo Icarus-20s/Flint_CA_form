@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
-import "./Aboutus.css"; // Use a unique CSS filename
+import "./Aboutus.css"; 
 import { Linkedin } from 'lucide-react';
 
 const Aboutus = () => {
     const [activeTestimonial, setActiveTestimonial] = useState(0);
-    const [visibleSection, setVisibleSection] = useState("");
     const navigate = useNavigate();
 
     // For testimonial navigation

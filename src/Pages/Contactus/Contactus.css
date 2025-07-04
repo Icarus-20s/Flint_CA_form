@@ -52,6 +52,7 @@
 
 .contact-hero-title {
   font-size: 3.5rem !important;
+  animation: fadeInDown 0.8s ease-out;
   font-weight: 700 !important;
   margin-bottom: 1.5rem !important;
   position: relative;
@@ -62,6 +63,7 @@
 
 .contact-hero-subtitle {
   font-size: 1.3rem !important;
+  animation: fadeInUp 0.8s ease-out;
   max-width: 750px;
   margin: 0 auto !important;
   opacity: 0.95;

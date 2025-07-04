@@ -213,6 +213,7 @@ img {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: var(--secondary-color);
+  animation: fadeInDown 0.8s ease-out;
 }
 
 @media (max-width: 1200px) {
@@ -232,6 +233,7 @@ img {
   font-weight: 400;
   margin-bottom: 2rem;
   color: var(--text-medium);
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .modern-hero__buttons {

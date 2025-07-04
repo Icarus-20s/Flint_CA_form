@@ -86,7 +86,7 @@
   background-size: cover;
   background-position: center;
   color: white;
-  height: 500px;
+   height: 50vh;
   display: flex;
   align-items: center;
   position: relative;
@@ -100,6 +100,7 @@
 
 .kbps-hero-title {
   font-size: 3.5rem;
+  animation: fadeInDown 0.8s ease-out;
   font-weight: 700;
   margin-bottom: 15px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -117,6 +118,7 @@
   font-size: 1.5rem;
   margin-bottom: 30px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .kbps-cta-button {

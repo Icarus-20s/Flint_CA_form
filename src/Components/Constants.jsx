@@ -77,7 +77,7 @@ const testimonialsData = [
         title: "CFO, Retail Solutions",
         testimonial:
             "The audit services we received were comprehensive and insightful. They identified key areas for improvement that have significantly enhanced our financial reporting.",
-        image: "images//homepage/testimonials/testi-2.jpg",
+        image: "images/homepage/testimonials/testi-2.jpg",
     },
     {
         id: 3,
