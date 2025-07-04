@@ -362,22 +362,23 @@ const Services = () => {
                                 </div>
                             </div>
 
-                            <div className="form-actions">
-                                <button
-                                    type="submit"
-                                    className="submit-button"
-                                    disabled={formSubmitting}
-                                >
-                                    {formSubmitting ? (
-                                        <span className="button-loading">
-                                            <LoadingSpinner />
-                                            Submitting...
-                                        </span>
-                                    ) : (
-                                        "Submit Quote Request"
-                                    )}
-                                </button>
-                            </div>
+            <div className="form-actions">
+    <button
+        type="submit"
+        className="submit-button"
+        disabled={formSubmitting}
+    >
+        <span className="button-content">
+            {formSubmitting ? (
+                <>
+                    Submitting...
+                </>
+            ) : (
+                "Submit Quote Request"
+            )}
+        </span>
+    </button>
+</div>
                         </form>
                     )}
                 </div>

@@ -573,7 +573,12 @@
   cursor: pointer;
   transition: var(--transition-standard);
   font-weight: 500;
+  min-width: 240px; /* Prevent shrinking/expanding */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 
 .submit-button:hover {
   background-color: #34495e;

@@ -141,7 +141,7 @@ const Footer = () => {
                                         <Typography variant="body2">
                                             Bagmati Provience, Nepal
                                             <br />
-                                            Lainchaur, Kathmandu
+                                            Baluwatar, Kathmandu
                                         </Typography>
                                     </Box>
 
