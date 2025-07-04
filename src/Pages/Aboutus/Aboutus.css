@@ -56,9 +56,14 @@
   padding: 80px 0;
 }
 
-.kbps-section:nth-child(even) {
+.kbps-section:nth-child(odd) {
   background-color: var(--bg-light);
 }
+
+.kbps-section:nth-child(even) {
+  background-color: white; /* or your green color */
+}
+
 
 .kbps-section-header {
   margin-bottom: 60px;

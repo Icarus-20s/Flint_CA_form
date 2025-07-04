@@ -440,11 +440,7 @@ const Contactus = () => {
                                                     helperText={getValidationError(
                                                         "name"
                                                     )}
-                                                    className={`contact-input ${
-                                                        formFocused === "name"
-                                                            ? "input-focused"
-                                                            : ""
-                                                    }`}
+                                                    className={`contact-input`}
                                                 />
                                             </Grid2>
                                             <Grid2 size={{ xs: 12, sm: 6 }}>
