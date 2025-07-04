@@ -192,19 +192,14 @@ const Contactus = () => {
   return (
     <div className="contactus-page">
       {/* Hero Banner */}
-      <motion.div 
-        className="contact-hero"
-        initial="hidden"
-        animate={isVisible.hero ? "visible" : "hidden"}
-        variants={fadeIn}
-      >
+      <div className="contact-hero">
         <Container maxWidth="lg">
           <Typography variant="h2" className="contact-hero-title">Contact Us</Typography>
           <Typography variant="h6" className="contact-hero-subtitle">
             Ready to elevate your financial strategy? Our CA professionals are here to help.
           </Typography>
         </Container>
-      </motion.div>
+      </div>
       
       <Container maxWidth="lg" className="contact-main-container">
         {/* Contact Info Cards */}

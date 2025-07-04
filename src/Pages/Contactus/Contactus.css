@@ -36,47 +36,18 @@
   color: var(--text-primary);
   overflow-x: hidden;
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Typography Enhancement */
-.contactus-page * {
-  transition: var(--transition-standard);
 }
 
 /* Hero Section */
 .contact-hero {
   background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
   color: var(--white);
-  padding: 6rem 2rem;
+  padding: 100px 20px;
   text-align: center;
   position: relative;
   margin-bottom: 4rem;
   box-shadow: 0 8px 32px rgba(6, 208, 1, 0.2);
   overflow: hidden;
-}
-
-.contact-hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 25% 25%, rgba(155, 236, 0, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(155, 236, 0, 0.08) 0%, transparent 50%);
-  background-size: 400px 400px, 300px 300px;
-  animation: heroPattern 20s ease-in-out infinite;
-  z-index: 0;
-}
-
-@keyframes heroPattern {
-  0%, 100% { transform: translateX(0) translateY(0); }
-  25% { transform: translateX(-20px) translateY(-10px); }
-  50% { transform: translateX(10px) translateY(-20px); }
-  75% { transform: translateX(-10px) translateY(10px); }
 }
 
 .contact-hero-title {
@@ -695,22 +666,6 @@
   100% {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-/* Loading States */
-.loading-skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
   }
 }
 
