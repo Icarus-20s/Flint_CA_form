@@ -8,7 +8,6 @@ import {
     ExternalLink,
     HelpCircle,
     Newspaper,
-    Loader,
     AlertCircle,
     Plus,
     X,
@@ -166,8 +165,7 @@ const SectionErrorState = ({ sectionName, onRetry }) => (
 // Loading state for individual sections
 const SectionLoadingState = () => (
     <div className="section-loading">
-        <Loader size={24} className="spinner" />
-        <p>Loading content...</p>
+        <LoadingSpinner/>
     </div>
 );
 

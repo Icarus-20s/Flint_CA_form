@@ -7,5 +7,6 @@ body, h1, h2, h3, p, ul, li, a {
 }
 
 body {
+  overflow-x: hidden;
   background-color: #90C67C;
 }

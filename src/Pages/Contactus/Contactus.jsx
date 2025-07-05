@@ -25,7 +25,6 @@ import {
     CheckCircle as CheckCircleIcon,
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
-import LoadingSpinner from "../../Loaders/LoadingSpinner";
 import "./Contactus.css";
 
 const Contactus = () => {
@@ -568,11 +567,9 @@ const Contactus = () => {
                                                     disabled={loading}
                                                     className="submit-button"
                                                     startIcon={
-                                                        loading ? (
-                                                            <LoadingSpinner size="small" />
-                                                        ) : (
+                                                        
                                                             <SendIcon />
-                                                        )
+                                                        
                                                     }
                                                 >
                                                     {loading

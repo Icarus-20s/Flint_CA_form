@@ -18,7 +18,6 @@ const Login = () => {
         try {
             const response = await api.post("/login/", { email, password });
             if (response.status === 200) {
-                console.log(response);
                 auth.login(
                     response.data.user,
                     response.data.token,

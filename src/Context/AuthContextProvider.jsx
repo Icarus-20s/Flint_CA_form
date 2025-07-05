@@ -33,11 +33,7 @@ const AuthContextProvider = ({ children }) => {
         const accessToken = Cookies.get("token");
         const storedUser = localStorage.getItem("user");
         const storedRole = localStorage.getItem("role");
-
-        console.log("AccessToken:", accessToken); // Debugging output
-        console.log("StoredUser:", storedUser);
-        console.log("StoredRole:", storedRole);
-
+        console.log("Access Token:", storedUser);
         // If user is stored in localStorage and token exists in cookies, authenticate
         if (accessToken && storedUser && storedRole) {
             try {

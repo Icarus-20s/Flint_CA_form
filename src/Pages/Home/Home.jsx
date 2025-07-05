@@ -352,10 +352,6 @@ const Statistics = () => {
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                console.log(
-                    "Statistics section in view:",
-                    entry.isIntersecting
-                );
 
                 if (
                     entry.isIntersecting &&
@@ -391,7 +387,6 @@ const Statistics = () => {
     useEffect(() => {
         const fallbackTimer = setTimeout(() => {
             if (!hasAnimatedRef.current && !animationRef.current) {
-                console.log("Starting fallback animation");
                 startTimeRef.current = null;
                 animationRef.current = requestAnimationFrame(animateStats);
             }

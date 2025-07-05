@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import api from "../../Api/api";
 import WhyJoinUs from "./WhyJoinUs/WhyJoinUs";
 import ExperienceBenefits from "./ExperienceBenefits/ExperienceBenefits";
-import EmployeeReviews from "./EmployeeReview/EmployeeReview";
 import LoadingSpinner from "../../Loaders/LoadingSpinner";
 import "./Career.css";
 
@@ -46,7 +45,6 @@ const Career = () => {
             if (response.status !== 200) {
                 throw new Error("Failed to fetch services");
             }
-            console.log("Fetched careers:", response.data);
             setCareers(response.data);
             setLoading(false);
         } catch (err) {
